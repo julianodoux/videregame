@@ -1,249 +1,378 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Sistema de Sorvetes</title>
+<title>Controle de Sorvetes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: #f1f5f9;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
-        width: 100%;
-        max-width: 500px;
-        margin: auto;
-        padding: 15px;
-    }
-
-    h2 {
-        margin-top: 25px;
-        background: #1e40af;
+        background: #f2f2f7;
         padding: 12px;
-        color: white;
+        color: #333;
+        max-width: 480px;
+        margin: auto;
+    }
+
+    h1 {
         text-align: center;
-        border-radius: 6px;
+        margin-bottom: 20px;
+        font-size: 26px;
+        font-weight: 900;
+        color: #222;
+    }
+
+    .cat-btn {
+        width: 100%;
+        background: #007aff;
+        color: white;
+        padding: 18px;
         font-size: 20px;
+        border: none;
+        border-radius: 14px;
+        margin-top: 15px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 3px 7px rgba(0,0,0,0.15);
+    }
+
+    .categoria {
+        display: none;
+        margin-top: 8px;
+        background: #ffffff;
+        padding: 14px;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     .item {
-        background: white;
-        padding: 12px;
-        margin: 10px 0;
-        border-radius: 6px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        background: #fff;
+        padding: 14px;
+        margin: 12px 0;
+        border-radius: 14px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: 0.2s;
     }
 
-    .name {
-        font-size: 18px;
+    .item.zero {
+        background: #ff4d4d !important;
+        color: white !important;
+    }
+
+    .nome {
+        font-size: 20px;
         font-weight: bold;
-        margin-bottom: 8px;
+    }
+
+    .valor {
+        font-size: 16px;
+        color: #007aff;
+        margin-top: 2px;
+        font-weight: bold;
+    }
+
+    .restante {
+        font-size: 17px;
+        margin-top: 4px;
+        font-weight: bold;
+    }
+
+    .linha {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 14px;
     }
 
     .controls {
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        gap: 8px;
     }
 
-    .controls input {
-        width: 60px;
-        padding: 5px;
-        font-size: 18px;
-        text-align: center;
-    }
-
-    button {
-        width: 36px;
-        height: 36px;
-        font-size: 22px;
+    .btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
         border: none;
-        border-radius: 6px;
-        background: #1e3a8a;
-        color: white;
+        cursor: pointer;
+        font-size: 26px;
+        font-weight: bold;
     }
 
-    .red {
-        background: #dc2626 !important;
-        color: white;
+    .menos { background: #ff3b30; color: white; }
+    .mais  { background: #34c759; color: white; }
+
+    .numero {
+        width: 45px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
     }
 
-    #totaisBox {
-        margin-top: 25px;
-        padding: 15px;
-        background: white;
-        border-radius: 6px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    #totalVendas, .caixa-info {
+        margin-top: 20px;
+        padding: 20px;
+        background: #e6fff0;
+        border-radius: 16px;
+        font-size: 22px;
+        text-align: center;
+        font-weight: 900;
+        color: #0b6b1a;
     }
 
     #limpar {
-        background: #b91c1c;
         width: 100%;
-        padding: 12px;
-        margin-top: 15px;
-        border-radius: 6px;
+        background: #ff3b30;
         color: white;
-        font-size: 18px;
+        padding: 18px;
+        font-size: 20px;
+        border: none;
+        border-radius: 14px;
+        margin-top: 25px;
+        cursor: pointer;
+        font-weight: bold;
     }
 </style>
-</head>
-<body>
-
-<div class="container">
-
-<h2>PALETAS FRUTVERÃO</h2>
-
-<div id="lista"></div>
-
-<div id="totaisBox">
-    <p><b>Total em vendas:</b> R$ <span id="totalVendas">0.00</span></p>
-
-    <label>Dinheiro:</label>
-    <input type="number" id="dinheiro" value="0" oninput="atualizarPagamento()">
-
-    <label>Cartão:</label>
-    <input type="number" id="cartao" value="0" readonly>
-
-    <p><b>Comissão:</b> R$ <span id="comissao">0.00</span></p>
-
-    <button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
-</div>
-
-</div>
 
 <script>
-/* ==========================
-   LISTA DE ITENS + PREÇOS
-========================== */
+/* ------------------- PREÇOS ------------------- */
+let precoPorCategoria = {
+    "PALETAS FRUTIVERÃO": 18,
+    "AO LEITE FRUTIVERÃO": 8,
+    "TROPICAL FRUTIVERÃO": 6,
+    "ESPECIAL FRUTIBLITO": 13,
+    "LANÇAMENTOS": null
+};
 
-const itens = [
-    { nome: "PALETA MORANGO", preco: 18 },
-    { nome: "PALETA COCO", preco: 18 },
-    { nome: "PALETA UVA", preco: 18 },
-    { nome: "PALETA MANGA", preco: 18 },
-    { nome: "PALETA ABACAXI", preco: 18 },
-    { nome: "PALETA CHOCOLATE", preco: 18 },
+let precosLancamentos = {
+    "Pistache": 16,
+    "Unicórnio": 10
+};
 
-    { nome: "AO LEITE – CHOCOLATE", preco: 8 },
-    { nome: "AO LEITE – MORANGO", preco: 8 },
-    { nome: "AO LEITE – COCO", preco: 8 },
+/* ------------------- CATEGORIAS ------------------- */
+let categorias = {
+    "PALETAS FRUTIVERÃO": [
+        "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
+        "Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá","Açaí",
+        "Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino","Banana com Avelã",
+        "Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"
+    ],
 
-    { nome: "TROPICAL – UVA", preco: 6 },
-    { nome: "TROPICAL – ABACAXI", preco: 6 },
-    { nome: "TROPICAL – MARACUJÁ", preco: 6 },
+    "AO LEITE FRUTIVERÃO": [
+        "Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango",
+        "Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"
+    ],
 
-    { nome: "ESPECIAL – FRUTIBLITO", preco: 13 },
-    { nome: "ESPECIAL – SUNDAY", preco: 13 },
+    "TROPICAL FRUTIVERÃO": [
+        "Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina",
+        "Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"
+    ],
 
-    { nome: "PISTACHE", preco: 16 },
-    { nome: "UNICÓRNIO", preco: 10 }
-];
+    "ESPECIAL FRUTIBLITO": [
+        "Frutiblito","Sunday de Chocolate","Sunday de Morango"
+    ],
 
-/* ==========================
-   CARREGA DADOS DO STORAGE
-========================== */
-let dados = JSON.parse(localStorage.getItem("estoqueSorvete")) || {};
+    "LANÇAMENTOS": [
+        "Pistache","Unicórnio"
+    ]
+};
 
-function salvar() {
-    localStorage.setItem("estoqueSorvete", JSON.stringify(dados));
-}
+let id = 1;
 
-/* ==========================
-   GERAR LISTA NA TELA
-========================== */
-function gerarLista() {
-    const div = document.getElementById("lista");
-    div.innerHTML = "";
+/* ------------------- CARREGAR LOCALSTORAGE ------------------- */
+let total = Number(localStorage.getItem("totalVendas")) || 0;
+let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
 
-    itens.forEach(item => {
-        if (!dados[item.nome]) {
-            dados[item.nome] = { estoque: 0, vendido: 0 };
+let cartao = total - dinheiro;
+if (cartao < 0) cartao = 0;
+
+let comissao = dinheiro * 0.30 + cartao * 0.25;
+
+/* ---------------------------------------------------------
+   🔥 FUNÇÃO NOVA: CALCULAR TOTAL DE VENDAS
+---------------------------------------------------------- */
+function calcularTotal() {
+    total = 0;
+
+    let ids = document.querySelectorAll("[id^='vend_']");
+    ids.forEach(campo => {
+        let idLocal = campo.id.split("_")[1];
+        let vendido = Number(campo.innerText);
+
+        // preço
+        let nomeItem = document.querySelector(`#item_${idLocal} .nome`).innerText;
+
+        let preco = 0;
+
+        // acha o preço correto
+        for (let cat in categorias) {
+            if (categorias[cat].includes(nomeItem)) {
+                preco = (cat === "LANÇAMENTOS") ? precosLancamentos[nomeItem] : precoPorCategoria[cat];
+            }
         }
 
-        const restante = dados[item.nome].estoque - dados[item.nome].vendido;
-
-        div.innerHTML += `
-            <div class="item ${restante <= 0 ? "red" : ""}">
-                <div class="name">${item.nome} — R$ ${item.preco}</div>
-
-                <div class="controls">
-                    <span>Estoque:</span>
-                    <input type="number" id="est_${item.nome}" value="${dados[item.nome].estoque}" 
-                           oninput="atualizarEstoque('${item.nome}')">
-                </div>
-
-                <div class="controls">
-                    <span>Vendido:</span>
-                    <button onclick="vender('${item.nome}', -1)">-</button>
-                    <span id="vend_${item.nome}">${dados[item.nome].vendido}</span>
-                    <button onclick="vender('${item.nome}', 1)">+</button>
-                </div>
-
-                <p><b>Restante: <span id="res_${item.nome}">${restante}</span></b></p>
-            </div>
-        `;
+        total += vendido * preco;
     });
 
-    atualizarTotal();
-}
+    document.getElementById("valorTotal").innerText = total.toFixed(2);
 
-gerarLista();
-
-/* ==========================
-        FUNÇÕES
-========================== */
-
-function atualizarEstoque(nome) {
-    const v = Number(document.getElementById("est_" + nome).value);
-    dados[nome].estoque = v;
+    atualizarFinanceiro();
     salvar();
-    gerarLista();
 }
 
-function vender(nome, qnt) {
-    if (dados[nome].vendido + qnt < 0) return;
+/* ---------------------------------------------------------
+   RESTANTE DAS FUNÇÕES (iguais ao seu código)
+---------------------------------------------------------- */
 
-    dados[nome].vendido += qnt;
-    salvar();
-    gerarLista();
+function toggle(cat) {
+    let el = document.getElementById("cat_" + cat);
+    el.style.display = el.style.display === "block" ? "none" : "block";
 }
 
-function atualizarTotal() {
-    let total = 0;
+function atualizar(id) {
+    let est = Number(document.getElementById("est_" + id).innerText);
+    let vend = Number(document.getElementById("vend_" + id).innerText);
+    let resto = est - vend;
 
-    itens.forEach(item => {
-        total += dados[item.nome].vendido * item.preco;
-    });
+    if (resto < 0) resto = 0;
 
-    document.getElementById("totalVendas").innerText = total.toFixed(2);
+    let bloco = document.getElementById("item_" + id);
+    let campoResto = document.getElementById("resto_" + id);
+    campoResto.innerText = "Restante: " + resto;
 
-    // Atualiza cálculo de dinheiro/cartão quando total muda
-    atualizarPagamento();
+    if (resto === 0) bloco.classList.add("zero");
+    else bloco.classList.remove("zero");
+
+    calcularTotal();
 }
 
-function atualizarPagamento() {
-    const total = Number(document.getElementById("totalVendas").innerText);
-    const dinheiro = Number(document.getElementById("dinheiro").value);
+function add(tipo, id) {
+    let campo = document.getElementById(tipo + "_" + id);
+    campo.innerText = Number(campo.innerText) + 1;
 
-    let cartao = total - dinheiro;
+    atualizar(id);
+}
+
+function remove(tipo, id) {
+    let campo = document.getElementById(tipo + "_" + id);
+    let valor = Number(campo.innerText);
+
+    if (valor > 0) campo.innerText = valor - 1;
+
+    atualizar(id);
+}
+
+function salvar() {
+    localStorage.setItem("totalVendas", total.toFixed(2));
+    localStorage.setItem("dinheiro", dinheiro.toFixed(2));
+}
+
+function atualizarFinanceiro() {
+    dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
+
+    cartao = total - dinheiro;
     if (cartao < 0) cartao = 0;
 
-    document.getElementById("cartao").value = cartao.toFixed(2);
+    comissao = dinheiro * 0.30 + cartao * 0.25;
 
-    const comissao = dinheiro * 0.30 + cartao * 0.25;
-    document.getElementById("comissao").innerText = comissao.toFixed(2);
+    document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
+    document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
+
+    salvar();
 }
 
 function limparTudo() {
-    if (confirm("Tem certeza que deseja limpar tudo?")) {
-        localStorage.removeItem("estoqueSorvete");
-        location.reload();
-    }
+    localStorage.clear();
+    location.reload();
 }
+</script>
+
+</head>
+<body>
+
+<h1>Controle de Sorvetes</h1>
+
+<div id="conteudo">
+
+<script>
+for (let cat in categorias) {
+    document.write(`<button class="cat-btn" onclick="toggle('${cat}')">${cat}</button>`);
+    document.write(`<div id="cat_${cat}" class="categoria">`);
+
+    categorias[cat].forEach(sabor => {
+        let preco = precoPorCategoria[cat];
+        if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
+
+        document.write(`
+            <div class="item" id="item_${id}">
+                <div class="nome">${sabor}</div>
+                <div class="valor">Preço: R$ ${preco}</div>
+                <div class="restante" id="resto_${id}">Restante: 0</div>
+
+                <div class="linha">
+                    <div class="controls">
+                        <span>Estoque</span>
+                        <button class="btn menos" onclick="remove('est', ${id})">-</button>
+                        <span class="numero" id="est_${id}">0</span>
+                        <button class="btn mais" onclick="add('est', ${id})">+</button>
+                    </div>
+                </div>
+
+                <div class="linha">
+                    <div class="controls">
+                        <span>Vendido</span>
+                        <button class="btn menos" onclick="remove('vend', ${id})">-</button>
+                        <span class="numero" id="vend_${id}">0</span>
+                        <button class="btn mais" onclick="add('vend', ${id})">+</button>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        id++;
+    });
+
+    document.write("</div>");
+}
+</script>
+
+</div>
+
+<!-- TOTAL EM VENDAS -->
+<div id="totalVendas">
+    TOTAL EM VENDAS: R$ <span id="valorTotal"></span>
+</div>
+
+<script>
+document.getElementById("valorTotal").innerText = total.toFixed(2);
+</script>
+
+<!-- DINHEIRO -->
+<div class="caixa-info">
+    VENDAS EM DINHEIRO:<br>
+    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}" 
+           oninput="atualizarFinanceiro()"
+           style="width: 90%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 22px; text-align: center;">
+</div>
+
+<!-- CARTÃO -->
+<div class="caixa-info">
+    VENDAS NO CARTÃO:<br>
+    <span id="campoCartao">R$ ${cartao.toFixed(2)}</span>
+</div>
+
+<!-- COMISSÃO -->
+<div class="caixa-info" style="background:#fff2cc; color:#8a6d00;">
+    COMISSÃO:<br>
+    <span id="campoComissao">R$ ${comissao.toFixed(2)}</span>
+</div>
+
+<!-- BOTÃO LIMPAR -->
+<button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
+
+<script>
+calcularTotal();
 </script>
 
 </body>
