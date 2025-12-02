@@ -2,16 +2,21 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Controle de Sorvetes</title>
 
 <style>
+    * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+    }
+
     body {
         font-family: Arial, sans-serif;
         background: #f2f2f7;
+        margin: 0;
         padding: 12px;
         color: #333;
-        max-width: 480px;
-        margin: auto;
     }
 
     h1 {
@@ -43,15 +48,17 @@
         padding: 14px;
         border-radius: 14px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        width: 100%;
     }
 
     .item {
         background: #fff;
-        padding: 14px;
-        margin: 12px 0;
+        padding: 16px;
+        margin: 14px 0;
         border-radius: 14px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         transition: 0.2s;
+        width: 100%;
     }
 
     .item.zero {
@@ -60,42 +67,51 @@
     }
 
     .nome {
-        font-size: 20px;
+        font-size: 22px;
         font-weight: bold;
     }
 
     .valor {
-        font-size: 16px;
+        font-size: 17px;
         color: #007aff;
-        margin-top: 2px;
+        margin-top: 3px;
         font-weight: bold;
     }
 
     .restante {
-        font-size: 17px;
+        font-size: 18px;
         margin-top: 4px;
         font-weight: bold;
     }
 
     .linha {
         display: flex;
-        justify-content: space-around;
-        margin-top: 14px;
+        justify-content: space-between;
+        margin-top: 16px;
+        width: 100%;
     }
 
     .controls {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .controls span {
+        font-size: 17px;
+        width: 90px;
+        font-weight: bold;
     }
 
     .btn {
-        width: 45px;
-        height: 45px;
-        border-radius: 12px;
+        width: 55px;
+        height: 55px;
+        border-radius: 14px;
         border: none;
         cursor: pointer;
-        font-size: 26px;
+        font-size: 32px;
         font-weight: bold;
     }
 
@@ -103,9 +119,9 @@
     .mais  { background: #34c759; color: white; }
 
     .numero {
-        width: 45px;
+        width: 60px;
         text-align: center;
-        font-size: 24px;
+        font-size: 28px;
         font-weight: bold;
     }
 
@@ -118,10 +134,15 @@
         text-align: center;
         font-weight: 900;
         color: #0b6b1a;
+        width: 100%;
     }
 </style>
 
 <script>
+document.addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+});
+
 let precoPorCategoria = {
     "PALETAS FRUTIVERÃO": 18,
     "AO LEITE FRUTIVERÃO": 8,
@@ -130,36 +151,14 @@ let precoPorCategoria = {
     "LANÇAMENTOS": null
 };
 
-let precosLancamentos = {
-    "Pistache": 16,
-    "Unicórnio": 10
-};
+let precosLancamentos = { "Pistache": 16, "Unicórnio": 10 };
 
 let categorias = {
-    "PALETAS FRUTIVERÃO": [
-        "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
-        "Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá","Açaí",
-        "Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino","Banana com Avelã",
-        "Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"
-    ],
-
-    "AO LEITE FRUTIVERÃO": [
-        "Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango",
-        "Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"
-    ],
-
-    "TROPICAL FRUTIVERÃO": [
-        "Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina",
-        "Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"
-    ],
-
-    "ESPECIAL FRUTIBLITO": [
-        "Frutiblito","Sunday de Chocolate","Sunday de Morango"
-    ],
-
-    "LANÇAMENTOS": [
-        "Pistache","Unicórnio"
-    ]
+    "PALETAS FRUTIVERÃO": ["Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine","Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá","Açaí","Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino","Banana com Avelã","Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"],
+    "AO LEITE FRUTIVERÃO": ["Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango","Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"],
+    "TROPICAL FRUTIVERÃO": ["Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina","Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"],
+    "ESPECIAL FRUTIBLITO": ["Frutiblito","Sunday de Chocolate","Sunday de Morango"],
+    "LANÇAMENTOS": ["Pistache","Unicórnio"]
 };
 
 let id = 1;
@@ -170,22 +169,17 @@ function toggle(cat) {
     el.style.display = el.style.display === "block" ? "none" : "block";
 }
 
-function atualizar(id, preco) {
+function atualizar(id) {
     let est = Number(document.getElementById("est_" + id).innerText);
     let vend = Number(document.getElementById("vend_" + id).innerText);
     let resto = est - vend;
-
     if (resto < 0) resto = 0;
 
-    let bloco = document.getElementById("item_" + id);
-    let campoResto = document.getElementById("resto_" + id);
-    campoResto.innerText = "Restante: " + resto;
+    document.getElementById("resto_" + id).innerText = "Restante: " + resto;
 
-    if (resto === 0) {
-        bloco.classList.add("zero");
-    } else {
-        bloco.classList.remove("zero");
-    }
+    let bloco = document.getElementById("item_" + id);
+    if (resto === 0) bloco.classList.add("zero");
+    else bloco.classList.remove("zero");
 }
 
 function add(tipo, id, preco) {
@@ -198,7 +192,7 @@ function add(tipo, id, preco) {
             "TOTAL EM VENDAS: R$ " + total.toFixed(2);
     }
 
-    atualizar(id, preco);
+    atualizar(id);
 }
 
 function remove(tipo, id, preco) {
@@ -215,7 +209,7 @@ function remove(tipo, id, preco) {
                 "TOTAL EM VENDAS: R$ " + total.toFixed(2);
         }
 
-        atualizar(id, preco);
+        atualizar(id);
     }
 }
 </script>
@@ -234,7 +228,6 @@ for (let cat in categorias) {
     document.write(`<div id="cat_${cat}" class="categoria">`);
 
     categorias[cat].forEach(sabor => {
-
         let preco = precoPorCategoria[cat];
         if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
 
@@ -245,25 +238,21 @@ for (let cat in categorias) {
                 <div class="restante" id="resto_${id}">Restante: 0</div>
 
                 <div class="linha">
-
                     <div class="controls">
                         <span>Estoque</span>
                         <button class="btn menos" onclick="remove('est', ${id}, ${preco})">-</button>
                         <span class="numero" id="est_${id}">0</span>
                         <button class="btn mais" onclick="add('est', ${id}, ${preco})">+</button>
                     </div>
-
                 </div>
 
                 <div class="linha">
-
                     <div class="controls">
                         <span>Vendido</span>
                         <button class="btn menos" onclick="remove('vend', ${id}, ${preco})">-</button>
                         <span class="numero" id="vend_${id}">0</span>
                         <button class="btn mais" onclick="add('vend', ${id}, ${preco})">+</button>
                     </div>
-
                 </div>
 
             </div>
