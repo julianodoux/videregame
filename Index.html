@@ -184,10 +184,9 @@ let id = 1;
 let total = Number(localStorage.getItem("totalVendas")) || 0;
 let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
 
-/* CARTÃO = TOTAL - DINHEIRO */
 let cartao = total - dinheiro;
+if (cartao < 0) cartao = 0;
 
-/* COMISSÃO */
 let comissao = dinheiro * 0.30 + cartao * 0.25;
 
 /* ------------------- FUNÇÕES ------------------- */
@@ -236,6 +235,7 @@ function salvar() {
 
 function atualizarFinanceiro() {
     dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
+
     cartao = total - dinheiro;
     if (cartao < 0) cartao = 0;
 
@@ -305,12 +305,19 @@ for (let cat in categorias) {
 </div>
 
 <!-- TOTAL EM VENDAS -->
-<div id="totalVendas">TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span></div>
+<div id="totalVendas">
+    TOTAL EM VENDAS: R$ <span id="valorTotal"></span>
+</div>
+
+<script>
+document.getElementById("valorTotal").innerText = total.toFixed(2);
+</script>
 
 <!-- DINHEIRO -->
 <div class="caixa-info">
     VENDAS EM DINHEIRO:<br>
-    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}" oninput="atualizarFinanceiro()"
+    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}" 
+           oninput="atualizarFinanceiro()"
            style="width: 90%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 22px; text-align: center;">
 </div>
 
@@ -330,7 +337,6 @@ for (let cat in categorias) {
 <button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
 
 <script>
-/* Atualiza os campos na tela na primeira carga */
 atualizarFinanceiro();
 </script>
 
