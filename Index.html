@@ -2,254 +2,291 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Sistema de Vendas - Praia</title>
+<title>Controle de Sorvetes</title>
+
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: #f0f0f0;
-        margin: 0;
-        padding: 10px;
+        background: #f2f2f2;
+        padding: 15px;
     }
 
-    .tabs {
-        display: flex;
-        overflow-x: auto;
-        margin-bottom: 10px;
-    }
-
-    .tab {
-        padding: 12px 18px;
-        background: #ddd;
-        margin-right: 5px;
-        border-radius: 8px;
-        cursor: pointer;
-        white-space: nowrap;
-        font-weight: bold;
-    }
-
-    .tab.active {
+    .cat-btn {
+        width: 100%;
         background: #007bff;
-        color: #fff;
+        color: white;
+        padding: 14px;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        cursor: pointer;
     }
 
     .categoria {
         display: none;
-    }
-
-    .categoria.active {
-        display: block;
-    }
-
-    .produto {
-        background: #fff;
-        padding: 15px;
+        background: white;
+        padding: 12px;
         border-radius: 10px;
         margin-bottom: 15px;
         box-shadow: 0 3px 6px rgba(0,0,0,0.15);
     }
 
+    .produto {
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .produto:last-child {
+        border-bottom: none;
+    }
+
     .nome {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: bold;
     }
 
     .preco {
-        font-size: 18px;
-        margin: 5px 0 12px;
-        color: #444;
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .estoque-box {
+        margin-bottom: 8px;
+    }
+
+    input[type=number] {
+        width: 80px;
+        padding: 6px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #aaa;
     }
 
     .controle {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 15px;
+        margin-top: 5px;
     }
 
-    button {
-        padding: 10px 18px;
-        font-size: 22px;
-        font-weight: bold;
+    .btn {
+        padding: 10px 16px;
+        font-size: 20px;
         border: none;
-        border-radius: 10px;
         cursor: pointer;
-    }
-
-    .menos {
-        background: #dc3545;
+        border-radius: 8px;
         color: white;
     }
 
-    .mais {
-        background: #28a745;
-        color: white;
-    }
+    .mais { background: #28a745; }
+    .menos { background: #dc3545; }
 
-    .qtd {
-        font-size: 22px;
+    .vendidos {
+        font-size: 18px;
         width: 40px;
         text-align: center;
     }
 
     #totalBox {
-        background: #fff;
+        background: white;
         padding: 20px;
-        margin-top: 20px;
         border-radius: 10px;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.15);
         font-size: 22px;
+        margin-top: 20px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.15);
         text-align: center;
     }
 </style>
+
 </head>
 <body>
 
-<h2>📊 Controle de Vendas – Praia</h2>
+<h2>🍦 Controle de Sorvetes – Praia</h2>
 
-<div class="tabs">
-    <div class="tab active" data-tab="paletas">Paletas FRUTVERÃO</div>
-    <div class="tab" data-tab="especial">Especial FRUTIBLITO</div>
-    <div class="tab" data-tab="lancamento">Lançamento</div>
-</div>
 
-<!-- ============================= -->
-<!-- CATEGORIA 1 - PALETAS -->
-<!-- ============================= -->
+<!-- ===================================================== -->
+<!-- FUNÇÃO PARA EXPANDIR/FECHAR CATEGORIAS -->
+<script>
+function toggleCat(id) {
+    let div = document.getElementById(id);
+    div.style.display = div.style.display === "block" ? "none" : "block";
+}
+</script>
+<!-- ===================================================== -->
 
-<div class="categoria active" id="paletas">
-
-    <div class="produto" data-preco="18">
-        <div class="nome">Frutiverão</div>
-        <div class="preco">R$ 18,00</div>
-        <div class="controle">
-            <button class="menos">-</button>
-            <span class="qtd">0</span>
-            <button class="mais">+</button>
-        </div>
-    </div>
-
-    <div class="produto" data-preco="8">
-        <div class="nome">Ao Leite</div>
-        <div class="preco">R$ 8,00</div>
-        <div class="controle">
-            <button class="menos">-</button>
-            <span class="qtd">0</span>
-            <button class="mais">+</button>
-        </div>
-    </div>
-
-    <div class="produto" data-preco="6">
-        <div class="nome">Tropical</div>
-        <div class="preco">R$ 6,00</div>
-        <div class="controle">
-            <button class="menos">-</button>
-            <span class="qtd">0</span>
-            <button class="mais">+</button>
-        </div>
-    </div>
-
-</div>
-
-<!-- ============================= -->
-<!-- CATEGORIA 2 - ESPECIAL -->
-<!-- ============================= -->
-
-<div class="categoria" id="especial">
-
-    <div class="produto" data-preco="13">
-        <div class="nome">FRUTIBLITO</div>
-        <div class="preco">R$ 13,00</div>
-        <div class="controle">
-            <button class="menos">-</button>
-            <span class="qtd">0</span>
-            <button class="mais">+</button>
-        </div>
-    </div>
-
-    <div class="produto" data-preco="13">
-        <div class="nome">SUNDAY</div>
-        <div class="preco">R$ 13,00</div>
-        <div class="controle">
-            <button class="menos">-</button>
-            <span class="qtd">0</span>
-            <button class="mais">+</button>
-        </div>
-    </div>
-
-</div>
-
-<!-- ============================= -->
-<!-- CATEGORIA 3 - LANÇAMENTOS -->
-<!-- ============================= -->
-
-<div class="categoria" id="lancamento">
-
-    <div class="produto" data-preco="16">
-        <div class="nome">Pistache</div>
-        <div class="preco">R$ 16,00</div>
-        <div class="controle">
-            <button class="menos">-</button>
-            <span class="qtd">0</span>
-            <button class="mais">+</button>
-        </div>
-    </div>
-
-    <div class="produto" data-preco="10">
-        <div class="nome">Unicórnio</div>
-        <div class="preco">R$ 10,00</div>
-        <div class="controle">
-            <button class="menos">-</button>
-            <span class="qtd">0</span>
-            <button class="mais">+</button>
-        </div>
-    </div>
-
-</div>
-
-<!-- TOTAL DE VENDAS -->
-<div id="totalBox">
-    💰 Total vendido: <b>R$ <span id="total">0.00</span></b>
-</div>
 
 <script>
-    // Troca de abas
-    document.querySelectorAll(".tab").forEach(tab => {
-        tab.addEventListener("click", () => {
-            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-            tab.classList.add("active");
+let totalVendas = 0;
 
-            document.querySelectorAll(".categoria").forEach(cat => cat.classList.remove("active"));
-            document.getElementById(tab.dataset.tab).classList.add("active");
-        });
-    });
+function atualizarTotal(preco, operacao) {
+    if (operacao === "somar") {
+        totalVendas += preco;
+    } else if (operacao === "subtrair") {
+        totalVendas -= preco;
+    }
 
-    let total = 0;
-    const totalSpan = document.getElementById("total");
+    document.getElementById("total").innerText = totalVendas.toFixed(2);
+}
 
-    document.querySelectorAll(".produto").forEach(prod => {
-        const preco = parseFloat(prod.dataset.preco);
-        const btnMenos = prod.querySelector(".menos");
-        const btnMais = prod.querySelector(".mais");
-        const qtdSpan = prod.querySelector(".qtd");
+function vender(btn, preco) {
+    const produtoDiv = btn.parentElement;
+    const vendidosSpan = produtoDiv.querySelector(".vendidos");
+    const estoqueInput = produtoDiv.parentElement.querySelector(".estoque");
+    
+    let vendidos = parseInt(vendidosSpan.textContent);
+    let estoque = parseInt(estoqueInput.value);
 
-        let qtd = 0;
+    if (estoque > 0) {
+        vendidos++;
+        estoque--;
 
-        btnMais.addEventListener("click", () => {
-            qtd++;
-            qtdSpan.textContent = qtd;
-            total += preco;
-            totalSpan.textContent = total.toFixed(2);
-        });
+        vendidosSpan.textContent = vendidos;
+        estoqueInput.value = estoque;
 
-        btnMenos.addEventListener("click", () => {
-            if (qtd > 0) {
-                qtd--;
-                qtdSpan.textContent = qtd;
-                total -= preco;
-                totalSpan.textContent = total.toFixed(2);
-            }
-        });
-    });
+        atualizarTotal(preco, "somar");
+    }
+}
+
+function desfazerVenda(btn, preco) {
+    const produtoDiv = btn.parentElement;
+    const vendidosSpan = produtoDiv.querySelector(".vendidos");
+    const estoqueInput = produtoDiv.parentElement.querySelector(".estoque");
+
+    let vendidos = parseInt(vendidosSpan.textContent);
+
+    if (vendidos > 0) {
+        vendidos--;
+        vendidosSpan.textContent = vendidos;
+
+        let estoque = parseInt(estoqueInput.value);
+        estoqueInput.value = estoque + 1;
+
+        atualizarTotal(preco, "subtrair");
+    }
+}
 </script>
+
+
+<!-- ===================================================== -->
+<!-- CATEGORIA: PALETAS FRUTVERÃO (18, 8, 6) -->
+<!-- ===================================================== -->
+
+<button class="cat-btn" onclick="toggleCat('cat1')">Paletas – FRUTVERÃO</button>
+<div class="categoria" id="cat1">
+
+    <h3>Frutiverão – R$18</h3>
+
+    <!-- RAFFAELLO -->
+    <div class="produto">
+        <div class="nome">Raffaello</div>
+        <div class="estoque-box">Estoque: <input class="estoque" type="number" value="0"></div>
+        <div class="controle">
+            <button class="btn menos" onclick="desfazerVenda(this,18)">-</button>
+            <span class="vendidos">0</span>
+            <button class="btn mais" onclick="vender(this,18)">+</button>
+        </div>
+    </div>
+
+    <!-- ROMEU E JULIETA -->
+    <div class="produto">
+        <div class="nome">Romeu e Julieta</div>
+        <div class="estoque-box">Estoque: <input class="estoque" type="number" value="0"></div>
+        <div class="controle">
+            <button class="btn menos" onclick="desfazerVenda(this,18)">-</button>
+            <span class="vendidos">0</span>
+            <button class="btn mais" onclick="vender(this,18)">+</button>
+        </div>
+    </div>
+
+    <!-- repete para os outros -->
+</div>
+
+
+<!-- ===================================================== -->
+<!-- CATEGORIA: AO LEITE – R$8 -->
+<!-- ===================================================== -->
+
+<button class="cat-btn" onclick="toggleCat('cat2')">Ao Leite – FRUTVERÃO</button>
+<div class="categoria" id="cat2">
+
+    <h3>Ao Leite – R$8</h3>
+
+    <div class="produto">
+        <div class="nome">Brigadeiro</div>
+        <div class="estoque-box">Estoque: <input class="estoque" type="number" value="0"></div>
+        <div class="controle">
+            <button class="btn menos" onclick="desfazerVenda(this,8)">-</button>
+            <span class="vendidos">0</span>
+            <button class="btn mais" onclick="vender(this,8)">+</button>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- CATEGORIA: TROPICAL – R$6 -->
+<!-- ===================================================== -->
+
+<button class="cat-btn" onclick="toggleCat('cat3')">Tropical – FRUTVERÃO</button>
+<div class="categoria" id="cat3">
+
+    <h3>Tropical – R$6</h3>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- CATEGORIA: ESPECIAL FRUTIBLITO – R$13 -->
+<!-- ===================================================== -->
+
+<button class="cat-btn" onclick="toggleCat('cat4')">Especial – FRUTIBLITO</button>
+<div class="categoria" id="cat4">
+
+    <h3>Especial – R$13</h3>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- CATEGORIA: LANÇAMENTOS -->
+<!-- ===================================================== -->
+
+<button class="cat-btn" onclick="toggleCat('cat5')">Lançamentos</button>
+<div class="categoria" id="cat5">
+
+    <h3>Pistache – R$16</h3>
+    <div class="produto">
+        <div class="nome">Pistache</div>
+        <div class="estoque-box">Estoque: <input class="estoque" type="number" value="0"></div>
+        <div class="controle">
+            <button class="btn menos" onclick="desfazerVenda(this,16)">-</button>
+            <span class="vendidos">0</span>
+            <button class="btn mais" onclick="vender(this,16)">+</button>
+        </div>
+    </div>
+
+    <h3>Unicórnio – R$10</h3>
+    <div class="produto">
+        <div class="nome">Unicórnio</div>
+        <div class="estoque-box">Estoque: <input class="estoque" type="number" value="0"></div>
+        <div class="controle">
+            <button class="btn menos" onclick="desfazerVenda(this,10)">-</button>
+            <span class="vendidos">0</span>
+            <button class="btn mais" onclick="vender(this,10)">+</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+
+<div id="totalBox">
+    Total vendido: <b>R$ <span id="total">0.00</span></b>
+</div>
+
 
 </body>
 </html>
