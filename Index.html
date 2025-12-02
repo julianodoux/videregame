@@ -2,360 +2,254 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle de Sorvetes</title>
-
+<title>Sistema de Vendas - Praia</title>
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: #f2f2f2;
+        background: #f0f0f0;
         margin: 0;
-        padding: 15px;
-    }
-
-    h2 {
-        text-align: center;
-        margin-bottom: 15px;
+        padding: 10px;
     }
 
     .tabs {
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 15px;
-    }
-
-    .tab-btn {
-        flex: 1;
-        padding: 12px;
-        background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-size: 15px;
-    }
-
-    .tab-btn.active {
-        background: #004c9e;
-    }
-
-    .category {
-        display: none;
-    }
-
-    .item {
-        background: white;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        font-size: 18px;
-    }
-
-    .label {
-        font-size: 14px;
-        color: #555;
-        margin-top: 8px;
-        margin-bottom: 3px;
-        font-weight: bold;
-    }
-
-    .controls {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        overflow-x: auto;
         margin-bottom: 10px;
     }
 
-    button {
-        padding: 8px 15px;
-        font-size: 18px;
-        border: none;
-        border-radius: 6px;
-        color: white;
-    }
-
-    .minus { background: #d9534f; }
-    .plus { background: #5cb85c; }
-
-    .stock, .sold {
-        font-size: 18px;
+    .tab {
+        padding: 12px 18px;
+        background: #ddd;
+        margin-right: 5px;
+        border-radius: 8px;
+        cursor: pointer;
+        white-space: nowrap;
         font-weight: bold;
     }
 
-    .out {
-        color: red;
+    .tab.active {
+        background: #007bff;
+        color: #fff;
     }
 
-    #totais {
-        background: white;
+    .categoria {
+        display: none;
+    }
+
+    .categoria.active {
+        display: block;
+    }
+
+    .produto {
+        background: #fff;
         padding: 15px;
-        font-size: 20px;
         border-radius: 10px;
-        margin-top: 25px;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+
+    .nome {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .preco {
+        font-size: 18px;
+        margin: 5px 0 12px;
+        color: #444;
+    }
+
+    .controle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    button {
+        padding: 10px 18px;
+        font-size: 22px;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .menos {
+        background: #dc3545;
+        color: white;
+    }
+
+    .mais {
+        background: #28a745;
+        color: white;
+    }
+
+    .qtd {
+        font-size: 22px;
+        width: 40px;
+        text-align: center;
+    }
+
+    #totalBox {
+        background: #fff;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        font-size: 22px;
         text-align: center;
     }
 </style>
-
 </head>
 <body>
 
-<h2>Controle de Sorvetes 🍦</h2>
+<h2>📊 Controle de Vendas – Praia</h2>
 
 <div class="tabs">
-    <button class="tab-btn active" onclick="openTab('paletas')">Paletas</button>
-    <button class="tab-btn" onclick="openTab('aoLeite')">Ao Leite</button>
-    <button class="tab-btn" onclick="openTab('tropical')">Tropical</button>
-    <button class="tab-btn" onclick="openTab('especial')">Especial</button>
-    <button class="tab-btn" onclick="openTab('lanc')">Lançamentos</button>
+    <div class="tab active" data-tab="paletas">Paletas FRUTVERÃO</div>
+    <div class="tab" data-tab="especial">Especial FRUTIBLITO</div>
+    <div class="tab" data-tab="lancamento">Lançamento</div>
 </div>
 
-<!-- ========================= CATEGORIA TEMPLATE ========================= -->
-<script>
-const precos = {
-    paletas: 18,
-    aoLeite: 8,
-    tropical: 6,
-    especial: 13,
-    pistache: 16,
-    unicornio: 10
-};
+<!-- ============================= -->
+<!-- CATEGORIA 1 - PALETAS -->
+<!-- ============================= -->
 
-let totalVendidoReais = 0;
-let totalUnidadesVendidas = 0;
+<div class="categoria active" id="paletas">
 
-function add(btn) {
-    let span = btn.parentElement.querySelector("span");
-    span.textContent = Number(span.textContent) + 1;
-    span.classList.remove("out");
-}
-
-function vender(btn, preco) {
-    let estoque = btn.parentElement.querySelector(".stock");
-    let vendidos = btn.parentElement.querySelector(".sold");
-
-    let qtdEstoque = Number(estoque.textContent);
-
-    if (qtdEstoque > 0) {
-        estoque.textContent = qtdEstoque - 1;
-        vendidos.textContent = Number(vendidos.textContent) + 1;
-
-        totalUnidadesVendidas++;
-        totalVendidoReais += preco;
-        atualizarTotal();
-
-        if (qtdEstoque - 1 === 0) estoque.classList.add("out");
-    }
-}
-
-function desfazerVenda(btn, preco) {
-    let estoque = btn.parentElement.querySelector(".stock");
-    let vendidos = btn.parentElement.querySelector(".sold");
-
-    let qtdVendidos = Number(vendidos.textContent);
-
-    if (qtdVendidos > 0) {
-        vendidos.textContent = qtdVendidos - 1;
-        estoque.textContent = Number(estoque.textContent) + 1;
-
-        totalUnidadesVendidas--;
-        totalVendidoReais -= preco;
-
-        atualizarTotal();
-
-        estoque.classList.remove("out");
-    }
-}
-
-function atualizarTotal() {
-    document.getElementById("totais").innerHTML =
-        "Total vendido: <b>" + totalUnidadesVendidas + " itens</b><br>R$ " + 
-        totalVendidoReais.toFixed(2).replace(".", ",");
-}
-
-function openTab(tab) {
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-    event.target.classList.add("active");
-
-    document.querySelectorAll(".category").forEach(c => c.style.display = "none");
-    document.getElementById(tab).style.display = "block";
-}
-</script>
-
-<!-- ========================= PALETAS ========================= -->
-<div id="paletas" class="category" style="display:block;">
-
-<h3>Paletas Frutiverão — R$ 18,00</h3>
-
-<script>
-const paletas = [
-"Raffaello", "Oreo", "Ferrero", "Kinder Ovo",
-"Kinder Bueno", "M&M", "Choco Maltine"
-];
-</script>
-
-<script>
-document.write(paletas.map(sabor => `
-<div class="item">
-    <b>${sabor}</b>
-
-    <div class="label">Estoque</div>
-    <div class="controls">
-        <button class="minus" onclick="vender(this,18)">–</button>
-        <span class="stock">0</span>
-        <button class="plus" onclick="add(this)">+</button>
+    <div class="produto" data-preco="18">
+        <div class="nome">Frutiverão</div>
+        <div class="preco">R$ 18,00</div>
+        <div class="controle">
+            <button class="menos">-</button>
+            <span class="qtd">0</span>
+            <button class="mais">+</button>
+        </div>
     </div>
 
-    <div class="label">Vendidos</div>
-    <div class="controls">
-        <button class="minus" onclick="desfazerVenda(this,18)">–</button>
-        <span class="sold">0</span>
-        <button class="plus" onclick="vender(this,18)">+</button>
+    <div class="produto" data-preco="8">
+        <div class="nome">Ao Leite</div>
+        <div class="preco">R$ 8,00</div>
+        <div class="controle">
+            <button class="menos">-</button>
+            <span class="qtd">0</span>
+            <button class="mais">+</button>
+        </div>
     </div>
-</div>
-`).join(""));
-</script>
+
+    <div class="produto" data-preco="6">
+        <div class="nome">Tropical</div>
+        <div class="preco">R$ 6,00</div>
+        <div class="controle">
+            <button class="menos">-</button>
+            <span class="qtd">0</span>
+            <button class="mais">+</button>
+        </div>
+    </div>
 
 </div>
 
-<!-- ========================= AO LEITE ========================= -->
-<div id="aoLeite" class="category">
+<!-- ============================= -->
+<!-- CATEGORIA 2 - ESPECIAL -->
+<!-- ============================= -->
 
-<h3>Ao Leite — R$ 8,00</h3>
+<div class="categoria" id="especial">
+
+    <div class="produto" data-preco="13">
+        <div class="nome">FRUTIBLITO</div>
+        <div class="preco">R$ 13,00</div>
+        <div class="controle">
+            <button class="menos">-</button>
+            <span class="qtd">0</span>
+            <button class="mais">+</button>
+        </div>
+    </div>
+
+    <div class="produto" data-preco="13">
+        <div class="nome">SUNDAY</div>
+        <div class="preco">R$ 13,00</div>
+        <div class="controle">
+            <button class="menos">-</button>
+            <span class="qtd">0</span>
+            <button class="mais">+</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ============================= -->
+<!-- CATEGORIA 3 - LANÇAMENTOS -->
+<!-- ============================= -->
+
+<div class="categoria" id="lancamento">
+
+    <div class="produto" data-preco="16">
+        <div class="nome">Pistache</div>
+        <div class="preco">R$ 16,00</div>
+        <div class="controle">
+            <button class="menos">-</button>
+            <span class="qtd">0</span>
+            <button class="mais">+</button>
+        </div>
+    </div>
+
+    <div class="produto" data-preco="10">
+        <div class="nome">Unicórnio</div>
+        <div class="preco">R$ 10,00</div>
+        <div class="controle">
+            <button class="menos">-</button>
+            <span class="qtd">0</span>
+            <button class="mais">+</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- TOTAL DE VENDAS -->
+<div id="totalBox">
+    💰 Total vendido: <b>R$ <span id="total">0.00</span></b>
+</div>
 
 <script>
-const aoLeite = ["Morango", "Chocolate", "Leite Condensado"];
+    // Troca de abas
+    document.querySelectorAll(".tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+
+            document.querySelectorAll(".categoria").forEach(cat => cat.classList.remove("active"));
+            document.getElementById(tab.dataset.tab).classList.add("active");
+        });
+    });
+
+    let total = 0;
+    const totalSpan = document.getElementById("total");
+
+    document.querySelectorAll(".produto").forEach(prod => {
+        const preco = parseFloat(prod.dataset.preco);
+        const btnMenos = prod.querySelector(".menos");
+        const btnMais = prod.querySelector(".mais");
+        const qtdSpan = prod.querySelector(".qtd");
+
+        let qtd = 0;
+
+        btnMais.addEventListener("click", () => {
+            qtd++;
+            qtdSpan.textContent = qtd;
+            total += preco;
+            totalSpan.textContent = total.toFixed(2);
+        });
+
+        btnMenos.addEventListener("click", () => {
+            if (qtd > 0) {
+                qtd--;
+                qtdSpan.textContent = qtd;
+                total -= preco;
+                totalSpan.textContent = total.toFixed(2);
+            }
+        });
+    });
 </script>
-
-<script>
-document.write(aoLeite.map(sabor => `
-<div class="item">
-    <b>${sabor}</b>
-
-    <div class="label">Estoque</div>
-    <div class="controls">
-        <button class="minus" onclick="vender(this,8)">–</button>
-        <span class="stock">0</span>
-        <button class="plus" onclick="add(this)">+</button>
-    </div>
-
-    <div class="label">Vendidos</div>
-    <div class="controls">
-        <button class="minus" onclick="desfazerVenda(this,8)">–</button>
-        <span class="sold">0</span>
-        <button class="plus" onclick="vender(this,8)">+</button>
-    </div>
-</div>
-`).join(""));
-</script>
-
-</div>
-
-<!-- ========================= TROPICAL ========================= -->
-<div id="tropical" class="category">
-
-<h3>Tropical — R$ 6,00</h3>
-
-<script>
-const tropical = ["Uva", "Limão"];
-</script>
-
-<script>
-document.write(tropical.map(sabor => `
-<div class="item">
-    <b>${sabor}</b>
-
-    <div class="label">Estoque</div>
-    <div class="controls">
-        <button class="minus" onclick="vender(this,6)">–</button>
-        <span class="stock">0</span>
-        <button class="plus" onclick="add(this)">+</button>
-    </div>
-
-    <div class="label">Vendidos</div>
-    <div class="controls">
-        <button class="minus" onclick="desfazerVenda(this,6)">–</button>
-        <span class="sold">0</span>
-        <button class="plus" onclick="vender(this,6)">+</button>
-    </div>
-</div>
-`).join(""));
-</script>
-
-</div>
-
-<!-- ========================= ESPECIAL ========================= -->
-<div id="especial" class="category">
-
-<h3>Especial — R$ 13,00</h3>
-
-<script>
-const especial = ["Skimo Morango", "Milk Trufado", "Frutiblito", "Sunday"];
-</script>
-
-<script>
-document.write(especial.map(sabor => `
-<div class="item">
-    <b>${sabor}</b>
-
-    <div class="label">Estoque</div>
-    <div class="controls">
-        <button class="minus" onclick="vender(this,13)">–</button>
-        <span class="stock">0</span>
-        <button class="plus" onclick="add(this)">+</button>
-    </div>
-
-    <div class="label">Vendidos</div>
-    <div class="controls">
-        <button class="minus" onclick="desfazerVenda(this,13)">–</button>
-        <span class="sold">0</span>
-        <button class="plus" onclick="vender(this,13)">+</button>
-    </div>
-</div>
-`). join(""));
-</script>
-
-</div>
-
-<!-- ========================= LANÇAMENTOS ========================= -->
-<div id="lanc" class="category">
-
-<h3>Lançamentos</h3>
-
-<script>
-const lanc = [
-    { nome: "Pistache", preco: 16 },
-    { nome: "Unicórnio", preco: 10 }
-];
-</script>
-
-<script>
-document.write(lanc.map(item => `
-<div class="item">
-    <b>${item.nome} — R$ ${item.preco},00</b>
-
-    <div class="label">Estoque</div>
-    <div class="controls">
-        <button class="minus" onclick="vender(this,${item.preco})">–</button>
-        <span class="stock">0</span>
-        <button class="plus" onclick="add(this)">+</button>
-    </div>
-
-    <div class="label">Vendidos</div>
-    <div class="controls">
-        <button class="minus" onclick="desfazerVenda(this,${item.preco})">–</button>
-        <span class="sold">0</span>
-        <button class="plus" onclick="vender(this,${item.preco})">+</button>
-    </div>
-</div>
-`).join(""));
-</script>
-
-</div>
-
-<div id="totais">
-Total vendido: <b>0 itens</b><br>
-R$ 0,00
-</div>
 
 </body>
 </html>
