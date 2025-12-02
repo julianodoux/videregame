@@ -3,226 +3,300 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle de Sorvetes - Abas</title>
-
+<title>Controle de Sorvetes</title>
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: #f0f0f5;
-        padding: 15px;
-        margin: 0;
+        background: #f5f5f5;
+        padding: 10px;
     }
 
-    h1 {
+    h2 {
         text-align: center;
-        margin-top: 10px;
-        font-size: 26px;
+        margin-bottom: 15px;
     }
 
-    /* ------ ESTILO DAS ABAS ------ */
-    .tab {
-        background: white;
-        margin-top: 18px;
-        padding: 14px;
-        border-radius: 12px;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-        font-size: 20px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .tab:hover {
-        background: #fafafa;
-    }
-
-    .content {
-        display: none;
-        padding: 5px;
-        margin-top: 10px;
-    }
-
-    .item {
+    .tabs {
         display: flex;
-        flex-direction: column;
-        background: white;
-        padding: 15px;
-        margin: 12px 0;
-        border-radius: 14px;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.12);
-    }
-
-    .nome {
-        font-size: 20px;
-        font-weight: bold;
+        flex-wrap: wrap;
+        gap: 8px;
         margin-bottom: 12px;
     }
 
-    .row {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 5px;
+    .tab-btn {
+        padding: 10px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        flex: 1;
+    }
+
+    .tab-btn.active {
+        background: #0056b3;
+    }
+
+    .category {
+        display: none;
+    }
+
+    .item {
+        background: white;
+        margin-bottom: 10px;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 17px;
     }
 
     .controls {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 18px;
+        margin-top: 10px;
     }
 
-    .btn {
-        width: 42px;
-        height: 42px;
-        border-radius: 10px;
+    button {
+        font-size: 18px;
+        padding: 8px 15px;
         border: none;
-        cursor: pointer;
-        font-size: 28px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        border-radius: 6px;
     }
 
-    .menos { background: #ff4d4d; color: white; }
-    .mais { background: #28b463; color: white; }
+    .minus { background: #dc3545; color: white; }
+    .plus { background: #28a745; color: white; }
 
-    .valor {
-        width: 45px;
-        font-size: 22px;
-        text-align: center;
+    .out {
+        color: red;
         font-weight: bold;
     }
 
-    .restante {
-        width: 80px;
-        text-align: center;
-        font-weight: bold;
-        padding: 10px;
+    #total {
+        background: white;
+        padding: 15px;
+        margin-top: 20px;
         border-radius: 10px;
-        font-size: 22px;
-    }
-
-    .zero {
-        background: #ffb3b3 !important;
-        color: #900;
-    }
-
-    .ok {
-        background: #c8facc;
-        color: #0a6e20;
-    }
-
-    /* MOBILE */
-    @media (max-width: 480px) {
-        .row {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
+        font-size: 20px;
+        text-align: center;
     }
 </style>
-
-<script>
-function toggleTab(id) {
-    let c = document.getElementById("content_" + id);
-    c.style.display = c.style.display === "block" ? "none" : "block";
-}
-
-function update(id) {
-    let estoque = Number(document.getElementById("estoq_" + id).innerText);
-    let vendido = Number(document.getElementById("vend_" + id).innerText);
-
-    let resto = estoque - vendido;
-    if (resto < 0) resto = 0;
-
-    let campo = document.getElementById("resto_" + id);
-    campo.innerText = resto;
-
-    campo.className = resto <= 0 ? "restante zero" : "restante ok";
-}
-
-function add(tipo, id) {
-    let el = document.getElementById(tipo + "_" + id);
-    el.innerText = Number(el.innerText) + 1;
-    update(id);
-}
-
-function remove(tipo, id) {
-    let el = document.getElementById(tipo + "_" + id);
-    let v = Number(el.innerText);
-    if (v > 0) el.innerText = v - 1;
-    update(id);
-}
-</script>
-
 </head>
 <body>
 
-<h1>🍦 Controle de Sorvetes</h1>
+<h2>Controle de Sorvetes 🍦</h2>
+
+<div class="tabs">
+    <button class="tab-btn active" onclick="openTab('paletas')">Paletas</button>
+    <button class="tab-btn" onclick="openTab('aoLeite')">Ao Leite</button>
+    <button class="tab-btn" onclick="openTab('tropical')">Tropical</button>
+    <button class="tab-btn" onclick="openTab('especial')">Especial</button>
+    <button class="tab-btn" onclick="openTab('lanc')">Lançamentos</button>
+</div>
+
+<!-- PALETAS -->
+<div id="paletas" class="category" style="display:block;">
+    <h3>Paletas Frutiverão - R$ 18,00</h3>
+
+    <script>const price_paletas = 18;</script>
+
+    <div class="item" data-price="18">Raffaello
+        <div class="controls">
+            <button class="minus" onclick="sell(this,18)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item" data-price="18">Oreo
+        <div class="controls">
+            <button class="minus" onclick="sell(this,18)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item" data-price="18">Ferrero
+        <div class="controls">
+            <button class="minus" onclick="sell(this,18)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item" data-price="18">Kinder Ovo
+        <div class="controls">
+            <button class="minus" onclick="sell(this,18)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item" data-price="18">Kinder Bueno
+        <div class="controls">
+            <button class="minus" onclick="sell(this,18)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item" data-price="18">M&M
+        <div class="controls">
+            <button class="minus" onclick="sell(this,18)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item" data-price="18">Choco Maltine
+        <div class="controls">
+            <button class="minus" onclick="sell(this,18)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+</div>
+
+<!-- AO LEITE -->
+<div id="aoLeite" class="category">
+    <h3>Ao Leite Frutiverão - R$ 8,00</h3>
+
+    <div class="item">Morango
+        <div class="controls">
+            <button class="minus" onclick="sell(this,8)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item">Chocolate
+        <div class="controls">
+            <button class="minus" onclick="sell(this,8)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item">Leite Condensado
+        <div class="controls">
+            <button class="minus" onclick="sell(this,8)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+</div>
+
+<!-- TROPICAL -->
+<div id="tropical" class="category">
+    <h3>Tropical Frutiverão - R$ 6,00</h3>
+
+    <div class="item">Uva
+        <div class="controls">
+            <button class="minus" onclick="sell(this,6)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item">Limão
+        <div class="controls">
+            <button class="minus" onclick="sell(this,6)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+</div>
+
+<!-- ESPECIAL -->
+<div id="especial" class="category">
+    <h3>Especial Frutiverão - R$ 13,00</h3>
+
+    <div class="item">Skimo Morango
+        <div class="controls">
+            <button class="minus" onclick="sell(this,13)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item">Milk Trufado
+        <div class="controls">
+            <button class="minus" onclick="sell(this,13)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item">Frutiblito
+        <div class="controls">
+            <button class="minus" onclick="sell(this,13)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item">Sunday
+        <div class="controls">
+            <button class="minus" onclick="sell(this,13)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+</div>
+
+<!-- LANÇAMENTOS -->
+<div id="lanc" class="category">
+    <h3>Lançamentos</h3>
+
+    <div class="item">Pistache — R$ 16,00
+        <div class="controls">
+            <button class="minus" onclick="sell(this,16)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+
+    <div class="item">Unicórnio — R$ 10,00
+        <div class="controls">
+            <button class="minus" onclick="sell(this,10)">–</button>
+            <span class="stock">0</span>
+            <button class="plus" onclick="add(this)">+</button>
+        </div>
+    </div>
+</div>
+
+<div id="total">Total vendido: R$ 0,00</div>
 
 <script>
-// LISTA DE SABORES
-let categorias = {
-    "PALETAS FRUTIVERÃO": [
-        "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
-        "Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá","Açaí",
-        "Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino","Banana com Avelã",
-        "Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"
-    ],
+let total = 0;
 
-    "AO LEITE FRUTIVERÃO": [
-        "Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango",
-        "Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"
-    ],
+function openTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
 
-    "TROPICAL FRUTIVERÃO": [
-        "Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina",
-        "Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"
-    ],
+    document.querySelectorAll('.category').forEach(cat => cat.style.display = 'none');
+    document.getElementById(tab).style.display = 'block';
+}
 
-    "ESPECIAL FRUTIVERÃO": [
-        "Skimo Morango","Skimo ao Leite","Milk Trufado","Brigadeiro","Chococo",
-        "Torta de Limão","Itu Napolitano","Frutiblito","Sunday de Chocolate",
-        "Sunday de Morango"
-    ],
+function add(btn) {
+    let stock = btn.parentElement.querySelector('.stock');
+    stock.textContent = parseInt(stock.textContent) + 1;
+    stock.classList.remove("out");
+}
 
-    "LANÇAMENTOS": ["Pistache","Unicórnio"]
-};
+function sell(btn, price) {
+    let stock = btn.parentElement.querySelector('.stock');
+    let n = parseInt(stock.textContent);
 
-let id = 1;
-let cIndex = 1;
+    if (n > 0) {
+        stock.textContent = n - 1;
+        total += price;
+        document.getElementById("total").textContent = 
+        "Total vendido: R$ " + total.toFixed(2).replace(".", ",");
+    }
 
-for (let categoria in categorias) {
-    document.write(`
-        <div class="tab" onclick="toggleTab(${cIndex})">${categoria}</div>
-        <div class="content" id="content_${cIndex}">
-    `);
-
-    categorias[categoria].forEach(sabor => {
-        document.write(`
-            <div class="item">
-                <div class="nome">${sabor}</div>
-
-                <div class="row">
-                    <div class="controls">
-                        <button class="btn menos" onclick="remove('estoq', ${id})">-</button>
-                        <span class="valor" id="estoq_${id}">0</span>
-                        <button class="btn mais" onclick="add('estoq', ${id})">+</button>
-                    </div>
-
-                    <div class="controls">
-                        <button class="btn menos" onclick="remove('vend', ${id})">-</button>
-                        <span class="valor" id="vend_${id}">0</span>
-                        <button class="btn mais" onclick="add('vend', ${id})">+</button>
-                    </div>
-
-                    <div id="resto_${id}" class="restante ok">0</div>
-                </div>
-            </div>
-        `);
-        id++;
-    });
-
-    document.write("</div>");
-    cIndex++;
+    if (n - 1 <= 0) {
+        stock.classList.add("out");
+    }
 }
 </script>
 
