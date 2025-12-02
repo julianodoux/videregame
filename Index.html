@@ -3,16 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>Controle de Sorvetes</title>
-
-<!-- EVITA ZOOM NO CELULAR -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <style>
     body {
         font-family: Arial, sans-serif;
         background: #f2f2f7;
-        padding: 0;
-        margin: 0;
+        padding: 12px;
         color: #333;
         max-width: 480px;
         margin: auto;
@@ -20,12 +17,10 @@
 
     h1 {
         text-align: center;
-        padding: 16px;
+        margin-bottom: 20px;
         font-size: 26px;
         font-weight: 900;
-        background: white;
-        margin: 0;
-        border-bottom: 2px solid #ddd;
+        color: #222;
     }
 
     .cat-btn {
@@ -35,15 +30,20 @@
         padding: 18px;
         font-size: 20px;
         border: none;
-        border-radius: 0;
+        border-radius: 14px;
+        margin-top: 15px;
         cursor: pointer;
         font-weight: bold;
+        box-shadow: 0 3px 7px rgba(0,0,0,0.15);
     }
 
     .categoria {
         display: none;
+        margin-top: 8px;
         background: #ffffff;
-        padding: 10px;
+        padding: 14px;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     .item {
@@ -52,6 +52,7 @@
         margin: 12px 0;
         border-radius: 14px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: 0.2s;
     }
 
     .item.zero {
@@ -67,6 +68,7 @@
     .valor {
         font-size: 16px;
         color: #007aff;
+        margin-top: 2px;
         font-weight: bold;
     }
 
@@ -96,7 +98,6 @@
         cursor: pointer;
         font-size: 26px;
         font-weight: bold;
-        touch-action: manipulation;
     }
 
     .menos { background: #ff3b30; color: white; }
@@ -109,32 +110,33 @@
         font-weight: bold;
     }
 
-    #totalVendas {
-        margin-top: 30px;
+    #totalVendas, .caixa-info {
+        margin-top: 20px;
         padding: 20px;
         background: #e6fff0;
-        font-size: 26px;
+        border-radius: 16px;
+        font-size: 22px;
         text-align: center;
         font-weight: 900;
         color: #0b6b1a;
-        border-top: 2px solid #cdebd8;
     }
 
-    #resetar {
+    #limpar {
         width: 100%;
-        margin-top: 20px;
-        padding: 18px;
         background: #ff3b30;
         color: white;
+        padding: 18px;
         font-size: 20px;
-        font-weight: bold;
         border: none;
+        border-radius: 14px;
+        margin-top: 25px;
         cursor: pointer;
+        font-weight: bold;
     }
 </style>
 
 <script>
-// PREÇOS
+/* ------------------- PREÇOS ------------------- */
 let precoPorCategoria = {
     "PALETAS FRUTIVERÃO": 18,
     "AO LEITE FRUTIVERÃO": 8,
@@ -148,7 +150,7 @@ let precosLancamentos = {
     "Unicórnio": 10
 };
 
-// CATEGORIAS
+/* ------------------- CATEGORIAS ------------------- */
 let categorias = {
     "PALETAS FRUTIVERÃO": [
         "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
@@ -177,57 +179,29 @@ let categorias = {
 };
 
 let id = 1;
-let total = 0;
 
-// ------ LOCALSTORAGE ------
-function salvar() {
-    let dados = {
-        total,
-        itens: {}
-    };
+/* ------------------- CARREGAR LOCALSTORAGE ------------------- */
+let total = Number(localStorage.getItem("totalVendas")) || 0;
+let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
 
-    for (let i = 1; i < id; i++) {
-        dados.itens[i] = {
-            est: document.getElementById("est_" + i).innerText,
-            vend: document.getElementById("vend_" + i).innerText
-        };
-    }
+/* CARTÃO = TOTAL - DINHEIRO */
+let cartao = total - dinheiro;
 
-    localStorage.setItem("sorvetes", JSON.stringify(dados));
-}
+/* COMISSÃO */
+let comissao = dinheiro * 0.30 + cartao * 0.25;
 
-function carregar() {
-    let dados = localStorage.getItem("sorvetes");
-    if (!dados) return;
-    dados = JSON.parse(dados);
-
-    total = Number(dados.total);
-    document.getElementById("totalVendas").innerText =
-        "TOTAL EM VENDAS: R$ " + total.toFixed(2);
-
-    for (let i in dados.itens) {
-        document.getElementById("est_" + i).innerText = dados.itens[i].est;
-        document.getElementById("vend_" + i).innerText = dados.itens[i].vend;
-    }
-}
-
-function resetar() {
-    if (confirm("Zerar tudo?")) {
-        localStorage.removeItem("sorvetes");
-        location.reload();
-    }
-}
-
-// BOTÕES
+/* ------------------- FUNÇÕES ------------------- */
 function toggle(cat) {
     let el = document.getElementById("cat_" + cat);
     el.style.display = el.style.display === "block" ? "none" : "block";
 }
 
-function atualizar(id, preco) {
+function atualizar(id) {
     let est = Number(document.getElementById("est_" + id).innerText);
     let vend = Number(document.getElementById("vend_" + id).innerText);
-    let resto = Math.max(est - vend, 0);
+    let resto = est - vend;
+
+    if (resto < 0) resto = 0;
 
     let bloco = document.getElementById("item_" + id);
     let campoResto = document.getElementById("resto_" + id);
@@ -239,40 +213,48 @@ function atualizar(id, preco) {
     salvar();
 }
 
-function add(tipo, id, preco) {
+function add(tipo, id) {
     let campo = document.getElementById(tipo + "_" + id);
     campo.innerText = Number(campo.innerText) + 1;
 
-    if (tipo === "vend") {
-        total += preco;
-        document.getElementById("totalVendas").innerText =
-            "TOTAL EM VENDAS: R$ " + total.toFixed(2);
-    }
-
-    atualizar(id, preco);
+    atualizar(id);
 }
 
-function remove(tipo, id, preco) {
+function remove(tipo, id) {
     let campo = document.getElementById(tipo + "_" + id);
     let valor = Number(campo.innerText);
 
-    if (valor > 0) {
-        campo.innerText = valor - 1;
+    if (valor > 0) campo.innerText = valor - 1;
 
-        if (tipo === "vend") {
-            total -= preco;
-            total = Math.max(total, 0);
-            document.getElementById("totalVendas").innerText =
-                "TOTAL EM VENDAS: R$ " + total.toFixed(2);
-        }
+    atualizar(id);
+}
 
-        atualizar(id, preco);
-    }
+function salvar() {
+    localStorage.setItem("totalVendas", total.toFixed(2));
+    localStorage.setItem("dinheiro", dinheiro.toFixed(2));
+}
+
+function atualizarFinanceiro() {
+    dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
+    cartao = total - dinheiro;
+    if (cartao < 0) cartao = 0;
+
+    comissao = dinheiro * 0.30 + cartao * 0.25;
+
+    document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
+    document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
+
+    salvar();
+}
+
+function limparTudo() {
+    localStorage.clear();
+    location.reload();
 }
 </script>
 
 </head>
-<body onload="carregar()">
+<body>
 
 <h1>Controle de Sorvetes</h1>
 
@@ -280,12 +262,10 @@ function remove(tipo, id, preco) {
 
 <script>
 for (let cat in categorias) {
-
     document.write(`<button class="cat-btn" onclick="toggle('${cat}')">${cat}</button>`);
     document.write(`<div id="cat_${cat}" class="categoria">`);
 
     categorias[cat].forEach(sabor => {
-
         let preco = precoPorCategoria[cat];
         if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
 
@@ -298,18 +278,18 @@ for (let cat in categorias) {
                 <div class="linha">
                     <div class="controls">
                         <span>Estoque</span>
-                        <button class="btn menos" onclick="remove('est', ${id}, ${preco})">-</button>
+                        <button class="btn menos" onclick="remove('est', ${id})">-</button>
                         <span class="numero" id="est_${id}">0</span>
-                        <button class="btn mais" onclick="add('est', ${id}, ${preco})">+</button>
+                        <button class="btn mais" onclick="add('est', ${id})">+</button>
                     </div>
                 </div>
 
                 <div class="linha">
                     <div class="controls">
                         <span>Vendido</span>
-                        <button class="btn menos" onclick="remove('vend', ${id}, ${preco})">-</button>
+                        <button class="btn menos" onclick="remove('vend', ${id})">-</button>
                         <span class="numero" id="vend_${id}">0</span>
-                        <button class="btn mais" onclick="add('vend', ${id}, ${preco})">+</button>
+                        <button class="btn mais" onclick="add('vend', ${id})">+</button>
                     </div>
                 </div>
             </div>
@@ -324,9 +304,35 @@ for (let cat in categorias) {
 
 </div>
 
-<div id="totalVendas">TOTAL EM VENDAS: R$ 0,00</div>
+<!-- TOTAL EM VENDAS -->
+<div id="totalVendas">TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span></div>
 
-<button id="resetar" onclick="resetar()">ZERAR TUDO</button>
+<!-- DINHEIRO -->
+<div class="caixa-info">
+    VENDAS EM DINHEIRO:<br>
+    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}" oninput="atualizarFinanceiro()"
+           style="width: 90%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 22px; text-align: center;">
+</div>
+
+<!-- CARTÃO -->
+<div class="caixa-info">
+    VENDAS NO CARTÃO:<br>
+    <span id="campoCartao">R$ ${cartao.toFixed(2)}</span>
+</div>
+
+<!-- COMISSÃO -->
+<div class="caixa-info" style="background:#fff2cc; color:#8a6d00;">
+    COMISSÃO:<br>
+    <span id="campoComissao">R$ ${comissao.toFixed(2)}</span>
+</div>
+
+<!-- BOTÃO LIMPAR -->
+<button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
+
+<script>
+/* Atualiza os campos na tela na primeira carga */
+atualizarFinanceiro();
+</script>
 
 </body>
 </html>
