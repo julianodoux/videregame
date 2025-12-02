@@ -8,27 +8,46 @@
     body {
         font-family: Arial, sans-serif;
         background: #f2f2f7;
-        padding: 20px;
+        padding: 15px;
         color: #333;
     }
 
     h1 {
         text-align: center;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
 
-    h2 {
-        background: #fff;
-        padding: 12px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        margin-top: 30px;
+    /* Botões de categoria */
+    .cat-btn {
+        width: 100%;
+        background: #007aff;
+        color: white;
+        padding: 14px;
+        font-size: 18px;
+        border: none;
+        border-radius: 10px;
+        margin-top: 12px;
+        cursor: pointer;
+        text-align: left;
+    }
+
+    .cat-btn:hover {
+        background: #0061cc;
+    }
+
+    /* Área dos itens */
+    .categoria {
+        display: none;
+        background: #ffffff;
+        margin-top: 8px;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 3px 7px rgba(0,0,0,0.1);
     }
 
     .item {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        flex-direction: column;
         background: white;
         padding: 10px;
         margin: 8px 0;
@@ -36,20 +55,33 @@
         box-shadow: 0 2px 5px rgba(0,0,0,0.07);
     }
 
+    .linha {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 6px;
+    }
+
     .nome {
-        width: 35%;
         font-weight: bold;
+        font-size: 16px;
+    }
+
+    .valor {
+        font-size: 14px;
+        margin-top: 4px;
+        opacity: 0.7;
     }
 
     .controls {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 8px;
     }
 
     .btn {
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
         border-radius: 6px;
         border: none;
         cursor: pointer;
@@ -59,184 +91,138 @@
     .menos { background: #ff5757; color: white; }
     .mais { background: #4caf50; color: white; }
 
-    .valor {
+    .numero {
         width: 40px;
         text-align: center;
         font-weight: bold;
     }
 
-    .restante {
-        width: 60px;
+    #totalVendas {
+        margin-top: 25px;
+        padding: 15px;
+        background: #d6ffe0;
+        border-radius: 12px;
+        font-size: 20px;
         text-align: center;
         font-weight: bold;
-        padding: 5px;
-        border-radius: 6px;
+        color: #0b6b1a;
     }
-
-    .zero {
-        background: #ffcccc !important;
-        color: #b30000;
-    }
-
-    .ok {
-        background: #d4ffd6;
-        color: #0a6e20;
-    }
-
 </style>
 
 <script>
-function update(id) {
-    let estoque = Number(document.getElementById("estoq_" + id).innerText);
-    let vendido = Number(document.getElementById("vend_" + id).innerText);
-    let resto = estoque - vendido;
-    if (resto < 0) resto = 0;
+let precoPorCategoria = {
+    "PALETAS FRUTIVERÃO": 18,
+    "AO LEITE FRUTIVERÃO": 8,
+    "TROPICAL FRUTIVERÃO": 6,
+    "ESPECIAL FRUTIBLITO": 13,
+    "LANÇAMENTOS": null
+};
 
-    let campo = document.getElementById("resto_" + id);
-    campo.innerText = resto;
+let precosLancamentos = {
+    "Pistache": 16,
+    "Unicórnio": 10
+};
 
-    if (resto <= 0) campo.className = "restante zero";
-    else campo.className = "restante ok";
+let categorias = {
+    "PALETAS FRUTIVERÃO": [
+        "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
+        "Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá",
+        "Açaí","Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino",
+        "Banana com Avelã","Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"
+    ],
+
+    "AO LEITE FRUTIVERÃO": [
+        "Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango",
+        "Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"
+    ],
+
+    "TROPICAL FRUTIVERÃO": [
+        "Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina",
+        "Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"
+    ],
+
+    "ESPECIAL FRUTIBLITO": [
+        "Frutiblito","Sunday de Chocolate","Sunday de Morango"
+    ],
+
+    "LANÇAMENTOS": [
+        "Pistache","Unicórnio"
+    ]
+};
+
+let id = 1;
+let total = 0;
+
+function toggle(cat) {
+    let el = document.getElementById("cat_" + cat);
+    el.style.display = el.style.display === "block" ? "none" : "block";
 }
 
-function add(tipo, id) {
-    let el = document.getElementById(tipo + "_" + id);
-    let valor = Number(el.innerText);
+function add(id, preco) {
+    let campo = document.getElementById("vend_" + id);
+    let valor = Number(campo.innerText) + 1;
+    campo.innerText = valor;
 
-    valor++;
-    el.innerText = valor;
-    update(id);
+    total += preco;
+    document.getElementById("totalVendas").innerText = 
+        "TOTAL EM VENDAS: R$ " + total.toFixed(2);
 }
 
-function remove(tipo, id) {
-    let el = document.getElementById(tipo + "_" + id);
-    let valor = Number(el.innerText);
+function remove(id, preco) {
+    let campo = document.getElementById("vend_" + id);
+    let valor = Number(campo.innerText);
 
-    if (valor > 0) valor--;
-    el.innerText = valor;
-    update(id);
+    if (valor > 0) {
+        valor--;
+        campo.innerText = valor;
+
+        total -= preco;
+        if (total < 0) total = 0;
+        document.getElementById("totalVendas").innerText = 
+            "TOTAL EM VENDAS: R$ " + total.toFixed(2);
+    }
 }
 </script>
 
 </head>
 <body>
 
-<h1>Controle de Estoque – Sorvetes</h1>
+<h1>Controle de Sorvetes</h1>
 
-<!-- ======================= PALETAS FRUTIVERÃO ======================= -->
-
-<h2>PALETAS FRUTIVERÃO</h2>
-
-<div id="lista">
-
-<!-- MODELO AUTOMÁTICO GERADO COM OS NOMES DA SUA LISTA -->
-
+<div id="conteudo">
 <script>
-// LISTA DE SABORES POR CATEGORIA
-let categorias = {
-    "PALETAS FRUTIVERÃO": [
-        "Raffaello",
-        "Oreo",
-        "Ferrero",
-        "Kinder Ovo",
-        "Kinder Bueno",
-        "M&M",
-        "Choco Maltine",
-        "Milk Trufado",
-        "Babalu",
-        "Blue Ice",
-        "Sensação",
-        "Morango",
-        "Maracujá",
-        "Açaí",
-        "Iogurte c/ Amora",
-        "Menta c/ Chocolate",
-        "Paçoca",
-        "Capuccino",
-        "Banana com Avelã",
-        "Coco c/ Abobora",
-        "Coco c/ Doce de Leite",
-        "Tapioca",
-        "Abacaxi Zero"
-    ],
-
-    "AO LEITE FRUTIVERÃO": [
-        "Morango",
-        "Chocolate",
-        "Leite Condensado",
-        "Milho-Verde",
-        "Açaí c/ Morango",
-        "Coco",
-        "Coco Queimado",
-        "Abóbora c/ Coco",
-        "Amendoim",
-        "Abacate",
-        "Blue Ice"
-    ],
-
-    "TROPICAL FRUTIVERÃO": [
-        "Uva",
-        "Limão",
-        "Maracujá",
-        "Manga",
-        "Abacaxi",
-        "Melancia",
-        "Tangerina",
-        "Maçã Verde",
-        "Groselha",
-        "Tutti Frutti",
-        "Pinta Língua"
-    ],
-
-    "ESPECIAL FRUTIVERÃO": [
-        "Skimo Morango",
-        "Skimo ao Leite",
-        "Milk Trufado",
-        "Brigadeiro",
-        "Chococo",
-        "Torta de Limão",
-        "Itu Napolitano",
-        "Frutiblito",
-        "Sunday de Chocolate",
-        "Sunday de Morango"
-    ],
-
-    "LANÇAMENTOS": [
-        "Pistache",
-        "Unicórnio"
-    ]
-};
-
-let id = 1;
-
 for (let cat in categorias) {
-    document.write(`<h2>${cat}</h2>`);
+    document.write(`<button class="cat-btn" onclick="toggle('${cat}')">${cat}</button>`);
+    document.write(`<div id="cat_${cat}" class="categoria">`);
+
     categorias[cat].forEach(sabor => {
+        let preco = precoPorCategoria[cat];
+        if (cat == "LANÇAMENTOS") preco = precosLancamentos[sabor];
+
         document.write(`
             <div class="item">
                 <div class="nome">${sabor}</div>
+                <div class="valor">Preço: R$ ${preco}</div>
 
-                <div class="controls">
-                    <button class="btn menos" onclick="remove('estoq', ${id})">-</button>
-                    <span class="valor" id="estoq_${id}">0</span>
-                    <button class="btn mais" onclick="add('estoq', ${id})">+</button>
+                <div class="linha">
+                    <div class="controls">
+                        <button class="btn menos" onclick="remove(${id}, ${preco})">-</button>
+                        <span class="numero" id="vend_${id}">0</span>
+                        <button class="btn mais" onclick="add(${id}, ${preco})">+</button>
+                    </div>
                 </div>
-
-                <div class="controls">
-                    <button class="btn menos" onclick="remove('vend', ${id})">-</button>
-                    <span class="valor" id="vend_${id}">0</span>
-                    <button class="btn mais" onclick="add('vend', ${id})">+</button>
-                </div>
-
-                <div id="resto_${id}" class="restante ok">0</div>
             </div>
         `);
+
         id++;
     });
+
+    document.write("</div>");
 }
 </script>
-
 </div>
+
+<div id="totalVendas">TOTAL EM VENDAS: R$ 0,00</div>
 
 </body>
 </html>
