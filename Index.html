@@ -2,210 +2,240 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sistema de Vendas - Sorvetes</title>
+<title>Controle de Sorvetes</title>
 
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: #f1f5f9;
-        padding: 20px;
-        margin: 0;
+        background: #f2f2f7;
+        padding: 12px;
+        color: #333;
+        max-width: 480px;
+        margin: auto;
     }
 
-    .category-btn {
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 26px;
+        font-weight: 900;
+        color: #222;
+    }
+
+    /* Botões de categoria */
+    .cat-btn {
         width: 100%;
-        background: #007bff;
+        background: #007aff;
         color: white;
         padding: 18px;
-        font-size: 18px;
+        font-size: 20px;
         border: none;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        text-align: left;
+        border-radius: 14px;
+        margin-top: 15px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 3px 7px rgba(0,0,0,0.15);
     }
 
-    .category-content {
+    .cat-btn:active {
+        background: #005ec2;
+        transform: scale(0.98);
+    }
+
+    /* Área de itens */
+    .categoria {
         display: none;
-        background: white;
-        padding: 15px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        border: 1px solid #d1d5db;
+        margin-top: 8px;
+        background: #ffffff;
+        padding: 14px;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     .item {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 18px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #ddd;
+        background: #fff;
+        padding: 14px;
+        margin: 12px 0;
+        border-radius: 14px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-    .item-title {
-        font-size: 17px;
+    .nome {
+        font-size: 20px;
         font-weight: bold;
-        margin-bottom: 8px;
+    }
+
+    .valor {
+        font-size: 16px;
+        color: #007aff;
+        margin-top: 6px;
+        font-weight: bold;
+    }
+
+    .linha {
+        display: flex;
+        justify-content: center;
+        margin-top: 14px;
     }
 
     .controls {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 18px;
     }
 
     .btn {
-        width: 45px;
-        height: 45px;
-        font-size: 22px;
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
         border: none;
-        border-radius: 8px;
-        background: #e5e7eb;
-    }
-
-    .number-input {
-        width: 70px;
-        padding: 10px;
-        font-size: 18px;
-        text-align: center;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        background: #f9fafb;
-    }
-
-    .estoque-input {
-        width: 90px;
-        padding: 10px;
-        font-size: 16px;
-        margin-top: 8px;
-        text-align: center;
-        border-radius: 8px;
-        border: 1px solid #999;
-        background: #fff8dc;
-    }
-
-    #totalGeral {
-        background: #16a34a;
-        padding: 18px;
-        margin-top: 20px;
-        border-radius: 12px;
-        color: white;
-        font-size: 22px;
+        cursor: pointer;
+        font-size: 32px;
         font-weight: bold;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .menos { background: #ff3b30; color: white; }
+    .mais  { background: #34c759; color: white; }
+
+    .btn:active {
+        transform: scale(0.9);
+    }
+
+    .numero {
+        width: 55px;
         text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    #totalVendas {
+        margin-top: 30px;
+        padding: 20px;
+        background: #e6fff0;
+        border-radius: 16px;
+        font-size: 26px;
+        text-align: center;
+        font-weight: 900;
+        color: #0b6b1a;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 </style>
+
+<script>
+let precoPorCategoria = {
+    "PALETAS FRUTIVERÃO": 18,
+    "AO LEITE FRUTIVERÃO": 8,
+    "TROPICAL FRUTIVERÃO": 6,
+    "ESPECIAL FRUTIBLITO": 13,
+    "LANÇAMENTOS": null
+};
+
+let precosLancamentos = {
+    "Pistache": 16,
+    "Unicórnio": 10
+};
+
+let categorias = {
+    "PALETAS FRUTIVERÃO": [
+        "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
+        "Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá",
+        "Açaí","Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino",
+        "Banana com Avelã","Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"
+    ],
+
+    "AO LEITE FRUTIVERÃO": [
+        "Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango",
+        "Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"
+    ],
+
+    "TROPICAL FRUTIVERÃO": [
+        "Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina",
+        "Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"
+    ],
+
+    "ESPECIAL FRUTIBLITO": [
+        "Frutiblito","Sunday de Chocolate","Sunday de Morango"
+    ],
+
+    "LANÇAMENTOS": [
+        "Pistache","Unicórnio"
+    ]
+};
+
+let id = 1;
+let total = 0;
+
+function toggle(cat) {
+    let el = document.getElementById("cat_" + cat);
+    el.style.display = el.style.display === "block" ? "none" : "block";
+}
+
+function add(id, preco) {
+    let campo = document.getElementById("vend_" + id);
+    let valor = Number(campo.innerText) + 1;
+    campo.innerText = valor;
+
+    total += preco;
+    document.getElementById("totalVendas").innerText = 
+        "TOTAL EM VENDAS: R$ " + total.toFixed(2);
+}
+
+function remove(id, preco) {
+    let campo = document.getElementById("vend_" + id);
+    let valor = Number(campo.innerText);
+
+    if (valor > 0) {
+        valor--;
+        campo.innerText = valor;
+
+        total -= preco;
+        if (total < 0) total = 0;
+        document.getElementById("totalVendas").innerText = 
+            "TOTAL EM VENDAS: R$ " + total.toFixed(2);
+    }
+}
+</script>
 
 </head>
 <body>
 
-<h2 style="text-align:center;">📊 Sistema de Vendas de Sorvetes</h2>
+<h1>Controle de Sorvetes</h1>
 
-<!-- CATEGORIAS E ITENS (gerados via JS) -->
-<div id="container"></div>
-
-<div id="totalGeral">Total vendido: 0</div>
-
+<div id="conteudo">
 <script>
-const categorias = {
-    "Picolé": [
-        "Branco c/ Chocolate", "Chocolate", "Coco", "Napolitano",
-        "Uva", "Morango", "Maracujá", "Abacaxi", "Tutti-Frutti"
-    ],
-    "Massinha": [
-        "Ninho c/ Morango", "Ninho c/ Nutella", "Ninho c/ Chocolate",
-        "Ouro Branco", "Charge", "Cajuzinho", "Prestígio"
-    ],
-    "Casquinha": [
-        "Chocolate", "Baunilha", "Misto", "Morango"
-    ],
-    "Milkshake": [
-        "Chocolate", "Morango", "Baunilha", "Ovomaltine", "Nescau"
-    ],
-    "Açaí": [
-        "300ml", "500ml", "700ml", "1 Litro"
-    ],
-    "Deluxe": [
-        "Ninho com Nutella", "Ferrero", "KitKat", "Churros Especial"
-    ]
-};
+for (let cat in categorias) {
+    document.write(`<button class="cat-btn" onclick="toggle('${cat}')">${cat}</button>`);
+    document.write(`<div id="cat_${cat}" class="categoria">`);
 
-function gerarSistema() {
-    const container = document.getElementById("container");
+    categorias[cat].forEach(sabor => {
+        let preco = precoPorCategoria[cat];
+        if (cat == "LANÇAMENTOS") preco = precosLancamentos[sabor];
 
-    for (let categoria in categorias) {
+        document.write(`
+            <div class="item">
+                <div class="nome">${sabor}</div>
+                <div class="valor">Preço: R$ ${preco}</div>
 
-        // Botão da categoria
-        const btn = document.createElement("button");
-        btn.className = "category-btn";
-        btn.innerText = categoria;
-
-        // Conteúdo da categoria
-        const content = document.createElement("div");
-        content.className = "category-content";
-
-        categorias[categoria].forEach(item => {
-            
-            const div = document.createElement("div");
-            div.className = "item";
-
-            div.innerHTML = `
-                <div class="item-title">${item}</div>
-
-                <label>Estoque:</label>
-                <input type="number" class="estoque-input" id="estoque-${categoria}-${item}" value="0">
-
-                <div class="controls">
-                    <button class="btn" onclick="alterar('${categoria}','${item}',-1)">-</button>
-                    <input type="number" id="venda-${categoria}-${item}" class="number-input" value="0" readonly>
-                    <button class="btn" onclick="alterar('${categoria}','${item}',1)">+</button>
+                <div class="linha">
+                    <div class="controls">
+                        <button class="btn menos" onclick="remove(${id}, ${preco})">-</button>
+                        <span class="numero" id="vend_${id}">0</span>
+                        <button class="btn mais" onclick="add(${id}, ${preco})">+</button>
+                    </div>
                 </div>
-            `;
+            </div>
+        `);
 
-            content.appendChild(div);
-        });
-
-        // Expande e recolhe
-        btn.addEventListener("click", () => {
-            content.style.display = content.style.display === "block" ? "none" : "block";
-        });
-
-        container.appendChild(btn);
-        container.appendChild(content);
-    }
-}
-
-function alterar(cat, item, valor) {
-    const campo = document.getElementById(`venda-${cat}-${item}`);
-    let atual = parseInt(campo.value);
-
-    const estoque = document.getElementById(`estoque-${cat}-${item}`);
-    let est = parseInt(estoque.value);
-
-    if (valor === 1 && atual >= est) {
-        alert("⚠️ Estoque insuficiente!");
-        return;
-    }
-
-    if (atual + valor >= 0) {
-        campo.value = atual + valor;
-        atualizarTotal();
-    }
-}
-
-function atualizarTotal() {
-    let total = 0;
-
-    document.querySelectorAll('.number-input').forEach(input => {
-        total += parseInt(input.value);
+        id++;
     });
 
-    document.getElementById("totalGeral").innerText =
-        `Total vendido: ${total}`;
+    document.write("</div>");
 }
-
-gerarSistema();
 </script>
+</div>
+
+<div id="totalVendas">TOTAL EM VENDAS: R$ 0,00</div>
 
 </body>
 </html>
