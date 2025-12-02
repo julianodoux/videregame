@@ -81,7 +81,7 @@
     .controls {
         display: flex;
         align-items: center;
-        gap: 18px;
+        gap: 14px;
     }
 
     .btn {
@@ -107,6 +107,8 @@
         text-align: center;
         font-size: 28px;
         font-weight: bold;
+        border-radius: 10px;
+        padding: 4px 6px;
     }
 
     #totalVendas {
@@ -123,6 +125,7 @@
 </style>
 
 <script>
+// preços por categoria
 let precoPorCategoria = {
     "PALETAS FRUTIVERÃO": 18,
     "AO LEITE FRUTIVERÃO": 8,
@@ -136,6 +139,7 @@ let precosLancamentos = {
     "Unicórnio": 10
 };
 
+// lista de sabores
 let categorias = {
     "PALETAS FRUTIVERÃO": [
         "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
@@ -171,16 +175,34 @@ function toggle(cat) {
     el.style.display = el.style.display === "block" ? "none" : "block";
 }
 
+// deixa fundo vermelho quando QNT = 0
+function atualizarCor(id) {
+    let campo = document.getElementById("vend_" + id);
+    let valor = Number(campo.innerText);
+
+    if (valor === 0) {
+        campo.style.background = "#ff4d4d";
+        campo.style.color = "white";
+    } else {
+        campo.style.background = "#e8ffe8";
+        campo.style.color = "#0b6b1a";
+    }
+}
+
+// Aumentar
 function add(id, preco) {
     let campo = document.getElementById("vend_" + id);
     let valor = Number(campo.innerText) + 1;
+
     campo.innerText = valor;
+    atualizarCor(id);
 
     total += preco;
     document.getElementById("totalVendas").innerText = 
         "TOTAL EM VENDAS: R$ " + total.toFixed(2);
 }
 
+// Diminuir
 function remove(id, preco) {
     let campo = document.getElementById("vend_" + id);
     let valor = Number(campo.innerText);
@@ -189,8 +211,11 @@ function remove(id, preco) {
         valor--;
         campo.innerText = valor;
 
+        atualizarCor(id);
+
         total -= preco;
         if (total < 0) total = 0;
+
         document.getElementById("totalVendas").innerText = 
             "TOTAL EM VENDAS: R$ " + total.toFixed(2);
     }
@@ -203,14 +228,18 @@ function remove(id, preco) {
 <h1>Controle de Sorvetes</h1>
 
 <div id="conteudo">
+
 <script>
+// gera tudo automaticamente
 for (let cat in categorias) {
+
     document.write(`<button class="cat-btn" onclick="toggle('${cat}')">${cat}</button>`);
     document.write(`<div id="cat_${cat}" class="categoria">`);
 
     categorias[cat].forEach(sabor => {
+
         let preco = precoPorCategoria[cat];
-        if (cat == "LANÇAMENTOS") preco = precosLancamentos[sabor];
+        if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
 
         document.write(`
             <div class="item">
@@ -220,7 +249,10 @@ for (let cat in categorias) {
                 <div class="linha">
                     <div class="controls">
                         <button class="btn menos" onclick="remove(${id}, ${preco})">-</button>
+
+                        <span style="font-size: 18px; font-weight: bold;">QNT:</span>
                         <span class="numero" id="vend_${id}">0</span>
+
                         <button class="btn mais" onclick="add(${id}, ${preco})">+</button>
                     </div>
                 </div>
@@ -233,6 +265,7 @@ for (let cat in categorias) {
     document.write("</div>");
 }
 </script>
+
 </div>
 
 <div id="totalVendas">TOTAL EM VENDAS: R$ 0,00</div>
