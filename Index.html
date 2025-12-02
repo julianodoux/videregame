@@ -2,118 +2,153 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Controle de Sorvetes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Sorvetes - Abas</title>
 
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: #f2f2f7;
-        padding: 20px;
-        color: #333;
+        background: #f0f0f5;
+        padding: 15px;
+        margin: 0;
     }
 
     h1 {
         text-align: center;
-        margin-bottom: 25px;
+        margin-top: 10px;
+        font-size: 26px;
     }
 
-    h2 {
-        background: #fff;
-        padding: 12px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        margin-top: 30px;
+    /* ------ ESTILO DAS ABAS ------ */
+    .tab {
+        background: white;
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 12px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .tab:hover {
+        background: #fafafa;
+    }
+
+    .content {
+        display: none;
+        padding: 5px;
+        margin-top: 10px;
     }
 
     .item {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        flex-direction: column;
         background: white;
-        padding: 10px;
-        margin: 8px 0;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+        padding: 15px;
+        margin: 12px 0;
+        border-radius: 14px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.12);
     }
 
     .nome {
-        width: 35%;
+        font-size: 20px;
         font-weight: bold;
+        margin-bottom: 12px;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
     }
 
     .controls {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 18px;
     }
 
     .btn {
-        width: 30px;
-        height: 30px;
-        border-radius: 6px;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
         border: none;
         cursor: pointer;
-        font-size: 20px;
+        font-size: 28px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    .menos { background: #ff5757; color: white; }
-    .mais { background: #4caf50; color: white; }
+    .menos { background: #ff4d4d; color: white; }
+    .mais { background: #28b463; color: white; }
 
     .valor {
-        width: 40px;
+        width: 45px;
+        font-size: 22px;
         text-align: center;
         font-weight: bold;
     }
 
     .restante {
-        width: 60px;
+        width: 80px;
         text-align: center;
         font-weight: bold;
-        padding: 5px;
-        border-radius: 6px;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 22px;
     }
 
     .zero {
-        background: #ffcccc !important;
-        color: #b30000;
+        background: #ffb3b3 !important;
+        color: #900;
     }
 
     .ok {
-        background: #d4ffd6;
+        background: #c8facc;
         color: #0a6e20;
     }
 
+    /* MOBILE */
+    @media (max-width: 480px) {
+        .row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
 </style>
 
 <script>
+function toggleTab(id) {
+    let c = document.getElementById("content_" + id);
+    c.style.display = c.style.display === "block" ? "none" : "block";
+}
+
 function update(id) {
     let estoque = Number(document.getElementById("estoq_" + id).innerText);
     let vendido = Number(document.getElementById("vend_" + id).innerText);
+
     let resto = estoque - vendido;
     if (resto < 0) resto = 0;
 
     let campo = document.getElementById("resto_" + id);
     campo.innerText = resto;
 
-    if (resto <= 0) campo.className = "restante zero";
-    else campo.className = "restante ok";
+    campo.className = resto <= 0 ? "restante zero" : "restante ok";
 }
 
 function add(tipo, id) {
     let el = document.getElementById(tipo + "_" + id);
-    let valor = Number(el.innerText);
-
-    valor++;
-    el.innerText = valor;
+    el.innerText = Number(el.innerText) + 1;
     update(id);
 }
 
 function remove(tipo, id) {
     let el = document.getElementById(tipo + "_" + id);
-    let valor = Number(el.innerText);
-
-    if (valor > 0) valor--;
-    el.innerText = valor;
+    let v = Number(el.innerText);
+    if (v > 0) el.innerText = v - 1;
     update(id);
 }
 </script>
@@ -121,122 +156,75 @@ function remove(tipo, id) {
 </head>
 <body>
 
-<h1>Controle de Estoque – Sorvetes</h1>
-
-<!-- ======================= PALETAS FRUTIVERÃO ======================= -->
-
-<h2>PALETAS FRUTIVERÃO</h2>
-
-<div id="lista">
-
-<!-- MODELO AUTOMÁTICO GERADO COM OS NOMES DA SUA LISTA -->
+<h1>🍦 Controle de Sorvetes</h1>
 
 <script>
-// LISTA DE SABORES POR CATEGORIA
+// LISTA DE SABORES
 let categorias = {
     "PALETAS FRUTIVERÃO": [
-        "Raffaello",
-        "Oreo",
-        "Ferrero",
-        "Kinder Ovo",
-        "Kinder Bueno",
-        "M&M",
-        "Choco Maltine",
-        "Milk Trufado",
-        "Babalu",
-        "Blue Ice",
-        "Sensação",
-        "Morango",
-        "Maracujá",
-        "Açaí",
-        "Iogurte c/ Amora",
-        "Menta c/ Chocolate",
-        "Paçoca",
-        "Capuccino",
-        "Banana com Avelã",
-        "Coco c/ Abobora",
-        "Coco c/ Doce de Leite",
-        "Tapioca",
-        "Abacaxi Zero"
+        "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
+        "Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá","Açaí",
+        "Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino","Banana com Avelã",
+        "Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"
     ],
 
-    "AO LEITE FRUTIVERÃO": 
-        "Morango",
-        "Chocolate",
-        "Leite Condensado",
-        "Milho-Verde",
-        "Açaí c/ Morango",
-        "Coco",
-        "Coco Queimado",
-        "Abóbora c/ Coco",
-        "Amendoim",
-        "Abacate",
-        "Blue Ice"
+    "AO LEITE FRUTIVERÃO": [
+        "Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango",
+        "Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"
     ],
 
     "TROPICAL FRUTIVERÃO": [
-        "Uva",
-        "Limão",
-        "Maracujá",
-        "Manga",
-        "Abacaxi",
-        "Melancia",
-        "Tangerina",
-        "Maçã Verde",
-        "Groselha",
-        "Tutti Frutti",
-        "Pinta Língua"
+        "Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina",
+        "Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"
     ],
 
     "ESPECIAL FRUTIVERÃO": [
-        "Skimo Morango",
-        "Skimo ao Leite",
-        "Milk Trufado",
-        "Brigadeiro",
-        "Chococo",
-        "Torta de Limão",
-        "Itu Napolitano",
-        "Frutiblito",
-        "Sunday de Chocolate",
+        "Skimo Morango","Skimo ao Leite","Milk Trufado","Brigadeiro","Chococo",
+        "Torta de Limão","Itu Napolitano","Frutiblito","Sunday de Chocolate",
         "Sunday de Morango"
     ],
 
-    "LANÇAMENTOS": [
-        "Pistache",
-        "Unicórnio"
-    ]
+    "LANÇAMENTOS": ["Pistache","Unicórnio"]
 };
 
 let id = 1;
+let cIndex = 1;
 
-for (let cat in categorias) {
-    document.write(`<h2>${cat}</h2>`);
-    categorias[cat].forEach(sabor => {
+for (let categoria in categorias) {
+    document.write(`
+        <div class="tab" onclick="toggleTab(${cIndex})">${categoria}</div>
+        <div class="content" id="content_${cIndex}">
+    `);
+
+    categorias[categoria].forEach(sabor => {
         document.write(`
             <div class="item">
                 <div class="nome">${sabor}</div>
 
-                <div class="controls">
-                    <button class="btn menos" onclick="remove('estoq', ${id})">-</button>
-                    <span class="valor" id="estoq_${id}">0</span>
-                    <button class="btn mais" onclick="add('estoq', ${id})">+</button>
-                </div>
+                <div class="row">
+                    <div class="controls">
+                        <button class="btn menos" onclick="remove('estoq', ${id})">-</button>
+                        <span class="valor" id="estoq_${id}">0</span>
+                        <button class="btn mais" onclick="add('estoq', ${id})">+</button>
+                    </div>
 
-                <div class="controls">
-                    <button class="btn menos" onclick="remove('vend', ${id})">-</button>
-                    <span class="valor" id="vend_${id}">0</span>
-                    <button class="btn mais" onclick="add('vend', ${id})">+</button>
-                </div>
+                    <div class="controls">
+                        <button class="btn menos" onclick="remove('vend', ${id})">-</button>
+                        <span class="valor" id="vend_${id}">0</span>
+                        <button class="btn mais" onclick="add('vend', ${id})">+</button>
+                    </div>
 
-                <div id="resto_${id}" class="restante ok">0</div>
+                    <div id="resto_${id}" class="restante ok">0</div>
+                </div>
             </div>
         `);
         id++;
     });
+
+    document.write("</div>");
+    cIndex++;
 }
 </script>
-
-</div>
 
 </body>
 </html>
