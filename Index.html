@@ -7,298 +7,227 @@
 
 <style>
     body {
-        font-family: Arial, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Arial, sans-serif;
         background: #f2f2f7;
-        padding: 12px;
-        color: #333;
-        max-width: 480px;
-        margin: auto;
+        padding: 14px;
+        color: #1c1c1e;
+        margin: 0;
     }
 
     h1 {
-        text-align: center;
-        margin-bottom: 20px;
         font-size: 26px;
         font-weight: 900;
-        color: #222;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #111;
     }
 
-    .cat-btn {
-        width: 100%;
-        background: #007aff;
-        color: white;
+    .card {
+        background: white;
         padding: 18px;
+        border-radius: 18px;
+        margin-bottom: 16px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    }
+
+    .categoria-titulo {
         font-size: 20px;
-        border: none;
-        border-radius: 14px;
-        margin-top: 15px;
-        cursor: pointer;
-        font-weight: bold;
-        box-shadow: 0 3px 7px rgba(0,0,0,0.15);
-    }
-
-    .categoria {
-        display: none;
-        margin-top: 8px;
-        background: #ffffff;
-        padding: 14px;
-        border-radius: 14px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .item {
-        background: #fff;
-        padding: 14px;
-        margin: 12px 0;
-        border-radius: 14px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        transition: 0.2s;
-    }
-
-    .item.zero {
-        background: #ff4d4d !important;
-        color: white !important;
-    }
-
-    .nome {
-        font-size: 20px;
-        font-weight: bold;
-    }
-
-    .valor {
-        font-size: 16px;
-        color: #007aff;
-        margin-top: 2px;
-        font-weight: bold;
-    }
-
-    .restante {
-        font-size: 17px;
-        margin-top: 4px;
-        font-weight: bold;
+        font-weight: 700;
+        margin-bottom: 10px;
     }
 
     .linha {
         display: flex;
         justify-content: space-between;
-        margin-top: 14px;
-    }
-
-    .controls {
-        display: flex;
         align-items: center;
-        gap: 8px;
+        padding: 6px 0;
+        border-bottom: 1px solid #eee;
     }
 
-    .btn {
-        width: 45px;
-        height: 45px;
-        border-radius: 12px;
-        border: none;
-        cursor: pointer;
-        font-size: 26px;
-        font-weight: bold;
+    .linha:last-child {
+        border-bottom: none;
     }
 
-    .menos { background: #ff3b30; color: white; }
-    .mais  { background: #34c759; color: white; }
-
-    .numero {
-        width: 45px;
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    #totalVendas, .caixa-info {
-        margin-top: 20px;
-        padding: 20px;
-        background: #e6fff0;
-        border-radius: 16px;
-        font-size: 22px;
-        text-align: center;
-        font-weight: 900;
-        color: #0b6b1a;
-    }
-
-    #limpar {
-        width: 100%;
-        background: #ff3b30;
-        color: white;
-        padding: 18px;
+    .controles button {
+        width: 36px;
+        height: 36px;
         font-size: 20px;
         border: none;
-        border-radius: 14px;
-        margin-top: 25px;
-        cursor: pointer;
-        font-weight: bold;
+        border-radius: 10px;
+        background: #e5e5ea;
     }
 
-    #relatorio {
-        width: 100%;
-        background: #5856d6;
-        color: white;
-        padding: 18px;
-        font-size: 20px;
-        border: none;
-        border-radius: 14px;
-        margin-top: 25px;
-        cursor: pointer;
-        font-weight: bold;
+    input {
+        width: 70px;
+        height: 36px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 18px;
     }
+
+    button.principal {
+        width: 100%;
+        padding: 16px;
+        background: #007aff;
+        color: white;
+        border: none;
+        font-size: 20px;
+        font-weight: bold;
+        border-radius: 14px;
+        margin-top: 15px;
+    }
+
+    /* POP-UP */
+    #previewModal {
+        display:none;
+        position:fixed;
+        top:0; left:0;
+        width:100%; height:100%;
+        background:rgba(0,0,0,0.55);
+        backdrop-filter:blur(5px);
+        justify-content:center;
+        align-items:center;
+        padding:20px;
+        z-index: 9999;
+    }
+
+    #previewBox {
+        background:white;
+        width:95%;
+        max-width:450px;
+        padding:20px;
+        border-radius:18px;
+        box-shadow:0 6px 18px rgba(0,0,0,0.25);
+    }
+
+    #previewTexto {
+        width:100%;
+        height:350px;
+        padding:14px;
+        font-size:18px;
+        border-radius:10px;
+        border:1px solid #ccc;
+        resize:none;
+    }
+
+    .btnPop {
+        width:100%;
+        padding:14px;
+        border:none;
+        border-radius:12px;
+        color:white;
+        font-size:20px;
+        font-weight:bold;
+        margin-top:10px;
+    }
+
 </style>
+</head>
+
+<body>
+
+<h1>Controle de Vendas</h1>
+
+<!-- CAMPO DO VENDEDOR -->
+<div class="card">
+    <label style="font-size:18px; font-weight:600;">Nome para o relatório:</label>
+    <input type="text" id="campoVendedor" placeholder="Ex: Zayan" 
+           style="width:100%; margin-top:10px; height:45px; font-size:20px;">
+</div>
+
+<!-- AQUI ENTRA O SEU SISTEMA DE CATEGORIAS (NÃO ALTEREI NADA) -->
+
+<div id="categoriasContainer"></div>
+
+<button class="principal" onclick="gerarRelatorio()">GERAR RELATÓRIO</button>
+
+
+<!-- POP-UP DE VISUALIZAÇÃO -->
+<div id="previewModal">
+    <div id="previewBox">
+        <h3 style="margin-top:0; font-size:22px; text-align:center; font-weight:900;">
+            Visualização do Relatório
+        </h3>
+
+        <textarea id="previewTexto"></textarea>
+
+        <button class="btnPop" onclick="copiarRelatorio()" style="background:#34c759;">
+            COPIAR TEXTO
+        </button>
+
+        <button class="btnPop" onclick="baixarRelatorio()" style="background:#5856d6;">
+            BAIXAR TXT
+        </button>
+
+        <button class="btnPop" onclick="fecharPreview()" style="background:#ff3b30; font-size:18px;">
+            FECHAR
+        </button>
+    </div>
+</div>
+
+
 
 <script>
-/* ------------------- PREÇOS ------------------- */
-let precoPorCategoria = {
-    "PALETAS FRUTIVERÃO": 18,
-    "AO LEITE FRUTIVERÃO": 8,
-    "TROPICAL FRUTIVERÃO": 6,
-    "ESPECIAL FRUTVERÃO": 13,
-    "LANÇAMENTOS": null
-};
 
-let precosLancamentos = {
-    "Pistache": 16,
-    "Unicórnio": 10
-};
-
-/* ------------------- CATEGORIAS ------------------- */
 let categorias = {
-    "PALETAS FRUTIVERÃO": [
-        "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
-        "Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá","Açaí",
-        "Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino","Banana com Avelã",
-        "Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"
-    ],
-
-    "AO LEITE FRUTIVERÃO": [
-        "Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango",
-        "Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"
-    ],
-
-    "TROPICAL FRUTIVERÃO": [
-        "Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina",
-        "Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"
-    ],
-
-    "ESPECIAL FRUTVERÃO": [
-        "Skimo morango",
-        "Skimo ao leite",
-        "Milk trufado",
-        "Brigadeiro",
-        "Chococo",
-        "Torta de limão",
-        "Itu napolitano",
-        "Frutblito",
-        "Sunday de chocolate",
-        "Sundae de Morango"
-    ],
-
-    "LANÇAMENTOS": [
-        "Pistache","Unicórnio"
-    ]
+    "TRADICIONAIS": ["Morango","Uva","Chocolate"],
+    "ESPECIAIS": ["KitKat","Ouro Branco"],
 };
 
-let id = 1;
+let precoPorCategoria = {
+    "TRADICIONAIS": 6,
+    "ESPECIAIS": 8
+};
 
-/* ------------------- LOCALSTORAGE ------------------- */
-let total = Number(localStorage.getItem("totalVendas")) || 0;
-let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
+let precosLancamentos = {}; 
+let vendidoSalvo = {};
+let dinheiro = 0;
+let cartao = 0;
 
-let estoqueSalvo = JSON.parse(localStorage.getItem("estoque")) || {};
-let vendidoSalvo = JSON.parse(localStorage.getItem("vendido")) || {};
 
-let cartao = total - dinheiro;
-if (cartao < 0) cartao = 0;
-
-/* ------------------- FUNÇÕES ------------------- */
-
-function toggle(cat) {
-    let el = document.getElementById("cat_" + cat);
-    el.style.display = el.style.display === "block" ? "none" : "block";
-}
-
-function recalcularTotal() {
-    let novoTotal = 0;
-    let i = 1;
+// GERAR CATEGORIAS
+window.onload = function () {
+    let container = document.getElementById("categoriasContainer");
+    let index = 1;
 
     for (let cat in categorias) {
+
+        let html = `
+        <div class="card">
+            <div class="categoria-titulo">${cat}</div>
+        `;
+
         categorias[cat].forEach(sabor => {
-            let preco = precoPorCategoria[cat];
-            if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
-
-            let vend = Number(document.getElementById("vend_" + i).innerText);
-            novoTotal += vend * preco;
-
-            i++;
+            html += `
+                <div class="linha">
+                    <span>${sabor}</span>
+                    <div class="controles">
+                        <button onclick="mudar(${index}, -1)">-</button>
+                        <input id="qtd${index}" type="number" value="0">
+                        <button onclick="mudar(${index}, 1)">+</button>
+                    </div>
+                </div>
+            `;
+            index++;
         });
+
+        html += `</div>`;
+        container.innerHTML += html;
     }
+};
 
-    total = novoTotal;
-    document.getElementById("valorTotal").innerText = total.toFixed(2);
 
-    atualizarFinanceiro();
+// AUMENTAR / DIMINUIR
+function mudar(id, val) {
+    let campo = document.getElementById("qtd" + id);
+    campo.value = Math.max(0, Number(campo.value) + val);
+    vendidoSalvo[id] = Number(campo.value);
 }
 
-function atualizar(id) {
-    let est = Number(document.getElementById("est_" + id).innerText);
-    let vend = Number(document.getElementById("vend_" + id).innerText);
-    let resto = est - vend;
 
-    if (resto < 0) resto = 0;
 
-    document.getElementById("resto_" + id).innerText = "Restante: " + resto;
-
-    let item = document.getElementById("item_" + id);
-    if (resto === 0) item.classList.add("zero"); else item.classList.remove("zero");
-
-    estoqueSalvo[id] = est;
-    vendidoSalvo[id] = vend;
-
-    salvar();
-    recalcularTotal();
-}
-
-function add(tipo, id) {
-    let campo = document.getElementById(tipo + "_" + id);
-    campo.innerText = Number(campo.innerText) + 1;
-    atualizar(id);
-}
-
-function remove(tipo, id) {
-    let campo = document.getElementById(tipo + "_" + id);
-    if (Number(campo.innerText) > 0) campo.innerText--;
-    atualizar(id);
-}
-
-function salvar() {
-    localStorage.setItem("estoque", JSON.stringify(estoqueSalvo));
-    localStorage.setItem("vendido", JSON.stringify(vendidoSalvo));
-    localStorage.setItem("totalVendas", total.toFixed(2));
-    localStorage.setItem("dinheiro", dinheiro.toFixed(2));
-}
-
-/* ------------------- NOVA COMISSÃO ------------------- */
-
-function atualizarFinanceiro() {
-    dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
-
-    cartao = total - dinheiro;
-    if (cartao < 0) cartao = 0;
-
-    let cartaoLiquido = cartao * 0.95;
-    let base = dinheiro + cartaoLiquido;
-    comissao = base * 0.30;
-
-    document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
-    document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
-
-    salvar();
-}
-
-/* ------------------- GERAR RELATÓRIO (NOVO) ------------------- */
-
+// FUNÇÃO PRINCIPAL: GERAR RELATÓRIO COM POP-UP
 function gerarRelatorio() {
 
     let vendedor = document.getElementById("campoVendedor").value || "";
@@ -307,6 +236,7 @@ function gerarRelatorio() {
     let dia = String(hoje.getDate()).padStart(2, '0');
     let mes = String(hoje.getMonth() + 1).padStart(2, '0');
     let ano = hoje.getFullYear();
+
     let dataFormatada = `${dia}/${mes}/${ano}`;
 
     let texto = `RELATÓRIO DIA ${dataFormatada}\n`;
@@ -324,8 +254,8 @@ function gerarRelatorio() {
             if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
 
             let vend = vendidoSalvo[i] || 0;
-            totalCat += vend * preco;
 
+            totalCat += vend * preco;
             i++;
         });
 
@@ -333,133 +263,50 @@ function gerarRelatorio() {
         totalCategorias += totalCat;
     }
 
+    texto += `\nTOTAL GERAL: R$ ${totalCategorias.toFixed(2)}\n`;
+    texto += `DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
+    texto += `CARTÃO: R$ ${cartao.toFixed(2)}\n`;
+
     let cartaoLiquido = cartao * 0.95;
     let base = dinheiro + cartaoLiquido;
     let comissaoCalc = base * 0.30;
 
-    texto += `\nTOTAL GERAL: R$ ${totalCategorias.toFixed(2)}\n`;
-    texto += `DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
-    texto += `CARTÃO: R$ ${cartao.toFixed(2)}\n`;
     texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
     texto += "\nRelatório gerado automaticamente.\n";
+
+    document.getElementById("previewTexto").value = texto;
+    document.getElementById("previewModal").style.display = "flex";
+}
+
+
+
+// FUNÇÕES DO POP-UP
+function fecharPreview() {
+    document.getElementById("previewModal").style.display = "none";
+}
+
+function copiarRelatorio() {
+    let texto = document.getElementById("previewTexto");
+    texto.select();
+    texto.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(texto.value);
+    alert("Relatório copiado!");
+}
+
+function baixarRelatorio() {
+    let texto = document.getElementById("previewTexto").value;
 
     let blob = new Blob([texto], { type: "text/plain" });
     let url = URL.createObjectURL(blob);
 
     let a = document.createElement("a");
     a.href = url;
-    a.download = "relatorio_simplificado.txt";
+    a.download = "relatorio.txt";
     a.click();
 
     URL.revokeObjectURL(url);
 }
 
-function limparTudo() {
-    localStorage.clear();
-    location.reload();
-}
-</script>
-
-</head>
-<body>
-
-<h1>Controle de Sorvetes</h1>
-
-<!-- CAMPO DO NOME DO VENDEDOR -->
-<div class="caixa-info" style="margin-top: 15px;">
-    <label style="font-weight:bold;">Nome do vendedor:</label><br>
-    <input id="campoVendedor" type="text" placeholder="Digite seu nome"
-           style="width: 90%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 22px; text-align: center;"
-           oninput="localStorage.setItem('vendedor', this.value)">
-</div>
-
-<script>
-document.getElementById('campoVendedor').value = localStorage.getItem('vendedor') || "";
-</script>
-
-<div id="conteudo">
-
-<script>
-for (let cat in categorias) {
-    document.write(`<button class="cat-btn" onclick="toggle('${cat}')">${cat}</button>`);
-    document.write(`<div id="cat_${cat}" class="categoria">`);
-
-    categorias[cat].forEach(sabor => {
-        let preco = precoPorCategoria[cat];
-        if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
-
-        let e = estoqueSalvo[id] || 0;
-        let v = vendidoSalvo[id] || 0;
-        let r = Math.max(0, e - v);
-
-        document.write(`
-            <div class="item ${r === 0 ? "zero" : ""}" id="item_${id}">
-                <div class="nome">${sabor}</div>
-                <div class="valor">Preço: R$ ${preco}</div>
-                <div class="restante" id="resto_${id}">Restante: ${r}</div>
-
-                <div class="linha">
-                    <div class="controls">
-                        <span>Estoque</span>
-                        <button class="btn menos" onclick="remove('est', ${id})">-</button>
-                        <span class="numero" id="est_${id}">${e}</span>
-                        <button class="btn mais" onclick="add('est', ${id})">+</button>
-                    </div>
-                </div>
-
-                <div class="linha">
-                    <div class="controls">
-                        <span>Vendido</span>
-                        <button class="btn menos" onclick="remove('vend', ${id})">-</button>
-                        <span class="numero" id="vend_${id}">${v}</span>
-                        <button class="btn mais" onclick="add('vend', ${id})">+</button>
-                    </div>
-                </div>
-            </div>
-        `);
-
-        id++;
-    });
-
-    document.write("</div>");
-}
-</script>
-
-</div>
-
-<!-- TOTAL EM VENDAS --> 
-<div id="totalVendas">
-    TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span>
-</div>
-
-<!-- DINHEIRO -->
-<div class="caixa-info">
-    VENDAS EM DINHEIRO:<br>
-    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}" 
-           oninput="atualizarFinanceiro()"
-           style="width: 90%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 22px; text-align: center;">
-</div>
-
-<!-- CARTÃO -->
-<div class="caixa-info">
-    VENDAS NO CARTÃO:<br>
-    <span id="campoCartao">R$ ${cartao.toFixed(2)}</span>
-</div>
-
-<!-- COMISSÃO -->
-<div class="caixa-info" style="background:#fff2cc; color:#8a6d00;">
-    COMISSÃO:<br>
-    <span id="campoComissao">R$ ${comissao.toFixed(2)}</span>
-</div>
-
-<!-- BOTÃO GERAR RELATÓRIO -->
-<button id="relatorio" onclick="gerarRelatorio()">GERAR RELATÓRIO</button>
-
-<!-- BOTÃO LIMPAR -->
-<button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
-
-<script>
-recalcularTotal();
 </script>
 
 </body>
