@@ -212,8 +212,6 @@ let vendidoSalvo = JSON.parse(localStorage.getItem("vendido")) || {};
 let cartao = total - dinheiro;
 if (cartao < 0) cartao = 0;
 
-let comissao = dinheiro * 0.30 + cartao * 0.25;
-
 /* ------------------- FUNÇÕES ------------------- */
 
 function toggle(cat) {
@@ -281,13 +279,18 @@ function salvar() {
     localStorage.setItem("dinheiro", dinheiro.toFixed(2));
 }
 
+/* ------------------- NOVA COMISSÃO ------------------- */
+
 function atualizarFinanceiro() {
     dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
 
     cartao = total - dinheiro;
     if (cartao < 0) cartao = 0;
 
-    comissao = dinheiro * 0.30 + cartao * 0.25;
+    // NOVA REGRA:
+    let cartaoLiquido = cartao * 0.95;      // tira 5%
+    let base = dinheiro + cartaoLiquido;    // soma com dinheiro
+    comissao = base * 0.30;                 // pega 30%
 
     document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
     document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
@@ -326,11 +329,16 @@ function gerarRelatorio() {
         });
     }
 
+    // NOVA REGRA PARA O RELATÓRIO
+    let cartaoLiquido = cartao * 0.95;
+    let base = dinheiro + cartaoLiquido;
+    let comissaoCalc = base * 0.30;
+
     texto += "\n---------------------------------------\n";
     texto += `TOTAL EM VENDAS: R$ ${total.toFixed(2)}\n`;
     texto += `VENDAS EM DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
     texto += `VENDAS NO CARTÃO: R$ ${cartao.toFixed(2)}\n`;
-    texto += `COMISSÃO: R$ ${comissao.toFixed(2)}\n`;
+    texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
     texto += "---------------------------------------\n";
     texto += "Relatório gerado automaticamente.\n";
 
