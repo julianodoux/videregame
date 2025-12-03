@@ -341,7 +341,7 @@ function gerarRelatorio() {
     texto += `DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
     texto += `CARTÃO: R$ ${cartao.toFixed(2)}\n`;
     texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
-    texto += "\nRelatório gerado automaticamente.\n";
+    
 
     // Mostra no POPUP
     document.getElementById("conteudoRelatorio").innerText = texto;
