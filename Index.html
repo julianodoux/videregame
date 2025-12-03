@@ -301,7 +301,7 @@ function atualizarFinanceiro() {
 
 function gerarRelatorio() {
 
-    let vendedor = document.getElementById("campoVendedor").value || "Zayan";
+    let vendedor = document.getElementById("campoVendedor").value || "";
 
     let hoje = new Date();
     let dia = String(hoje.getDate()).padStart(2, '0');
@@ -374,7 +374,7 @@ function limparTudo() {
 </div>
 
 <script>
-document.getElementById('campoVendedor').value = localStorage.getItem('vendedor') || "Zayan";
+document.getElementById('campoVendedor').value = localStorage.getItem('vendedor') || "";
 </script>
 
 <div id="conteudo">
