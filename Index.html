@@ -1,370 +1,306 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Controle de Sorvetes</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: #f2f2f7;
-        padding: 12px;
-        color: #333;
-        max-width: 480px;
-        margin: auto;
+        background: #f2f2f2;
+        padding: 10px;
+        margin: 0;
     }
 
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 26px;
-        font-weight: 900;
-        color: #222;
-    }
-
-    .cat-btn {
+    .category-button {
         width: 100%;
-        background: #007aff;
+        background: #007bff;
         color: white;
-        padding: 18px;
-        font-size: 20px;
+        padding: 14px;
+        text-align: left;
         border: none;
-        border-radius: 14px;
-        margin-top: 15px;
-        cursor: pointer;
-        font-weight: bold;
-        box-shadow: 0 3px 7px rgba(0,0,0,0.15);
+        border-radius: 10px;
+        font-size: 18px;
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    .categoria {
+    .info-btn {
+        background: #ffffff55;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-left: 8px;
+    }
+
+    .category-content {
         display: none;
-        margin-top: 8px;
-        background: #ffffff;
-        padding: 14px;
-        border-radius: 14px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        background: white;
+        margin-top: 5px;
+        padding: 10px;
+        border-radius: 10px;
     }
 
     .item {
         background: #fff;
-        padding: 14px;
-        margin: 12px 0;
-        border-radius: 14px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        transition: 0.2s;
-    }
-
-    .item.zero {
-        background: #ff4d4d !important;
-        color: white !important;
-    }
-
-    .nome {
-        font-size: 20px;
-        font-weight: bold;
-    }
-
-    .valor {
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
         font-size: 16px;
-        color: #007aff;
-        margin-top: 2px;
-        font-weight: bold;
     }
 
-    .restante {
-        font-size: 17px;
-        margin-top: 4px;
-        font-weight: bold;
+    .item.red {
+        background: #ffb3b3;
     }
 
-    .linha {
+    .row {
         display: flex;
-        justify-content: space-around;
-        margin-top: 14px;
+        justify-content: space-between;
+        margin-top: 5px;
     }
 
-    .controls {
-        display: flex;
-        align-items: center;
-        gap: 8px;
+    input {
+        width: 60px;
+        font-size: 16px;
+        padding: 4px;
     }
 
-    .btn {
-        width: 45px;
-        height: 45px;
-        border-radius: 12px;
+    button {
+        padding: 6px 10px;
+        font-size: 18px;
+        border-radius: 6px;
         border: none;
-        cursor: pointer;
-        font-size: 26px;
-        font-weight: bold;
     }
 
-    .menos { background: #ff3b30; color: white; }
-    .mais  { background: #34c759; color: white; }
-
-    .numero {
-        width: 45px;
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    #totalVendas, .caixa-info {
+    #total {
+        background: #fff;
+        padding: 15px;
         margin-top: 20px;
-        padding: 20px;
-        background: #e6fff0;
-        border-radius: 16px;
+        border-radius: 10px;
         font-size: 22px;
         text-align: center;
-        font-weight: 900;
-        color: #0b6b1a;
-    }
-
-    #limpar {
-        width: 100%;
-        background: #ff3b30;
-        color: white;
-        padding: 18px;
-        font-size: 20px;
-        border: none;
-        border-radius: 14px;
-        margin-top: 25px;
-        cursor: pointer;
         font-weight: bold;
     }
+
+    /* POPUP iOS STYLE (Tela cheia) */
+    #popupOverlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(8px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    #popupBox {
+        width: 90%;
+        height: 80%;
+        background: white;
+        border-radius: 18px;
+        padding: 18px;
+        overflow-y: auto;
+        animation: fadeIn 0.25s;
+    }
+
+    #popupTitle {
+        font-size: 26px;
+        text-align: center;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+    #closePopup {
+        width: 100%;
+        background: #ff4444;
+        border: none;
+        padding: 14px;
+        color: white;
+        border-radius: 10px;
+        font-size: 18px;
+        margin-top: 20px;
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: scale(0.95);}
+        to {opacity: 1; transform: scale(1);}
+    }
 </style>
+</head>
+
+<body>
+
+<h2 style="text-align:center; margin-bottom:10px;">Controle de Sorvetes</h2>
+
+<div id="categories"></div>
+
+<div id="total">TOTAL EM VENDAS: R$ 0,00</div>
+
+<!-- POPUP FULLSCREEN -->
+<div id="popupOverlay">
+    <div id="popupBox">
+        <div id="popupTitle"></div>
+        <div id="popupContent"></div>
+        <button id="closePopup">Fechar</button>
+    </div>
+</div>
 
 <script>
-/* ------------------- PREÇOS ------------------- */
-let precoPorCategoria = {
-    "PALETAS FRUTIVERÃO": 18,
-    "AO LEITE FRUTIVERÃO": 8,
-    "TROPICAL FRUTIVERÃO": 6,
-    "ESPECIAL FRUTIBLITO": 13,
-    "LANÇAMENTOS": null
+
+const categories = {
+    "Paletas FRUTVERAO": [
+        "Raffaello", "Oreo", "Doce de Leite", "Morango", "Uva",
+        "Romeu e Julieta", "Prestígio", "Leite Ninho Tradicional"
+    ],
+    "Ao Leite FRUTVERAO": ["Morango", "Chocolate", "Coco"],
+    "Tropical FRUTVERAO": ["Maracujá", "Abacaxi", "Açaí", "Tutti-frutti"],
+    "Especial FRUTVERAO": ["Frutiblito", "Sunday"],
+    "Lançamentos": ["Pistache", "Unicórnio"]
 };
 
-let precosLancamentos = {
-    "Pistache": 16,
-    "Unicórnio": 10
+const prices = {
+    "Paletas FRUTVERAO": 18,
+    "Ao Leite FRUTVERAO": 8,
+    "Tropical FRUTVERAO": 6,
+    "Especial FRUTVERAO": 13,
+    "Lançamentos": { "Pistache": 16, "Unicórnio": 10 }
 };
 
-/* ------------------- CATEGORIAS ------------------- */
-let categorias = {
-    "PALETAS FRUTIVERÃO": [
-        "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
-        "Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá","Açaí",
-        "Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino","Banana com Avelã",
-        "Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"
-    ],
+let stock = JSON.parse(localStorage.getItem("stock")) || {};
+let sold = JSON.parse(localStorage.getItem("sold")) || {};
 
-    "AO LEITE FRUTIVERÃO": [
-        "Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango",
-        "Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"
-    ],
-
-    "TROPICAL FRUTIVERÃO": [
-        "Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina",
-        "Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"
-    ],
-
-    "ESPECIAL FRUTIBLITO": [
-        "Frutiblito","Sunday de Chocolate","Sunday de Morango"
-    ],
-
-    "LANÇAMENTOS": [
-        "Pistache","Unicórnio"
-    ]
-};
-
-let id = 1;
-
-/* ------------------- CARREGAR LOCALSTORAGE ------------------- */
-let total = Number(localStorage.getItem("totalVendas")) || 0;
-let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
-
-let estoqueSalvo = JSON.parse(localStorage.getItem("estoque")) || {};
-let vendidoSalvo = JSON.parse(localStorage.getItem("vendido")) || {};
-
-let cartao = total - dinheiro;
-if (cartao < 0) cartao = 0;
-
-let comissao = dinheiro * 0.30 + cartao * 0.25;
-
-/* ------------------- FUNÇÕES ------------------- */
-
-function toggle(cat) {
-    let el = document.getElementById("cat_" + cat);
-    el.style.display = el.style.display === "block" ? "none" : "block";
+function save() {
+    localStorage.setItem("stock", JSON.stringify(stock));
+    localStorage.setItem("sold", JSON.stringify(sold));
 }
 
-function recalcularTotal() {
-    let novoTotal = 0;
-    let i = 1;
+function render() {
+    const container = document.getElementById("categories");
+    container.innerHTML = "";
 
-    for (let cat in categorias) {
-        categorias[cat].forEach(sabor => {
-            let preco = precoPorCategoria[cat];
-            if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
+    for (let cat in categories) {
 
-            let vend = Number(document.getElementById("vend_" + i).innerText);
-            novoTotal += vend * preco;
+        const catBtn = document.createElement("button");
+        catBtn.className = "category-button";
+        catBtn.innerHTML = `${cat}`;
 
-            i++;
+        const infoBtn = document.createElement("button");
+        infoBtn.className = "info-btn";
+        infoBtn.innerText = "i";
+        infoBtn.onclick = () => openPopup(cat);
+
+        catBtn.appendChild(infoBtn);
+
+        container.appendChild(catBtn);
+
+        const box = document.createElement("div");
+        box.className = "category-content";
+
+        catBtn.onclick = (e) => {
+            if (e.target === infoBtn) return;
+            box.style.display = box.style.display === "block" ? "none" : "block";
+        };
+
+        categories[cat].forEach(item => {
+            if (!stock[item]) stock[item] = 0;
+            if (!sold[item]) sold[item] = 0;
+
+            const div = document.createElement("div");
+            div.className = "item";
+
+            const remaining = stock[item] - sold[item];
+            if (remaining <= 0) div.classList.add("red");
+
+            div.innerHTML = `
+                <strong>${item}</strong><br>
+                Estoque: <input type="number" value="${stock[item]}" 
+                    onchange="updateStock('${item}', this.value)">
+                <br>
+                Vendidos:
+                <button onclick="changeSold('${item}', -1)">-</button>
+                ${sold[item]}
+                <button onclick="changeSold('${item}', 1)">+</button>
+                <br>
+                Restante: <strong>${remaining}</strong>
+            `;
+
+            box.appendChild(div);
+        });
+
+        container.appendChild(box);
+    }
+
+    updateTotal();
+}
+
+function updateStock(item, value) {
+    stock[item] = Number(value);
+    save();
+    render();
+}
+
+function changeSold(item, val) {
+    sold[item] = Math.max(0, sold[item] + val);
+    save();
+    render();
+}
+
+function updateTotal() {
+    let total = 0;
+
+    for (let cat in categories) {
+        categories[cat].forEach(item => {
+            let price = prices[cat];
+            if (typeof price === "object") price = price[item];
+            total += sold[item] * price;
         });
     }
 
-    total = novoTotal;
-    document.getElementById("valorTotal").innerText = total.toFixed(2);
-
-    atualizarFinanceiro();
+    document.getElementById("total").innerHTML =
+        `TOTAL EM VENDAS: R$ ${total.toFixed(2).replace(".", ",")}`;
 }
 
-function atualizar(id) {
-    let est = Number(document.getElementById("est_" + id).innerText);
-    let vend = Number(document.getElementById("vend_" + id).innerText);
-    let resto = est - vend;
+/* POPUP */
+function openPopup(cat) {
+    const overlay = document.getElementById("popupOverlay");
+    const title = document.getElementById("popupTitle");
+    const content = document.getElementById("popupContent");
 
-    if (resto < 0) resto = 0;
+    title.innerText = cat;
 
-    document.getElementById("resto_" + id).innerText = "Restante: " + resto;
+    let totalStock = 0;
+    let totalSold = 0;
 
-    let item = document.getElementById("item_" + id);
-    if (resto === 0) item.classList.add("zero"); else item.classList.remove("zero");
+    let html = "";
 
-    estoqueSalvo[id] = est;
-    vendidoSalvo[id] = vend;
+    categories[cat].forEach(item => {
+        totalStock += stock[item];
+        totalSold += sold[item];
 
-    salvar();
-    recalcularTotal();
-}
-
-function add(tipo, id) {
-    let campo = document.getElementById(tipo + "_" + id);
-    campo.innerText = Number(campo.innerText) + 1;
-    atualizar(id);
-}
-
-function remove(tipo, id) {
-    let campo = document.getElementById(tipo + "_" + id);
-    if (Number(campo.innerText) > 0) campo.innerText--;
-    atualizar(id);
-}
-
-function salvar() {
-    localStorage.setItem("estoque", JSON.stringify(estoqueSalvo));
-    localStorage.setItem("vendido", JSON.stringify(vendidoSalvo));
-    localStorage.setItem("totalVendas", total.toFixed(2));
-    localStorage.setItem("dinheiro", dinheiro.toFixed(2));
-}
-
-function atualizarFinanceiro() {
-    dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
-
-    cartao = total - dinheiro;
-    if (cartao < 0) cartao = 0;
-
-    comissao = dinheiro * 0.30 + cartao * 0.25;
-
-    document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
-    document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
-
-    salvar();
-}
-
-function limparTudo() {
-    localStorage.clear();
-    location.reload();
-}
-</script>
-
-</head>
-<body>
-
-<h1>Controle de Sorvetes</h1>
-
-<div id="conteudo">
-
-<script>
-for (let cat in categorias) {
-    document.write(`<button class="cat-btn" onclick="toggle('${cat}')">${cat}</button>`);
-    document.write(`<div id="cat_${cat}" class="categoria">`);
-
-    categorias[cat].forEach(sabor => {
-        let preco = precoPorCategoria[cat];
-        if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
-
-        let e = estoqueSalvo[id] || 0;
-        let v = vendidoSalvo[id] || 0;
-        let r = Math.max(0, e - v);
-
-        document.write(`
-            <div class="item ${r === 0 ? "zero" : ""}" id="item_${id}">
-                <div class="nome">${sabor}</div>
-                <div class="valor">Preço: R$ ${preco}</div>
-                <div class="restante" id="resto_${id}">Restante: ${r}</div>
-
-                <div class="linha">
-                    <div class="controls">
-                        <span>Estoque</span>
-                        <button class="btn menos" onclick="remove('est', ${id})">-</button>
-                        <span class="numero" id="est_${id}">${e}</span>
-                        <button class="btn mais" onclick="add('est', ${id})">+</button>
-                    </div>
-                </div>
-
-                <div class="linha">
-                    <div class="controls">
-                        <span>Vendido</span>
-                        <button class="btn menos" onclick="remove('vend', ${id})">-</button>
-                        <span class="numero" id="vend_${id}">${v}</span>
-                        <button class="btn mais" onclick="add('vend', ${id})">+</button>
-                    </div>
-                </div>
-            </div>
-        `);
-
-        id++;
+        html += `<p><strong>${item}</strong>:  
+                 Estoque: ${stock[item]} — Vendidos: ${sold[item]} — Restante: ${stock[item] - sold[item]}</p>`;
     });
 
-    document.write("</div>");
+    content.innerHTML =
+        `<h3>Total Estoque: ${totalStock}</h3>
+         <h3>Total Vendidos: ${totalSold}</h3>
+         <h3>Restante: ${totalStock - totalSold}</h3>
+         <hr>` + html;
+
+    overlay.style.display = "flex";
 }
+
+document.getElementById("closePopup").onclick = () => {
+    document.getElementById("popupOverlay").style.display = "none";
+};
+
+render();
+
 </script>
-
-</div>
-
-<!-- TOTAL EM VENDAS -->
-<div id="totalVendas">
-    TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span>
-</div>
-
-<!-- DINHEIRO -->
-<div class="caixa-info">
-    VENDAS EM DINHEIRO:<br>
-    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}" 
-           oninput="atualizarFinanceiro()"
-           style="width: 90%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 22px; text-align: center;">
-</div>
-
-<!-- CARTÃO -->
-<div class="caixa-info">
-    VENDAS NO CARTÃO:<br>
-    <span id="campoCartao">R$ ${cartao.toFixed(2)}</span>
-</div>
-
-<!-- COMISSÃO -->
-<div class="caixa-info" style="background:#fff2cc; color:#8a6d00;">
-    COMISSÃO:<br>
-    <span id="campoComissao">R$ ${comissao.toFixed(2)}</span>
-</div>
-
-<!-- BOTÃO LIMPAR -->
-<button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
-
-<script>
-recalcularTotal();
-</script>
-
 </body>
 </html>
