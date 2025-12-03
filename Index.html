@@ -1,433 +1,370 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta charset="UTF-8">
 <title>Controle de Sorvetes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <style>
     body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        margin: 0;
-        background: var(--bg);
-        color: var(--text);
-        transition: 0.3s;
+        font-family: Arial, sans-serif;
+        background: #f2f2f7;
+        padding: 12px;
+        color: #333;
+        max-width: 480px;
+        margin: auto;
     }
 
-    :root {
-        --bg: #f2f2f7;
-        --text: #000;
-        --card: #fff;
-        --blue: #007aff;
-        --danger: #ff3b30;
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 26px;
+        font-weight: 900;
+        color: #222;
     }
 
-    .dark {
-        --bg: #000;
-        --text: #fff;
-        --card: #1c1c1e;
-    }
-
-    .header {
-        padding: 15px;
-        background: var(--card);
-        font-size: 22px;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        border-bottom: 1px solid #ccc4;
-    }
-
-    .switch {
-        transform: scale(1.3);
-    }
-
-    .accordion-btn {
+    .cat-btn {
         width: 100%;
-        text-align: left;
-        padding: 15px;
-        margin-top: 12px;
-        font-size: 18px;
+        background: #007aff;
+        color: white;
+        padding: 18px;
+        font-size: 20px;
         border: none;
-        border-radius: 12px;
-        background: var(--card);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .info-btn {
-        font-size: 18px;
-        background: var(--blue);
-        color: #fff;
-        border-radius: 50%;
-        width: 26px;
-        height: 26px;
-        border: none;
-    }
-
-    .content {
-        display: none;
-        padding: 15px;
-    }
-
-    .item-card {
-        background: var(--card);
-        padding: 15px;
-        margin-bottom: 12px;
         border-radius: 14px;
-        font-size: 17px;
-        box-shadow: 0 1px 4px #0002;
+        margin-top: 15px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 3px 7px rgba(0,0,0,0.15);
     }
 
-    .row {
-        display: flex;
-        justify-content: space-between;
+    .categoria {
+        display: none;
         margin-top: 8px;
+        background: #ffffff;
+        padding: 14px;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .item {
+        background: #fff;
+        padding: 14px;
+        margin: 12px 0;
+        border-radius: 14px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: 0.2s;
+    }
+
+    .item.zero {
+        background: #ff4d4d !important;
+        color: white !important;
+    }
+
+    .nome {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .valor {
+        font-size: 16px;
+        color: #007aff;
+        margin-top: 2px;
+        font-weight: bold;
+    }
+
+    .restante {
+        font-size: 17px;
+        margin-top: 4px;
+        font-weight: bold;
+    }
+
+    .linha {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 14px;
+    }
+
+    .controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
     .btn {
-        width: 34px;
-        height: 34px;
-        border-radius: 10px;
-        border: none;
-        font-size: 20px;
-        background: var(--blue);
-        color: #fff;
-    }
-
-    .zero {
-        background: var(--danger) !important;
-        color: #fff !important;
-    }
-
-    #totalBox, #calcBox, #reportBox {
-        background: var(--card);
-        padding: 18px;
-        margin: 18px;
-        border-radius: 14px;
-        box-shadow: 0 1px 4px #0002;
-        font-size: 18px;
-    }
-
-    input {
-        width: 100%;
-        padding: 12px;
+        width: 45px;
+        height: 45px;
         border-radius: 12px;
         border: none;
-        margin-top: 8px;
-        font-size: 18px;
+        cursor: pointer;
+        font-size: 26px;
+        font-weight: bold;
     }
 
-    .popup-bg {
-        position: fixed;
-        inset: 0;
-        backdrop-filter: blur(10px);
-        background: #0007;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 999;
+    .menos { background: #ff3b30; color: white; }
+    .mais  { background: #34c759; color: white; }
+
+    .numero {
+        width: 45px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
     }
 
-    .popup {
-        background: var(--card);
-        width: 85%;
-        max-height: 80%;
-        overflow-y: auto;
-        padding: 20px;
-        border-radius: 20px;
-        box-shadow: 0 5px 15px #0003;
-    }
-
-    .close {
-        width: 100%;
-        padding: 12px;
-        font-size: 18px;
-        background: var(--blue);
-        color: #fff;
-        border: none;
-        border-radius: 12px;
+    #totalVendas, .caixa-info {
         margin-top: 20px;
+        padding: 20px;
+        background: #e6fff0;
+        border-radius: 16px;
+        font-size: 22px;
+        text-align: center;
+        font-weight: 900;
+        color: #0b6b1a;
     }
 
-    .export-btn {
-        background: #34c759 !important;
+    #limpar {
+        width: 100%;
+        background: #ff3b30;
+        color: white;
+        padding: 18px;
+        font-size: 20px;
+        border: none;
+        border-radius: 14px;
+        margin-top: 25px;
+        cursor: pointer;
+        font-weight: bold;
     }
-
 </style>
-</head>
-<body>
-
-<div class="header">
-    Controle de Sorvetes
-    <label>
-        🌙 <input type="checkbox" id="darkMode" class="switch">
-    </label>
-</div>
-
-<div id="accordion"></div>
-
-<div id="totalBox">
-    <b>TOTAL EM VENDAS: R$ <span id="totalVendas">0.00</span></b>
-</div>
-
-<div id="calcBox">
-    <label>Vendas em dinheiro:</label>
-    <input type="number" id="dinheiro" oninput="atualizarPagamento()">
-
-    <label>Vendas no cartão:</label>
-    <input type="number" id="cartao" readonly>
-
-    <br><br>
-    <b>Comissão total: R$ <span id="comissao">0.00</span></b>
-</div>
-
-<div id="reportBox">
-    <button class="close export-btn" onclick="exportar()">Exportar relatório</button>
-    <button class="close" onclick="resetar()">Limpar tudo</button>
-</div>
-
-<!-- POPUP -->
-<div class="popup-bg" id="popupBg">
-    <div class="popup" id="popup"></div>
-</div>
-
-<audio id="clickSound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg"></audio>
 
 <script>
-/* -----------------------------------
-   DADOS DAS CATEGORIAS E ITENS
------------------------------------ */
-const categorias = {
-    "Paletas Frutiverão": {
-        preco: 18,
-        itens: ["Frutilla", "Mango", "Coco", "Uva", "Maracujá"]
-    },
-    "Ao Leite Frutiverão": {
-        preco: 8,
-        itens: ["Raffaello", "Kinder Bueno", "Ninho", "Chokito"]
-    },
-    "Tropical Frutiverão": {
-        preco: 6,
-        itens: ["Açaí", "Cupuaçu", "Cajá", "Graviola"]
-    },
-    "Especial Frutiverão": {
-        preco: 13,
-        itens: ["Frutiblito", "Sunday Morango", "Sunday Chocolate"]
-    },
-    "Lançamentos": {
-        itensValores: {
-            "Pistache": 16,
-            "Unicórnio": 10
-        }
-    }
+/* ------------------- PREÇOS ------------------- */
+let precoPorCategoria = {
+    "PALETAS FRUTIVERÃO": 18,
+    "AO LEITE FRUTIVERÃO": 8,
+    "TROPICAL FRUTIVERÃO": 6,
+    "ESPECIAL FRUTIBLITO": 13,
+    "LANÇAMENTOS": null
 };
 
-let dados = JSON.parse(localStorage.getItem("sorvetes")) || {};
+let precosLancamentos = {
+    "Pistache": 16,
+    "Unicórnio": 10
+};
 
-/* -----------------------------------
-   CRIAÇÃO DO LAYOUT
------------------------------------ */
-function criarLayout() {
-    let html = "";
+/* ------------------- CATEGORIAS ------------------- */
+let categorias = {
+    "PALETAS FRUTIVERÃO": [
+        "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
+        "Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá","Açaí",
+        "Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino","Banana com Avelã",
+        "Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"
+    ],
 
-    Object.keys(categorias).forEach(cat => {
-        html += `
-        <button class="accordion-btn" onclick="toggle('${cat}')">
-            ${cat}
-            <button class="info-btn" onclick="abrirInfo(event, '${cat}')">i</button>
-        </button>
-        <div class="content" id="${cat}">`;
+    "AO LEITE FRUTIVERÃO": [
+        "Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango",
+        "Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"
+    ],
 
-        // Paletas normais
-        if (categorias[cat].itens) {
-            categorias[cat].itens.forEach(item => {
-                if (!dados[item]) dados[item] = { estoque: 0, vendidos: 0, preco: categorias[cat].preco };
+    "TROPICAL FRUTIVERÃO": [
+        "Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina",
+        "Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"
+    ],
 
-                html += gerarItemHTML(item);
-            });
-        }
+    "ESPECIAL FRUTIBLITO": [
+        "Frutiblito","Sunday de Chocolate","Sunday de Morango"
+    ],
 
-        // Lançamentos com preços diferentes
-        if (categorias[cat].itensValores) {
-            Object.keys(categorias[cat].itensValores).forEach(item => {
-                if (!dados[item]) dados[item] = { estoque: 0, vendidos: 0, preco: categorias[cat].itensValores[item] };
+    "LANÇAMENTOS": [
+        "Pistache","Unicórnio"
+    ]
+};
 
-                html += gerarItemHTML(item);
-            });
-        }
+let id = 1;
 
-        html += "</div>";
-    });
+/* ------------------- CARREGAR LOCALSTORAGE ------------------- */
+let total = Number(localStorage.getItem("totalVendas")) || 0;
+let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
 
-    document.getElementById("accordion").innerHTML = html;
-    atualizarTela();
-}
+let estoqueSalvo = JSON.parse(localStorage.getItem("estoque")) || {};
+let vendidoSalvo = JSON.parse(localStorage.getItem("vendido")) || {};
 
-function gerarItemHTML(item) {
-    return `
-    <div class="item-card" id="card-${item}">
-        <b>${item}</b>
+let cartao = total - dinheiro;
+if (cartao < 0) cartao = 0;
 
-        <div class="row">
-            Estoque: <input type="number" value="${dados[item].estoque}" 
-                onchange="mudarEstoque('${item}', this.value)">
-        </div>
+let comissao = dinheiro * 0.30 + cartao * 0.25;
 
-        <div class="row">
-            Vendidos: <b id="vend-${item}">${dados[item].vendidos}</b>
-        </div>
-
-        <div class="row">
-            <button class="btn" onclick="vender('${item}', -1)">-</button>
-            <button class="btn" onclick="vender('${item}', 1)">+</button>
-        </div>
-
-        <div class="row">
-            Restante: <b id="rest-${item}"></b>
-        </div>
-    </div>`;
-}
-
-/* -----------------------------------
-   FUNÇÕES PRINCIPAIS
------------------------------------ */
+/* ------------------- FUNÇÕES ------------------- */
 
 function toggle(cat) {
-    const el = document.getElementById(cat);
+    let el = document.getElementById("cat_" + cat);
     el.style.display = el.style.display === "block" ? "none" : "block";
 }
 
-function abrirInfo(event, cat) {
-    event.stopPropagation();
+function recalcularTotal() {
+    let novoTotal = 0;
+    let i = 1;
 
-    let lista = "";
-    let total = 0;
+    for (let cat in categorias) {
+        categorias[cat].forEach(sabor => {
+            let preco = precoPorCategoria[cat];
+            if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
 
-    if (categorias[cat].itens) {
-        categorias[cat].itens.forEach(i => {
-            lista += `<p><b>${i}</b> — Estoque: ${dados[i].estoque} — Vendidos: ${dados[i].vendidos}</p>`;
-            total += dados[i].estoque;
+            let vend = Number(document.getElementById("vend_" + i).innerText);
+            novoTotal += vend * preco;
+
+            i++;
         });
     }
 
-    if (categorias[cat].itensValores) {
-        Object.keys(categorias[cat].itensValores).forEach(i => {
-            lista += `<p><b>${i}</b> — Estoque: ${dados[i].estoque} — Vendidos: ${dados[i].vendidos}</p>`;
-            total += dados[i].estoque;
-        });
-    }
+    total = novoTotal;
+    document.getElementById("valorTotal").innerText = total.toFixed(2);
 
-    document.getElementById("popup").innerHTML = `
-        <h2>${cat}</h2>
-        ${lista}
-        <h3>Total do grupo: ${total}</h3>
-        <button class="close" onclick="fecharInfo()">Fechar</button>
-    `;
-
-    document.getElementById("popupBg").style.display = "flex";
+    atualizarFinanceiro();
 }
 
-function fecharInfo() {
-    document.getElementById("popupBg").style.display = "none";
-}
+function atualizar(id) {
+    let est = Number(document.getElementById("est_" + id).innerText);
+    let vend = Number(document.getElementById("vend_" + id).innerText);
+    let resto = est - vend;
 
-function mudarEstoque(item, valor) {
-    dados[item].estoque = Number(valor);
+    if (resto < 0) resto = 0;
+
+    document.getElementById("resto_" + id).innerText = "Restante: " + resto;
+
+    let item = document.getElementById("item_" + id);
+    if (resto === 0) item.classList.add("zero"); else item.classList.remove("zero");
+
+    estoqueSalvo[id] = est;
+    vendidoSalvo[id] = vend;
+
     salvar();
-    atualizarTela();
+    recalcularTotal();
 }
 
-function vender(item, qtd) {
-    const som = document.getElementById("clickSound");
-    som.play();
-
-    if (dados[item].vendidos + qtd < 0) return;
-    if (dados[item].estoque - (dados[item].vendidos + qtd) < 0) return;
-
-    dados[item].vendidos += qtd;
-    salvar();
-    atualizarTela();
+function add(tipo, id) {
+    let campo = document.getElementById(tipo + "_" + id);
+    campo.innerText = Number(campo.innerText) + 1;
+    atualizar(id);
 }
 
-function atualizarTela() {
-    let total = 0;
-
-    Object.keys(dados).forEach(item => {
-        const vendidos = dados[item].vendidos;
-        const preco = dados[item].preco;
-        total += vendidos * preco;
-
-        const restante = dados[item].estoque - vendidos;
-
-        document.getElementById(`vend-${item}`).innerText = vendidos;
-        document.getElementById(`rest-${item}`).innerText = restante;
-
-        const card = document.getElementById(`card-${item}`);
-        if (restante <= 0) card.classList.add("zero");
-        else card.classList.remove("zero");
-    });
-
-    document.getElementById("totalVendas").innerText = total.toFixed(2);
-
-    atualizarPagamento();
-}
-
-function atualizarPagamento() {
-    let total = Number(document.getElementById("totalVendas").innerText);
-    let dinheiro = Number(document.getElementById("dinheiro").value || 0);
-
-    if (dinheiro > total) dinheiro = total;
-
-    let cartao = total - dinheiro;
-
-    document.getElementById("cartao").value = cartao.toFixed(2);
-
-    let comissao = dinheiro * 0.30 + cartao * 0.25;
-
-    document.getElementById("comissao").innerText = comissao.toFixed(2);
-}
-
-function exportar() {
-    let texto = "RELATÓRIO DE VENDAS\n\n";
-
-    Object.keys(dados).forEach(item => {
-        texto += `${item} — Vendidos: ${dados[item].vendidos}\n`;
-    });
-
-    texto += `\nTotal: R$ ${document.getElementById("totalVendas").innerText}`;
-
-    const blob = new Blob([texto], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "relatorio.txt";
-    a.click();
-}
-
-function resetar() {
-    if (!confirm("Tem certeza que deseja limpar tudo?")) return;
-    localStorage.removeItem("sorvetes");
-    location.reload();
+function remove(tipo, id) {
+    let campo = document.getElementById(tipo + "_" + id);
+    if (Number(campo.innerText) > 0) campo.innerText--;
+    atualizar(id);
 }
 
 function salvar() {
-    localStorage.setItem("sorvetes", JSON.stringify(dados));
+    localStorage.setItem("estoque", JSON.stringify(estoqueSalvo));
+    localStorage.setItem("vendido", JSON.stringify(vendidoSalvo));
+    localStorage.setItem("totalVendas", total.toFixed(2));
+    localStorage.setItem("dinheiro", dinheiro.toFixed(2));
 }
 
-/* -----------------------------------
-   MODO ESCURO
------------------------------------ */
-document.getElementById("darkMode").onchange = e => {
-    if (e.target.checked) document.body.classList.add("dark");
-    else document.body.classList.remove("dark");
-};
+function atualizarFinanceiro() {
+    dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
 
-criarLayout();
+    cartao = total - dinheiro;
+    if (cartao < 0) cartao = 0;
+
+    comissao = dinheiro * 0.30 + cartao * 0.25;
+
+    document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
+    document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
+
+    salvar();
+}
+
+function limparTudo() {
+    localStorage.clear();
+    location.reload();
+}
 </script>
+
+</head>
+<body>
+
+<h1>Controle de Sorvetes</h1>
+
+<div id="conteudo">
+
+<script>
+for (let cat in categorias) {
+    document.write(`<button class="cat-btn" onclick="toggle('${cat}')">${cat}</button>`);
+    document.write(`<div id="cat_${cat}" class="categoria">`);
+
+    categorias[cat].forEach(sabor => {
+        let preco = precoPorCategoria[cat];
+        if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
+
+        let e = estoqueSalvo[id] || 0;
+        let v = vendidoSalvo[id] || 0;
+        let r = Math.max(0, e - v);
+
+        document.write(`
+            <div class="item ${r === 0 ? "zero" : ""}" id="item_${id}">
+                <div class="nome">${sabor}</div>
+                <div class="valor">Preço: R$ ${preco}</div>
+                <div class="restante" id="resto_${id}">Restante: ${r}</div>
+
+                <div class="linha">
+                    <div class="controls">
+                        <span>Estoque</span>
+                        <button class="btn menos" onclick="remove('est', ${id})">-</button>
+                        <span class="numero" id="est_${id}">${e}</span>
+                        <button class="btn mais" onclick="add('est', ${id})">+</button>
+                    </div>
+                </div>
+
+                <div class="linha">
+                    <div class="controls">
+                        <span>Vendido</span>
+                        <button class="btn menos" onclick="remove('vend', ${id})">-</button>
+                        <span class="numero" id="vend_${id}">${v}</span>
+                        <button class="btn mais" onclick="add('vend', ${id})">+</button>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        id++;
+    });
+
+    document.write("</div>");
+}
+</script>
+
+</div>
+
+<!-- TOTAL EM VENDAS -->
+<div id="totalVendas">
+    TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span>
+</div>
+
+<!-- DINHEIRO -->
+<div class="caixa-info">
+    VENDAS EM DINHEIRO:<br>
+    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}" 
+           oninput="atualizarFinanceiro()"
+           style="width: 90%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 22px; text-align: center;">
+</div>
+
+<!-- CARTÃO -->
+<div class="caixa-info">
+    VENDAS NO CARTÃO:<br>
+    <span id="campoCartao">R$ ${cartao.toFixed(2)}</span>
+</div>
+
+<!-- COMISSÃO -->
+<div class="caixa-info" style="background:#fff2cc; color:#8a6d00;">
+    COMISSÃO:<br>
+    <span id="campoComissao">R$ ${comissao.toFixed(2)}</span>
+</div>
+
+<!-- BOTÃO LIMPAR -->
+<button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
+
+<script>
+recalcularTotal();
+</script>
+
 </body>
 </html>
