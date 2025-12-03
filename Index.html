@@ -338,7 +338,7 @@ function gerarRelatorio() {
     texto += `CARTÃO: R$ ${cartao.toFixed(2)}\n`;
     texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
     texto += "---------------------------------------\n";
-    texto += "Relatório gerado automaticamente.\n";
+    
 
     let blob = new Blob([texto], { type: "text/plain" });
     let url = URL.createObjectURL(blob);
@@ -361,6 +361,16 @@ function limparTudo() {
 <body>
 
 <h1>Controle de Sorvetes</h1>
+<div class="caixa-info" style="margin-top: 15px;">
+    <label style="font-weight:bold;">Nome do vendedor:</label><br>
+    <input id="campoVendedor" type="text" placeholder="Digite seu nome"
+           style="width: 90%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 22px; text-align: center;"
+           oninput="localStorage.setItem('vendedor', this.value)">
+</div>
+
+<script>
+document.getElementById('campoVendedor').value = localStorage.getItem('vendedor') || "Zayan";
+</script>
 
 <div id="conteudo">
 
