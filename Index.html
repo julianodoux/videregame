@@ -1,306 +1,433 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Controle de Sorvetes</title>
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background: #f2f2f2;
-        padding: 10px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        transition: 0.3s;
     }
 
-    .category-button {
+    :root {
+        --bg: #f2f2f7;
+        --text: #000;
+        --card: #fff;
+        --blue: #007aff;
+        --danger: #ff3b30;
+    }
+
+    .dark {
+        --bg: #000;
+        --text: #fff;
+        --card: #1c1c1e;
+    }
+
+    .header {
+        padding: 15px;
+        background: var(--card);
+        font-size: 22px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid #ccc4;
+    }
+
+    .switch {
+        transform: scale(1.3);
+    }
+
+    .accordion-btn {
         width: 100%;
-        background: #007bff;
-        color: white;
-        padding: 14px;
         text-align: left;
-        border: none;
-        border-radius: 10px;
+        padding: 15px;
+        margin-top: 12px;
         font-size: 18px;
-        margin-top: 10px;
+        border: none;
+        border-radius: 12px;
+        background: var(--card);
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
     .info-btn {
-        background: #ffffff55;
-        color: white;
+        font-size: 18px;
+        background: var(--blue);
+        color: #fff;
+        border-radius: 50%;
+        width: 26px;
+        height: 26px;
         border: none;
-        padding: 6px 10px;
-        border-radius: 8px;
-        font-size: 16px;
-        margin-left: 8px;
     }
 
-    .category-content {
+    .content {
         display: none;
-        background: white;
-        margin-top: 5px;
-        padding: 10px;
-        border-radius: 10px;
+        padding: 15px;
     }
 
-    .item {
-        background: #fff;
-        padding: 10px;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        font-size: 16px;
-    }
-
-    .item.red {
-        background: #ffb3b3;
+    .item-card {
+        background: var(--card);
+        padding: 15px;
+        margin-bottom: 12px;
+        border-radius: 14px;
+        font-size: 17px;
+        box-shadow: 0 1px 4px #0002;
     }
 
     .row {
         display: flex;
         justify-content: space-between;
-        margin-top: 5px;
+        margin-top: 8px;
+    }
+
+    .btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        border: none;
+        font-size: 20px;
+        background: var(--blue);
+        color: #fff;
+    }
+
+    .zero {
+        background: var(--danger) !important;
+        color: #fff !important;
+    }
+
+    #totalBox, #calcBox, #reportBox {
+        background: var(--card);
+        padding: 18px;
+        margin: 18px;
+        border-radius: 14px;
+        box-shadow: 0 1px 4px #0002;
+        font-size: 18px;
     }
 
     input {
-        width: 60px;
-        font-size: 16px;
-        padding: 4px;
-    }
-
-    button {
-        padding: 6px 10px;
-        font-size: 18px;
-        border-radius: 6px;
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
         border: none;
+        margin-top: 8px;
+        font-size: 18px;
     }
 
-    #total {
-        background: #fff;
-        padding: 15px;
-        margin-top: 20px;
-        border-radius: 10px;
-        font-size: 22px;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    /* POPUP iOS STYLE (Tela cheia) */
-    #popupOverlay {
+    .popup-bg {
         position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.45);
-        backdrop-filter: blur(8px);
+        inset: 0;
+        backdrop-filter: blur(10px);
+        background: #0007;
         display: none;
         justify-content: center;
         align-items: center;
-        z-index: 9999;
+        z-index: 999;
     }
 
-    #popupBox {
-        width: 90%;
-        height: 80%;
-        background: white;
-        border-radius: 18px;
-        padding: 18px;
+    .popup {
+        background: var(--card);
+        width: 85%;
+        max-height: 80%;
         overflow-y: auto;
-        animation: fadeIn 0.25s;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 5px 15px #0003;
     }
 
-    #popupTitle {
-        font-size: 26px;
-        text-align: center;
-        margin-bottom: 15px;
-        font-weight: bold;
-    }
-
-    #closePopup {
+    .close {
         width: 100%;
-        background: #ff4444;
-        border: none;
-        padding: 14px;
-        color: white;
-        border-radius: 10px;
+        padding: 12px;
         font-size: 18px;
+        background: var(--blue);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
         margin-top: 20px;
     }
 
-    @keyframes fadeIn {
-        from {opacity: 0; transform: scale(0.95);}
-        to {opacity: 1; transform: scale(1);}
+    .export-btn {
+        background: #34c759 !important;
     }
+
 </style>
 </head>
-
 <body>
 
-<h2 style="text-align:center; margin-bottom:10px;">Controle de Sorvetes</h2>
-
-<div id="categories"></div>
-
-<div id="total">TOTAL EM VENDAS: R$ 0,00</div>
-
-<!-- POPUP FULLSCREEN -->
-<div id="popupOverlay">
-    <div id="popupBox">
-        <div id="popupTitle"></div>
-        <div id="popupContent"></div>
-        <button id="closePopup">Fechar</button>
-    </div>
+<div class="header">
+    Controle de Sorvetes
+    <label>
+        🌙 <input type="checkbox" id="darkMode" class="switch">
+    </label>
 </div>
 
+<div id="accordion"></div>
+
+<div id="totalBox">
+    <b>TOTAL EM VENDAS: R$ <span id="totalVendas">0.00</span></b>
+</div>
+
+<div id="calcBox">
+    <label>Vendas em dinheiro:</label>
+    <input type="number" id="dinheiro" oninput="atualizarPagamento()">
+
+    <label>Vendas no cartão:</label>
+    <input type="number" id="cartao" readonly>
+
+    <br><br>
+    <b>Comissão total: R$ <span id="comissao">0.00</span></b>
+</div>
+
+<div id="reportBox">
+    <button class="close export-btn" onclick="exportar()">Exportar relatório</button>
+    <button class="close" onclick="resetar()">Limpar tudo</button>
+</div>
+
+<!-- POPUP -->
+<div class="popup-bg" id="popupBg">
+    <div class="popup" id="popup"></div>
+</div>
+
+<audio id="clickSound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg"></audio>
+
 <script>
-
-const categories = {
-    "Paletas FRUTVERAO": [
-        "Raffaello", "Oreo", "Doce de Leite", "Morango", "Uva",
-        "Romeu e Julieta", "Prestígio", "Leite Ninho Tradicional"
-    ],
-    "Ao Leite FRUTVERAO": ["Morango", "Chocolate", "Coco"],
-    "Tropical FRUTVERAO": ["Maracujá", "Abacaxi", "Açaí", "Tutti-frutti"],
-    "Especial FRUTVERAO": ["Frutiblito", "Sunday"],
-    "Lançamentos": ["Pistache", "Unicórnio"]
+/* -----------------------------------
+   DADOS DAS CATEGORIAS E ITENS
+----------------------------------- */
+const categorias = {
+    "Paletas Frutiverão": {
+        preco: 18,
+        itens: ["Frutilla", "Mango", "Coco", "Uva", "Maracujá"]
+    },
+    "Ao Leite Frutiverão": {
+        preco: 8,
+        itens: ["Raffaello", "Kinder Bueno", "Ninho", "Chokito"]
+    },
+    "Tropical Frutiverão": {
+        preco: 6,
+        itens: ["Açaí", "Cupuaçu", "Cajá", "Graviola"]
+    },
+    "Especial Frutiverão": {
+        preco: 13,
+        itens: ["Frutiblito", "Sunday Morango", "Sunday Chocolate"]
+    },
+    "Lançamentos": {
+        itensValores: {
+            "Pistache": 16,
+            "Unicórnio": 10
+        }
+    }
 };
 
-const prices = {
-    "Paletas FRUTVERAO": 18,
-    "Ao Leite FRUTVERAO": 8,
-    "Tropical FRUTVERAO": 6,
-    "Especial FRUTVERAO": 13,
-    "Lançamentos": { "Pistache": 16, "Unicórnio": 10 }
-};
+let dados = JSON.parse(localStorage.getItem("sorvetes")) || {};
 
-let stock = JSON.parse(localStorage.getItem("stock")) || {};
-let sold = JSON.parse(localStorage.getItem("sold")) || {};
-
-function save() {
-    localStorage.setItem("stock", JSON.stringify(stock));
-    localStorage.setItem("sold", JSON.stringify(sold));
-}
-
-function render() {
-    const container = document.getElementById("categories");
-    container.innerHTML = "";
-
-    for (let cat in categories) {
-
-        const catBtn = document.createElement("button");
-        catBtn.className = "category-button";
-        catBtn.innerHTML = `${cat}`;
-
-        const infoBtn = document.createElement("button");
-        infoBtn.className = "info-btn";
-        infoBtn.innerText = "i";
-        infoBtn.onclick = () => openPopup(cat);
-
-        catBtn.appendChild(infoBtn);
-
-        container.appendChild(catBtn);
-
-        const box = document.createElement("div");
-        box.className = "category-content";
-
-        catBtn.onclick = (e) => {
-            if (e.target === infoBtn) return;
-            box.style.display = box.style.display === "block" ? "none" : "block";
-        };
-
-        categories[cat].forEach(item => {
-            if (!stock[item]) stock[item] = 0;
-            if (!sold[item]) sold[item] = 0;
-
-            const div = document.createElement("div");
-            div.className = "item";
-
-            const remaining = stock[item] - sold[item];
-            if (remaining <= 0) div.classList.add("red");
-
-            div.innerHTML = `
-                <strong>${item}</strong><br>
-                Estoque: <input type="number" value="${stock[item]}" 
-                    onchange="updateStock('${item}', this.value)">
-                <br>
-                Vendidos:
-                <button onclick="changeSold('${item}', -1)">-</button>
-                ${sold[item]}
-                <button onclick="changeSold('${item}', 1)">+</button>
-                <br>
-                Restante: <strong>${remaining}</strong>
-            `;
-
-            box.appendChild(div);
-        });
-
-        container.appendChild(box);
-    }
-
-    updateTotal();
-}
-
-function updateStock(item, value) {
-    stock[item] = Number(value);
-    save();
-    render();
-}
-
-function changeSold(item, val) {
-    sold[item] = Math.max(0, sold[item] + val);
-    save();
-    render();
-}
-
-function updateTotal() {
-    let total = 0;
-
-    for (let cat in categories) {
-        categories[cat].forEach(item => {
-            let price = prices[cat];
-            if (typeof price === "object") price = price[item];
-            total += sold[item] * price;
-        });
-    }
-
-    document.getElementById("total").innerHTML =
-        `TOTAL EM VENDAS: R$ ${total.toFixed(2).replace(".", ",")}`;
-}
-
-/* POPUP */
-function openPopup(cat) {
-    const overlay = document.getElementById("popupOverlay");
-    const title = document.getElementById("popupTitle");
-    const content = document.getElementById("popupContent");
-
-    title.innerText = cat;
-
-    let totalStock = 0;
-    let totalSold = 0;
-
+/* -----------------------------------
+   CRIAÇÃO DO LAYOUT
+----------------------------------- */
+function criarLayout() {
     let html = "";
 
-    categories[cat].forEach(item => {
-        totalStock += stock[item];
-        totalSold += sold[item];
+    Object.keys(categorias).forEach(cat => {
+        html += `
+        <button class="accordion-btn" onclick="toggle('${cat}')">
+            ${cat}
+            <button class="info-btn" onclick="abrirInfo(event, '${cat}')">i</button>
+        </button>
+        <div class="content" id="${cat}">`;
 
-        html += `<p><strong>${item}</strong>:  
-                 Estoque: ${stock[item]} — Vendidos: ${sold[item]} — Restante: ${stock[item] - sold[item]}</p>`;
+        // Paletas normais
+        if (categorias[cat].itens) {
+            categorias[cat].itens.forEach(item => {
+                if (!dados[item]) dados[item] = { estoque: 0, vendidos: 0, preco: categorias[cat].preco };
+
+                html += gerarItemHTML(item);
+            });
+        }
+
+        // Lançamentos com preços diferentes
+        if (categorias[cat].itensValores) {
+            Object.keys(categorias[cat].itensValores).forEach(item => {
+                if (!dados[item]) dados[item] = { estoque: 0, vendidos: 0, preco: categorias[cat].itensValores[item] };
+
+                html += gerarItemHTML(item);
+            });
+        }
+
+        html += "</div>";
     });
 
-    content.innerHTML =
-        `<h3>Total Estoque: ${totalStock}</h3>
-         <h3>Total Vendidos: ${totalSold}</h3>
-         <h3>Restante: ${totalStock - totalSold}</h3>
-         <hr>` + html;
-
-    overlay.style.display = "flex";
+    document.getElementById("accordion").innerHTML = html;
+    atualizarTela();
 }
 
-document.getElementById("closePopup").onclick = () => {
-    document.getElementById("popupOverlay").style.display = "none";
+function gerarItemHTML(item) {
+    return `
+    <div class="item-card" id="card-${item}">
+        <b>${item}</b>
+
+        <div class="row">
+            Estoque: <input type="number" value="${dados[item].estoque}" 
+                onchange="mudarEstoque('${item}', this.value)">
+        </div>
+
+        <div class="row">
+            Vendidos: <b id="vend-${item}">${dados[item].vendidos}</b>
+        </div>
+
+        <div class="row">
+            <button class="btn" onclick="vender('${item}', -1)">-</button>
+            <button class="btn" onclick="vender('${item}', 1)">+</button>
+        </div>
+
+        <div class="row">
+            Restante: <b id="rest-${item}"></b>
+        </div>
+    </div>`;
+}
+
+/* -----------------------------------
+   FUNÇÕES PRINCIPAIS
+----------------------------------- */
+
+function toggle(cat) {
+    const el = document.getElementById(cat);
+    el.style.display = el.style.display === "block" ? "none" : "block";
+}
+
+function abrirInfo(event, cat) {
+    event.stopPropagation();
+
+    let lista = "";
+    let total = 0;
+
+    if (categorias[cat].itens) {
+        categorias[cat].itens.forEach(i => {
+            lista += `<p><b>${i}</b> — Estoque: ${dados[i].estoque} — Vendidos: ${dados[i].vendidos}</p>`;
+            total += dados[i].estoque;
+        });
+    }
+
+    if (categorias[cat].itensValores) {
+        Object.keys(categorias[cat].itensValores).forEach(i => {
+            lista += `<p><b>${i}</b> — Estoque: ${dados[i].estoque} — Vendidos: ${dados[i].vendidos}</p>`;
+            total += dados[i].estoque;
+        });
+    }
+
+    document.getElementById("popup").innerHTML = `
+        <h2>${cat}</h2>
+        ${lista}
+        <h3>Total do grupo: ${total}</h3>
+        <button class="close" onclick="fecharInfo()">Fechar</button>
+    `;
+
+    document.getElementById("popupBg").style.display = "flex";
+}
+
+function fecharInfo() {
+    document.getElementById("popupBg").style.display = "none";
+}
+
+function mudarEstoque(item, valor) {
+    dados[item].estoque = Number(valor);
+    salvar();
+    atualizarTela();
+}
+
+function vender(item, qtd) {
+    const som = document.getElementById("clickSound");
+    som.play();
+
+    if (dados[item].vendidos + qtd < 0) return;
+    if (dados[item].estoque - (dados[item].vendidos + qtd) < 0) return;
+
+    dados[item].vendidos += qtd;
+    salvar();
+    atualizarTela();
+}
+
+function atualizarTela() {
+    let total = 0;
+
+    Object.keys(dados).forEach(item => {
+        const vendidos = dados[item].vendidos;
+        const preco = dados[item].preco;
+        total += vendidos * preco;
+
+        const restante = dados[item].estoque - vendidos;
+
+        document.getElementById(`vend-${item}`).innerText = vendidos;
+        document.getElementById(`rest-${item}`).innerText = restante;
+
+        const card = document.getElementById(`card-${item}`);
+        if (restante <= 0) card.classList.add("zero");
+        else card.classList.remove("zero");
+    });
+
+    document.getElementById("totalVendas").innerText = total.toFixed(2);
+
+    atualizarPagamento();
+}
+
+function atualizarPagamento() {
+    let total = Number(document.getElementById("totalVendas").innerText);
+    let dinheiro = Number(document.getElementById("dinheiro").value || 0);
+
+    if (dinheiro > total) dinheiro = total;
+
+    let cartao = total - dinheiro;
+
+    document.getElementById("cartao").value = cartao.toFixed(2);
+
+    let comissao = dinheiro * 0.30 + cartao * 0.25;
+
+    document.getElementById("comissao").innerText = comissao.toFixed(2);
+}
+
+function exportar() {
+    let texto = "RELATÓRIO DE VENDAS\n\n";
+
+    Object.keys(dados).forEach(item => {
+        texto += `${item} — Vendidos: ${dados[item].vendidos}\n`;
+    });
+
+    texto += `\nTotal: R$ ${document.getElementById("totalVendas").innerText}`;
+
+    const blob = new Blob([texto], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "relatorio.txt";
+    a.click();
+}
+
+function resetar() {
+    if (!confirm("Tem certeza que deseja limpar tudo?")) return;
+    localStorage.removeItem("sorvetes");
+    location.reload();
+}
+
+function salvar() {
+    localStorage.setItem("sorvetes", JSON.stringify(dados));
+}
+
+/* -----------------------------------
+   MODO ESCURO
+----------------------------------- */
+document.getElementById("darkMode").onchange = e => {
+    if (e.target.checked) document.body.classList.add("dark");
+    else document.body.classList.remove("dark");
 };
 
-render();
-
+criarLayout();
 </script>
 </body>
 </html>
