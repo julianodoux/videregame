@@ -301,7 +301,7 @@ function atualizarFinanceiro() {
 
 function gerarRelatorio() {
 
-    let vendedor = document.getElementById("campoVendedor").value || "";
+    let vendedor = document.getElementById("campoVendedor").value || "Zayan";
 
     let hoje = new Date();
     let dia = String(hoje.getDate()).padStart(2, '0');
@@ -343,20 +343,6 @@ function gerarRelatorio() {
     texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
     texto += "\nRelatório gerado automaticamente.\n";
 
-    // Exibir no pop-up
-    document.getElementById("textoRelatorio").value = texto;
-    document.getElementById("popupRelatorio").style.display = "flex";
-}
-    let cartaoLiquido = cartao * 0.95;
-    let base = dinheiro + cartaoLiquido;
-    let comissaoCalc = base * 0.30;
-
-    texto += `\nTOTAL GERAL: R$ ${totalCategorias.toFixed(2)}\n`;
-    texto += `DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
-    texto += `CARTÃO: R$ ${cartao.toFixed(2)}\n`;
-    texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
-    texto += "\nRelatório gerado automaticamente.\n";
-
     let blob = new Blob([texto], { type: "text/plain" });
     let url = URL.createObjectURL(blob);
 
@@ -388,7 +374,7 @@ function limparTudo() {
 </div>
 
 <script>
-document.getElementById('campoVendedor').value = localStorage.getItem('vendedor') || "";
+document.getElementById('campoVendedor').value = localStorage.getItem('vendedor') || "Zayan";
 </script>
 
 <div id="conteudo">
