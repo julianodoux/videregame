@@ -300,44 +300,42 @@ function atualizarFinanceiro() {
 
 /* ------------------- GERAR RELATÓRIO ------------------- */
 
+
 function gerarRelatorio() {
 
-    let texto = "RELATÓRIO DE VENDAS - SORVETES\n";
+    let texto = "RELATÓRIO SIMPLIFICADO DE VENDAS\n";
     texto += "---------------------------------------\n\n";
 
     let i = 1;
+    let totalCategorias = 0;
 
     for (let cat in categorias) {
-        texto += `\n=== ${cat} ===\n`;
+
+        let totalCat = 0;
 
         categorias[cat].forEach(sabor => {
             let preco = precoPorCategoria[cat];
             if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
 
-            let est = estoqueSalvo[i] || 0;
             let vend = vendidoSalvo[i] || 0;
-            let resto = est - vend;
-            if (resto < 0) resto = 0;
-
-            texto += `\n${sabor}\n`;
-            texto += `Preço: R$ ${preco}\n`;
-            texto += `Estoque: ${est}\n`;
-            texto += `Vendido: ${vend}\n`;
-            texto += `Restante: ${resto}\n`;
+            totalCat += vend * preco;
 
             i++;
         });
+
+        texto += `${cat}: R$ ${totalCat.toFixed(2)}\n`;
+        totalCategorias += totalCat;
     }
 
-    // NOVA REGRA PARA O RELATÓRIO
+    // NOVA REGRA PARA A COMISSÃO
     let cartaoLiquido = cartao * 0.95;
     let base = dinheiro + cartaoLiquido;
     let comissaoCalc = base * 0.30;
 
     texto += "\n---------------------------------------\n";
-    texto += `TOTAL EM VENDAS: R$ ${total.toFixed(2)}\n`;
-    texto += `VENDAS EM DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
-    texto += `VENDAS NO CARTÃO: R$ ${cartao.toFixed(2)}\n`;
+    texto += `TOTAL GERAL: R$ ${totalCategorias.toFixed(2)}\n`;
+    texto += `DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
+    texto += `CARTÃO: R$ ${cartao.toFixed(2)}\n`;
     texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
     texto += "---------------------------------------\n";
     texto += "Relatório gerado automaticamente.\n";
@@ -347,7 +345,7 @@ function gerarRelatorio() {
 
     let a = document.createElement("a");
     a.href = url;
-    a.download = "relatorio_sorvetes.txt";
+    a.download = "relatorio_simplificado.txt";
     a.click();
 
     URL.revokeObjectURL(url);
