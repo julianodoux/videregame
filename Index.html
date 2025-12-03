@@ -80,7 +80,7 @@
 
     .linha {
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
         margin-top: 14px;
     }
 
@@ -124,6 +124,19 @@
     #limpar {
         width: 100%;
         background: #ff3b30;
+        color: white;
+        padding: 18px;
+        font-size: 20px;
+        border: none;
+        border-radius: 14px;
+        margin-top: 25px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    #relatorio {
+        width: 100%;
+        background: #5856d6;
         color: white;
         padding: 18px;
         font-size: 20px;
@@ -180,7 +193,7 @@ let categorias = {
 
 let id = 1;
 
-/* ------------------- CARREGAR LOCALSTORAGE ------------------- */
+/* ------------------- LOCALSTORAGE ------------------- */
 let total = Number(localStorage.getItem("totalVendas")) || 0;
 let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
 
@@ -273,6 +286,56 @@ function atualizarFinanceiro() {
     salvar();
 }
 
+/* ------------------- GERAR RELATÓRIO ------------------- */
+
+function gerarRelatorio() {
+
+    let texto = "RELATÓRIO DE VENDAS - SORVETES\n";
+    texto += "---------------------------------------\n\n";
+
+    let i = 1;
+
+    for (let cat in categorias) {
+        texto += `\n=== ${cat} ===\n`;
+
+        categorias[cat].forEach(sabor => {
+            let preco = precoPorCategoria[cat];
+            if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
+
+            let est = estoqueSalvo[i] || 0;
+            let vend = vendidoSalvo[i] || 0;
+            let resto = est - vend;
+            if (resto < 0) resto = 0;
+
+            texto += `\n${sabor}\n`;
+            texto += `Preço: R$ ${preco}\n`;
+            texto += `Estoque: ${est}\n`;
+            texto += `Vendido: ${vend}\n`;
+            texto += `Restante: ${resto}\n`;
+
+            i++;
+        });
+    }
+
+    texto += "\n---------------------------------------\n";
+    texto += `TOTAL EM VENDAS: R$ ${total.toFixed(2)}\n`;
+    texto += `VENDAS EM DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
+    texto += `VENDAS NO CARTÃO: R$ ${cartao.toFixed(2)}\n`;
+    texto += `COMISSÃO: R$ ${comissao.toFixed(2)}\n`;
+    texto += "---------------------------------------\n";
+    texto += "Relatório gerado automaticamente.\n";
+
+    let blob = new Blob([texto], { type: "text/plain" });
+    let url = URL.createObjectURL(blob);
+
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = "relatorio_sorvetes.txt";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
 function limparTudo() {
     localStorage.clear();
     location.reload();
@@ -334,7 +397,7 @@ for (let cat in categorias) {
 
 </div>
 
-<!-- TOTAL EM VENDAS -->
+<!-- TOTAL EM VENDAS --> 
 <div id="totalVendas">
     TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span>
 </div>
@@ -358,6 +421,9 @@ for (let cat in categorias) {
     COMISSÃO:<br>
     <span id="campoComissao">R$ ${comissao.toFixed(2)}</span>
 </div>
+
+<!-- BOTÃO GERAR RELATÓRIO -->
+<button id="relatorio" onclick="gerarRelatorio()">GERAR RELATÓRIO</button>
 
 <!-- BOTÃO LIMPAR -->
 <button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
