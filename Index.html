@@ -287,10 +287,9 @@ function atualizarFinanceiro() {
     cartao = total - dinheiro;
     if (cartao < 0) cartao = 0;
 
-    // NOVA REGRA:
-    let cartaoLiquido = cartao * 0.95;      // tira 5%
-    let base = dinheiro + cartaoLiquido;    // soma com dinheiro
-    comissao = base * 0.30;                 // pega 30%
+    let cartaoLiquido = cartao * 0.95;
+    let base = dinheiro + cartaoLiquido;
+    comissao = base * 0.30;
 
     document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
     document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
@@ -298,13 +297,20 @@ function atualizarFinanceiro() {
     salvar();
 }
 
-/* ------------------- GERAR RELATÓRIO ------------------- */
-
+/* ------------------- GERAR RELATÓRIO (NOVO) ------------------- */
 
 function gerarRelatorio() {
 
-    let texto = "RELATÓRIO SIMPLIFICADO DE VENDAS\n";
-    texto += "---------------------------------------\n\n";
+    let vendedor = document.getElementById("campoVendedor").value || "Zayan";
+
+    let hoje = new Date();
+    let dia = String(hoje.getDate()).padStart(2, '0');
+    let mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    let ano = hoje.getFullYear();
+    let dataFormatada = `${dia}/${mes}/${ano}`;
+
+    let texto = `RELATÓRIO DIA ${dataFormatada}\n`;
+    texto += `${vendedor.toUpperCase()}\n\n`;
 
     let i = 1;
     let totalCategorias = 0;
@@ -327,18 +333,15 @@ function gerarRelatorio() {
         totalCategorias += totalCat;
     }
 
-    // NOVA REGRA PARA A COMISSÃO
     let cartaoLiquido = cartao * 0.95;
     let base = dinheiro + cartaoLiquido;
     let comissaoCalc = base * 0.30;
 
-    texto += "\n---------------------------------------\n";
-    texto += `TOTAL GERAL: R$ ${totalCategorias.toFixed(2)}\n`;
+    texto += `\nTOTAL GERAL: R$ ${totalCategorias.toFixed(2)}\n`;
     texto += `DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
     texto += `CARTÃO: R$ ${cartao.toFixed(2)}\n`;
     texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
-    texto += "---------------------------------------\n";
-    
+    texto += "\nRelatório gerado automaticamente.\n";
 
     let blob = new Blob([texto], { type: "text/plain" });
     let url = URL.createObjectURL(blob);
@@ -361,6 +364,8 @@ function limparTudo() {
 <body>
 
 <h1>Controle de Sorvetes</h1>
+
+<!-- CAMPO DO NOME DO VENDEDOR -->
 <div class="caixa-info" style="margin-top: 15px;">
     <label style="font-weight:bold;">Nome do vendedor:</label><br>
     <input id="campoVendedor" type="text" placeholder="Digite seu nome"
