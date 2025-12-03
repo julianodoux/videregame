@@ -355,6 +355,16 @@ function limparTudo() {
     localStorage.clear();
     location.reload();
 }
+
+function fecharPopup() {
+    document.getElementById("popupRelatorio").style.display = "none";
+}
+
+function enviarWhatsApp() {
+    let texto = encodeURIComponent(window.relatorioTexto);
+    let url = `https://wa.me/?text=${texto}`;
+    window.open(url, '_blank');
+}
 </script>
 
 </head>
@@ -456,16 +466,9 @@ for (let cat in categorias) {
 <button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
 
 <script>
-function fecharPopup() {
-    document.getElementById("popupRelatorio").style.display = "none";
-}
-
-function enviarWhatsApp() {
-    let texto = encodeURIComponent(window.relatorioTexto);
-    let url = `https://wa.me/?text=${texto}`;
-    window.open(url, '_blank');
-}();
+recalcularTotal();
 </script>
+
 <!-- POP-UP DE RELATÓRIO -->
 <div id="popupRelatorio" 
      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
