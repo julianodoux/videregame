@@ -7,306 +7,206 @@
 
 <style>
     body {
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Arial, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro", "Roboto", Arial, sans-serif;
         background: #f2f2f7;
-        padding: 14px;
-        color: #1c1c1e;
-        margin: 0;
+        padding: 12px;
+        color: #333;
+        max-width: 480px;
+        margin: auto;
     }
 
     h1 {
-        font-size: 26px;
-        font-weight: 900;
         text-align: center;
-        margin-bottom: 20px;
+        font-weight: 700;
         color: #111;
     }
 
-    .card {
-        background: white;
-        padding: 18px;
-        border-radius: 18px;
-        margin-bottom: 16px;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    .section {
+        background: #fff;
+        padding: 12px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
-    .categoria-titulo {
-        font-size: 20px;
-        font-weight: 700;
-        margin-bottom: 10px;
-    }
-
-    .linha {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 6px 0;
-        border-bottom: 1px solid #eee;
-    }
-
-    .linha:last-child {
-        border-bottom: none;
-    }
-
-    .controles button {
-        width: 36px;
-        height: 36px;
-        font-size: 20px;
-        border: none;
-        border-radius: 10px;
-        background: #e5e5ea;
-    }
-
-    input {
-        width: 70px;
-        height: 36px;
-        text-align: center;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        font-size: 18px;
-    }
-
-    button.principal {
+    input[type="number"], input[type="text"] {
         width: 100%;
-        padding: 16px;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        margin-top: 6px;
+        margin-bottom: 12px;
+    }
+
+    button {
+        width: 100%;
+        padding: 13px;
+        border: none;
+        border-radius: 12px;
+        font-size: 17px;
+        margin-top: 10px;
+        cursor: pointer;
+        font-weight: 600;
         background: #007aff;
         color: white;
-        border: none;
-        font-size: 20px;
-        font-weight: bold;
+    }
+
+    .popup {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.45);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .popup-content {
+        background: white;
+        padding: 20px;
         border-radius: 14px;
-        margin-top: 15px;
+        width: 100%;
+        max-width: 420px;
+        max-height: 80%;
+        overflow-y: auto;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
 
-    /* POP-UP */
-    #previewModal {
-        display:none;
-        position:fixed;
-        top:0; left:0;
-        width:100%; height:100%;
-        background:rgba(0,0,0,0.55);
-        backdrop-filter:blur(5px);
-        justify-content:center;
-        align-items:center;
-        padding:20px;
-        z-index: 9999;
+    .popup button {
+        width: auto;
+        margin-right: 10px;
     }
-
-    #previewBox {
-        background:white;
-        width:95%;
-        max-width:450px;
-        padding:20px;
-        border-radius:18px;
-        box-shadow:0 6px 18px rgba(0,0,0,0.25);
-    }
-
-    #previewTexto {
-        width:100%;
-        height:350px;
-        padding:14px;
-        font-size:18px;
-        border-radius:10px;
-        border:1px solid #ccc;
-        resize:none;
-    }
-
-    .btnPop {
-        width:100%;
-        padding:14px;
-        border:none;
-        border-radius:12px;
-        color:white;
-        font-size:20px;
-        font-weight:bold;
-        margin-top:10px;
-    }
-
 </style>
 </head>
-
 <body>
 
 <h1>Controle de Vendas</h1>
 
-<!-- CAMPO DO VENDEDOR -->
-<div class="card">
-    <label style="font-size:18px; font-weight:600;">Nome para o relatório:</label>
-    <input type="text" id="campoVendedor" placeholder="Ex: Zayan" 
-           style="width:100%; margin-top:10px; height:45px; font-size:20px;">
+<div class="section">
+    <label><b>Seu nome no relatório:</b></label>
+    <input type="text" id="nomeRelatorio" placeholder="Ex: Zayan">
 </div>
 
-<!-- AQUI ENTRA O SEU SISTEMA DE CATEGORIAS (NÃO ALTEREI NADA) -->
+<div class="section">
+    <h2>Sorvetes</h2>
+    <label>Picolé simples (R$ 4):</label>
+    <input type="number" id="quant1" value="0">
 
-<div id="categoriasContainer"></div>
+    <label>Picolé especial (R$ 6):</label>
+    <input type="number" id="quant2" value="0">
 
-<button class="principal" onclick="gerarRelatorio()">GERAR RELATÓRIO</button>
+    <label>Sorvete 300ml (R$ 8):</label>
+    <input type="number" id="quant3" value="0">
 
+    <label>Sorvete 500ml (R$ 10):</label>
+    <input type="number" id="quant4" value="0">
 
-<!-- POP-UP DE VISUALIZAÇÃO -->
-<div id="previewModal">
-    <div id="previewBox">
-        <h3 style="margin-top:0; font-size:22px; text-align:center; font-weight:900;">
-            Visualização do Relatório
-        </h3>
+    <button onclick="calcular()">Atualizar Total</button>
+</div>
 
-        <textarea id="previewTexto"></textarea>
+<div class="section">
+    <h2>Pagamento</h2>
+    <label>Dinheiro recebido:</label>
+    <input type="number" id="campoDinheiro" value="0" oninput="atualizarFinanceiro()">
 
-        <button class="btnPop" onclick="copiarRelatorio()" style="background:#34c759;">
-            COPIAR TEXTO
-        </button>
+    <p><b>Cartão:</b> <span id="campoCartao">R$ 0.00</span></p>
+    <p><b>Comissão:</b> <span id="campoComissao">R$ 0.00</span></p>
+</div>
 
-        <button class="btnPop" onclick="baixarRelatorio()" style="background:#5856d6;">
-            BAIXAR TXT
-        </button>
+<button onclick="abrirPopupRelatorio()">Gerar Relatório</button>
 
-        <button class="btnPop" onclick="fecharPreview()" style="background:#ff3b30; font-size:18px;">
-            FECHAR
-        </button>
+<!-- POPUP -->
+<div class="popup" id="popupRelatorio">
+    <div class="popup-content">
+        <pre id="textoRelatorio" style="white-space: pre-wrap; font-size: 15px;"></pre>
+
+        <button onclick="copiarRelatorio()">Copiar Texto</button>
+        <button onclick="enviarWhatsApp()">Enviar WhatsApp</button>
+        <button onclick="fecharPopup()">Fechar</button>
     </div>
 </div>
 
-
-
 <script>
-
-let categorias = {
-    "TRADICIONAIS": ["Morango","Uva","Chocolate"],
-    "ESPECIAIS": ["KitKat","Ouro Branco"],
-};
-
-let precoPorCategoria = {
-    "TRADICIONAIS": 6,
-    "ESPECIAIS": 8
-};
-
-let precosLancamentos = {}; 
-let vendidoSalvo = {};
+let total = 0;
 let dinheiro = 0;
 let cartao = 0;
+let comissao = 0;
 
+function calcular() {
+    let q1 = Number(document.getElementById("quant1").value);
+    let q2 = Number(document.getElementById("quant2").value);
+    let q3 = Number(document.getElementById("quant3").value);
+    let q4 = Number(document.getElementById("quant4").value);
 
-// GERAR CATEGORIAS
-window.onload = function () {
-    let container = document.getElementById("categoriasContainer");
-    let index = 1;
+    total = q1*4 + q2*6 + q3*8 + q4*10;
 
-    for (let cat in categorias) {
+    atualizarFinanceiro();
+}
+function atualizarFinanceiro() {
+    dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
 
-        let html = `
-        <div class="card">
-            <div class="categoria-titulo">${cat}</div>
-        `;
+    cartao = total - dinheiro;
+    if (cartao < 0) cartao = 0;
 
-        categorias[cat].forEach(sabor => {
-            html += `
-                <div class="linha">
-                    <span>${sabor}</span>
-                    <div class="controles">
-                        <button onclick="mudar(${index}, -1)">-</button>
-                        <input id="qtd${index}" type="number" value="0">
-                        <button onclick="mudar(${index}, 1)">+</button>
-                    </div>
-                </div>
-            `;
-            index++;
-        });
+    // Desconto de 5% no cartão
+    let cartaoLiquido = cartao * 0.95;
 
-        html += `</div>`;
-        container.innerHTML += html;
-    }
-};
+    // Comissão de 30% SOMENTE sobre dinheiro + cartão líquido
+    let base = dinheiro + cartaoLiquido;
+    comissao = base * 0.30;
 
-
-// AUMENTAR / DIMINUIR
-function mudar(id, val) {
-    let campo = document.getElementById("qtd" + id);
-    campo.value = Math.max(0, Number(campo.value) + val);
-    vendidoSalvo[id] = Number(campo.value);
+    document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
+    document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
 }
 
+function abrirPopupRelatorio() {
+    gerarRelatorio();
+    document.getElementById("popupRelatorio").style.display = "flex";
+}
 
+function fecharPopup() {
+    document.getElementById("popupRelatorio").style.display = "none";
+}
 
-// FUNÇÃO PRINCIPAL: GERAR RELATÓRIO COM POP-UP
 function gerarRelatorio() {
+    let nome = document.getElementById("nomeRelatorio").value || "Vendedor";
+    let data = new Date();
+    let dia = String(data.getDate()).padStart(2, "0");
+    let mes = String(data.getMonth()+1).padStart(2, "0");
+    let ano = data.getFullYear();
 
-    let vendedor = document.getElementById("campoVendedor").value || "";
-
-    let hoje = new Date();
-    let dia = String(hoje.getDate()).padStart(2, '0');
-    let mes = String(hoje.getMonth() + 1).padStart(2, '0');
-    let ano = hoje.getFullYear();
-
-    let dataFormatada = `${dia}/${mes}/${ano}`;
-
-    let texto = `RELATÓRIO DIA ${dataFormatada}\n`;
-    texto += `${vendedor.toUpperCase()}\n\n`;
-
-    let i = 1;
-    let totalCategorias = 0;
-
-    for (let cat in categorias) {
-
-        let totalCat = 0;
-
-        categorias[cat].forEach(sabor => {
-            let preco = precoPorCategoria[cat];
-            if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
-
-            let vend = vendidoSalvo[i] || 0;
-
-            totalCat += vend * preco;
-            i++;
-        });
-
-        texto += `${cat}: R$ ${totalCat.toFixed(2)}\n`;
-        totalCategorias += totalCat;
-    }
-
-    texto += `\nTOTAL GERAL: R$ ${totalCategorias.toFixed(2)}\n`;
-    texto += `DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
-    texto += `CARTÃO: R$ ${cartao.toFixed(2)}\n`;
-
+    // Recalcular comissão
     let cartaoLiquido = cartao * 0.95;
     let base = dinheiro + cartaoLiquido;
     let comissaoCalc = base * 0.30;
 
-    texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
-    texto += "\nRelatório gerado automaticamente.\n";
+    let texto = "";
+    texto += `RELATÓRIO DIA ${dia}/${mes}/${ano}\n`;
+    texto += `\n**${nome.toUpperCase()}**\n\n`;
 
-    document.getElementById("previewTexto").value = texto;
-    document.getElementById("previewModal").style.display = "flex";
-}
+    texto += `TOTAL VENDIDO: R$ ${total.toFixed(2)}\n`;
+    texto += `DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
+    texto += `CARTÃO: R$ ${cartao.toFixed(2)}\n`;
+    texto += `CARTÃO (–5%): R$ ${cartaoLiquido.toFixed(2)}\n`;
+    texto += `BASE P/ COMISSÃO: R$ ${base.toFixed(2)}\n`;
+    texto += `COMISSÃO (30%): R$ ${comissaoCalc.toFixed(2)}\n`;
 
-
-
-// FUNÇÕES DO POP-UP
-function fecharPreview() {
-    document.getElementById("previewModal").style.display = "none";
+    document.getElementById("textoRelatorio").innerText = texto;
 }
 
 function copiarRelatorio() {
-    let texto = document.getElementById("previewTexto");
-    texto.select();
-    texto.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(texto.value);
+    let texto = document.getElementById("textoRelatorio").innerText;
+    navigator.clipboard.writeText(texto);
     alert("Relatório copiado!");
 }
 
-function baixarRelatorio() {
-    let texto = document.getElementById("previewTexto").value;
-
-    let blob = new Blob([texto], { type: "text/plain" });
-    let url = URL.createObjectURL(blob);
-
-    let a = document.createElement("a");
-    a.href = url;
-    a.download = "relatorio.txt";
-    a.click();
-
-    URL.revokeObjectURL(url);
+function enviarWhatsApp() {
+    let texto = encodeURIComponent(document.getElementById("textoRelatorio").innerText);
+    let url = "https://wa.me/?text=" + texto;
+    window.open(url, "_blank");
 }
-
 </script>
 
 </body>
