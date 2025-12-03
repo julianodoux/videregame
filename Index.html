@@ -183,8 +183,13 @@ let id = 1;
 /* ------------------- CARREGAR LOCALSTORAGE ------------------- */
 let total = Number(localStorage.getItem("totalVendas")) || 0;
 let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
+
+let estoqueSalvo = JSON.parse(localStorage.getItem("estoque")) || {};
+let vendidoSalvo = JSON.parse(localStorage.getItem("vendido")) || {};
+
 let cartao = total - dinheiro;
 if (cartao < 0) cartao = 0;
+
 let comissao = dinheiro * 0.30 + cartao * 0.25;
 
 /* ------------------- FUNÇÕES ------------------- */
@@ -194,7 +199,6 @@ function toggle(cat) {
     el.style.display = el.style.display === "block" ? "none" : "block";
 }
 
-/* ---- NOVO: recalcular total automaticamente ---- */
 function recalcularTotal() {
     let novoTotal = 0;
     let i = 1;
@@ -224,34 +228,33 @@ function atualizar(id) {
 
     if (resto < 0) resto = 0;
 
-    let bloco = document.getElementById("item_" + id);
-    let campoResto = document.getElementById("resto_" + id);
-    campoResto.innerText = "Restante: " + resto;
+    document.getElementById("resto_" + id).innerText = "Restante: " + resto;
 
-    if (resto === 0) bloco.classList.add("zero");
-    else bloco.classList.remove("zero");
+    let item = document.getElementById("item_" + id);
+    if (resto === 0) item.classList.add("zero"); else item.classList.remove("zero");
 
-    recalcularTotal();  
+    estoqueSalvo[id] = est;
+    vendidoSalvo[id] = vend;
+
     salvar();
+    recalcularTotal();
 }
 
 function add(tipo, id) {
     let campo = document.getElementById(tipo + "_" + id);
     campo.innerText = Number(campo.innerText) + 1;
-
     atualizar(id);
 }
 
 function remove(tipo, id) {
     let campo = document.getElementById(tipo + "_" + id);
-    let valor = Number(campo.innerText);
-
-    if (valor > 0) campo.innerText = valor - 1;
-
+    if (Number(campo.innerText) > 0) campo.innerText--;
     atualizar(id);
 }
 
 function salvar() {
+    localStorage.setItem("estoque", JSON.stringify(estoqueSalvo));
+    localStorage.setItem("vendido", JSON.stringify(vendidoSalvo));
     localStorage.setItem("totalVendas", total.toFixed(2));
     localStorage.setItem("dinheiro", dinheiro.toFixed(2));
 }
@@ -292,17 +295,21 @@ for (let cat in categorias) {
         let preco = precoPorCategoria[cat];
         if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
 
+        let e = estoqueSalvo[id] || 0;
+        let v = vendidoSalvo[id] || 0;
+        let r = Math.max(0, e - v);
+
         document.write(`
-            <div class="item" id="item_${id}">
+            <div class="item ${r === 0 ? "zero" : ""}" id="item_${id}">
                 <div class="nome">${sabor}</div>
                 <div class="valor">Preço: R$ ${preco}</div>
-                <div class="restante" id="resto_${id}">Restante: 0</div>
+                <div class="restante" id="resto_${id}">Restante: ${r}</div>
 
                 <div class="linha">
                     <div class="controls">
                         <span>Estoque</span>
                         <button class="btn menos" onclick="remove('est', ${id})">-</button>
-                        <span class="numero" id="est_${id}">0</span>
+                        <span class="numero" id="est_${id}">${e}</span>
                         <button class="btn mais" onclick="add('est', ${id})">+</button>
                     </div>
                 </div>
@@ -311,7 +318,7 @@ for (let cat in categorias) {
                     <div class="controls">
                         <span>Vendido</span>
                         <button class="btn menos" onclick="remove('vend', ${id})">-</button>
-                        <span class="numero" id="vend_${id}">0</span>
+                        <span class="numero" id="vend_${id}">${v}</span>
                         <button class="btn mais" onclick="add('vend', ${id})">+</button>
                     </div>
                 </div>
