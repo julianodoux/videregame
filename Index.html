@@ -343,15 +343,12 @@ function gerarRelatorio() {
     texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
     texto += "\nRelatório gerado automaticamente.\n";
 
-    let blob = new Blob([texto], { type: "text/plain" });
-    let url = URL.createObjectURL(blob);
+    // Mostra no POPUP
+    document.getElementById("conteudoRelatorio").innerText = texto;
+    document.getElementById("popupRelatorio").style.display = "block";
 
-    let a = document.createElement("a");
-    a.href = url;
-    a.download = "relatorio_simplificado.txt";
-    a.click();
-
-    URL.revokeObjectURL(url);
+    // Salva temporariamente para o WhatsApp
+    window.relatorioTexto = texto;
 }
 
 function limparTudo() {
@@ -459,8 +456,37 @@ for (let cat in categorias) {
 <button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
 
 <script>
-recalcularTotal();
-</script>
+function fecharPopup() {
+    document.getElementById("popupRelatorio").style.display = "none";
+}
 
+function enviarWhatsApp() {
+    let texto = encodeURIComponent(window.relatorioTexto);
+    let url = `https://wa.me/?text=${texto}`;
+    window.open(url, '_blank');
+}();
+</script>
+<!-- POP-UP DE RELATÓRIO -->
+<div id="popupRelatorio" 
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); 
+     padding:20px; box-sizing:border-box; z-index:9999;">
+
+    <div style="background:white; width:100%; max-width:450px; margin:auto; margin-top:40px;
+        padding:20px; border-radius:14px; font-size:18px; white-space:pre-wrap;
+        box-shadow:0 4px 12px rgba(0,0,0,0.3);" id="conteudoRelatorio"></div>
+
+    <button onclick="enviarWhatsApp()" 
+        style="width:100%; background:#25D366; color:white; padding:16px; 
+        font-size:22px; border:none; border-radius:14px; margin-top:20px; font-weight:bold;">
+        ENVIAR PELO WHATSAPP
+    </button>
+
+    <button onclick="fecharPopup()" 
+        style="width:100%; background:#ff3b30; color:white; padding:14px; 
+        font-size:20px; border:none; border-radius:14px; margin-top:12px; font-weight:bold;">
+        FECHAR
+    </button>
+</div>
 </body>
 </html>
