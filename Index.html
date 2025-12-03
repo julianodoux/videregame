@@ -183,51 +183,38 @@ let id = 1;
 /* ------------------- CARREGAR LOCALSTORAGE ------------------- */
 let total = Number(localStorage.getItem("totalVendas")) || 0;
 let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
-
 let cartao = total - dinheiro;
 if (cartao < 0) cartao = 0;
-
 let comissao = dinheiro * 0.30 + cartao * 0.25;
 
-/* ---------------------------------------------------------
-   🔥 FUNÇÃO NOVA: CALCULAR TOTAL DE VENDAS
----------------------------------------------------------- */
-function calcularTotal() {
-    total = 0;
-
-    let ids = document.querySelectorAll("[id^='vend_']");
-    ids.forEach(campo => {
-        let idLocal = campo.id.split("_")[1];
-        let vendido = Number(campo.innerText);
-
-        // preço
-        let nomeItem = document.querySelector(`#item_${idLocal} .nome`).innerText;
-
-        let preco = 0;
-
-        // acha o preço correto
-        for (let cat in categorias) {
-            if (categorias[cat].includes(nomeItem)) {
-                preco = (cat === "LANÇAMENTOS") ? precosLancamentos[nomeItem] : precoPorCategoria[cat];
-            }
-        }
-
-        total += vendido * preco;
-    });
-
-    document.getElementById("valorTotal").innerText = total.toFixed(2);
-
-    atualizarFinanceiro();
-    salvar();
-}
-
-/* ---------------------------------------------------------
-   RESTANTE DAS FUNÇÕES (iguais ao seu código)
----------------------------------------------------------- */
+/* ------------------- FUNÇÕES ------------------- */
 
 function toggle(cat) {
     let el = document.getElementById("cat_" + cat);
     el.style.display = el.style.display === "block" ? "none" : "block";
+}
+
+/* ---- NOVO: recalcular total automaticamente ---- */
+function recalcularTotal() {
+    let novoTotal = 0;
+    let i = 1;
+
+    for (let cat in categorias) {
+        categorias[cat].forEach(sabor => {
+            let preco = precoPorCategoria[cat];
+            if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
+
+            let vend = Number(document.getElementById("vend_" + i).innerText);
+            novoTotal += vend * preco;
+
+            i++;
+        });
+    }
+
+    total = novoTotal;
+    document.getElementById("valorTotal").innerText = total.toFixed(2);
+
+    atualizarFinanceiro();
 }
 
 function atualizar(id) {
@@ -244,7 +231,8 @@ function atualizar(id) {
     if (resto === 0) bloco.classList.add("zero");
     else bloco.classList.remove("zero");
 
-    calcularTotal();
+    recalcularTotal();  
+    salvar();
 }
 
 function add(tipo, id) {
@@ -341,12 +329,8 @@ for (let cat in categorias) {
 
 <!-- TOTAL EM VENDAS -->
 <div id="totalVendas">
-    TOTAL EM VENDAS: R$ <span id="valorTotal"></span>
+    TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span>
 </div>
-
-<script>
-document.getElementById("valorTotal").innerText = total.toFixed(2);
-</script>
 
 <!-- DINHEIRO -->
 <div class="caixa-info">
@@ -372,7 +356,7 @@ document.getElementById("valorTotal").innerText = total.toFixed(2);
 <button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
 
 <script>
-calcularTotal();
+recalcularTotal();
 </script>
 
 </body>
