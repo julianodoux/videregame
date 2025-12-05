@@ -52,6 +52,12 @@
         border-radius: 14px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         padding-top: 18px;
+        transition: background 0.2s;
+    }
+
+    /* COR DO CARD QUANDO ABERTO */
+    .categoria.aberta {
+        background: #e8f0ff !important;
     }
 
     .item {
@@ -235,6 +241,13 @@ function toggle(cat) {
     let abrir = el.style.display !== "block";
     el.style.display = abrir ? "block" : "none";
 
+    // remove classe aberta de todas
+    document.querySelectorAll(".categoria").forEach(c => c.classList.remove("aberta"));
+
+    // aplica na atual
+    if (abrir) el.classList.add("aberta");
+
+    // controla sticky
     for (let c in categorias) {
         let b = document.getElementById("btn_" + c);
         if (b) b.classList.remove("sticky-open");
@@ -267,7 +280,7 @@ function recalcularTotal() {
 
 function atualizar(id) {
     let est = Number(document.getElementById("est_" + id).innerText);
-    let vend = Number(document.getElementById("vend_" + id).innerInnerText);
+    let vend = Number(document.getElementById("vend_" + id).innerText);
     let resto = est - vend;
 
     if (resto < 0) resto = 0;
@@ -491,4 +504,4 @@ for (let cat in categorias) {
 </div>
 
 </body>
-</html> 
+</html>
