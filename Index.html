@@ -37,11 +37,10 @@
         box-shadow: 0 3px 7px rgba(0,0,0,0.15);
     }
 
-    /* classe aplicada apenas na categoria aberta para ficar fixa (sticky) */
     .cat-btn.sticky-open {
         position: sticky;
-        top: 12px;        /* distância do topo da viewport enquanto fica fixa */
-        z-index: 30;      /* acima do resto do conteúdo */
+        top: 12px;
+        z-index: 30;
         box-shadow: 0 6px 14px rgba(0,0,0,0.20);
     }
 
@@ -52,7 +51,6 @@
         padding: 14px;
         border-radius: 14px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        /* para evitar que o conteúdo da categoria fique "embaixo" do botão sticky */
         padding-top: 18px;
     }
 
@@ -157,7 +155,6 @@
         font-weight: bold;
     }
 
-    /* POPUP relatório */
     #popupRelatorio {
         display:none;
         position:fixed;
@@ -208,21 +205,11 @@ let categorias = {
     ],
 
     "ESPECIAL FRUTVERÃO": [
-        "Skimo morango",
-        "Skimo ao leite",
-        "Milk trufado",
-        "Brigadeiro",
-        "Chococo",
-        "Torta de limão",
-        "Itu napolitano",
-        "Frutblito",
-        "Sunday de chocolate",
-        "Sundae de Morango"
+        "Skimo morango","Skimo ao leite","Milk trufado","Brigadeiro","Chococo",
+        "Torta de limão","Itu napolitano","Frutblito","Sunday de chocolate","Sundae de Morango"
     ],
 
-    "LANÇAMENTOS": [
-        "Pistache","Unicórnio"
-    ]
+    "LANÇAMENTOS": ["Pistache","Unicórnio"]
 };
 
 let id = 1;
@@ -237,7 +224,7 @@ let vendidoSalvo = JSON.parse(localStorage.getItem("vendido")) || {};
 let cartao = total - dinheiro;
 if (cartao < 0) cartao = 0;
 
-let comissao = 0; // garante variável definida
+let comissao = 0;
 
 /* ------------------- FUNÇÕES ------------------- */
 
@@ -245,19 +232,14 @@ function toggle(cat) {
     let el = document.getElementById("cat_" + cat);
     let btn = document.getElementById("btn_" + cat);
 
-    // alterna exibição
     let abrir = el.style.display !== "block";
     el.style.display = abrir ? "block" : "none";
 
-    // aplica/remova classe sticky apenas no botão da categoria aberta
-    // removemos sticky de todos e aplicamos só no atual quando aberto
     for (let c in categorias) {
         let b = document.getElementById("btn_" + c);
         if (b) b.classList.remove("sticky-open");
     }
-    if (abrir && btn) {
-        btn.classList.add("sticky-open");
-    }
+    if (abrir && btn) btn.classList.add("sticky-open");
 }
 
 function recalcularTotal() {
@@ -266,6 +248,7 @@ function recalcularTotal() {
 
     for (let cat in categorias) {
         categorias[cat].forEach(sabor => {
+
             let preco = precoPorCategoria[cat];
             if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
 
@@ -284,7 +267,7 @@ function recalcularTotal() {
 
 function atualizar(id) {
     let est = Number(document.getElementById("est_" + id).innerText);
-    let vend = Number(document.getElementById("vend_" + id).innerText);
+    let vend = Number(document.getElementById("vend_" + id).innerInnerText);
     let resto = est - vend;
 
     if (resto < 0) resto = 0;
@@ -292,7 +275,8 @@ function atualizar(id) {
     document.getElementById("resto_" + id).innerText = "Restante: " + resto;
 
     let item = document.getElementById("item_" + id);
-    if (resto === 0) item.classList.add("zero"); else item.classList.remove("zero");
+    if (resto === 0) item.classList.add("zero");
+    else item.classList.remove("zero");
 
     estoqueSalvo[id] = est;
     vendidoSalvo[id] = vend;
@@ -320,7 +304,7 @@ function salvar() {
     localStorage.setItem("dinheiro", dinheiro.toFixed(2));
 }
 
-/* ------------------- NOVA COMISSÃO ------------------- */
+/* ------------------- FINANCEIRO ------------------- */
 
 function atualizarFinanceiro() {
     dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
@@ -330,6 +314,7 @@ function atualizarFinanceiro() {
 
     let cartaoLiquido = cartao * 0.95;
     let base = dinheiro + cartaoLiquido;
+
     comissao = base * 0.30;
 
     document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
@@ -338,29 +323,28 @@ function atualizarFinanceiro() {
     salvar();
 }
 
-/* ------------------- GERAR RELATÓRIO (NOVO) ------------------- */
+/* ------------------- RELATÓRIO ------------------- */
 
 function gerarRelatorio() {
-
     let vendedor = document.getElementById("campoVendedor").value || "";
 
     let hoje = new Date();
-    let dia = String(hoje.getDate()).padStart(2, '0');
-    let mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    let dia = String(hoje.getDate()).padStart(2,'0');
+    let mes = String(hoje.getMonth()+1).padStart(2,'0');
     let ano = hoje.getFullYear();
+
     let dataFormatada = `${dia}/${mes}/${ano}`;
 
-    let texto = `RELATÓRIO DIA ${dataFormatada}\n`;
-    texto += `${vendedor.toUpperCase()}\n\n`;
+    let texto = `RELATÓRIO DIA ${dataFormatada}\n${vendedor.toUpperCase()}\n\n`;
 
     let i = 1;
     let totalCategorias = 0;
 
     for (let cat in categorias) {
-
         let totalCat = 0;
 
         categorias[cat].forEach(sabor => {
+
             let preco = precoPorCategoria[cat];
             if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
 
@@ -382,13 +366,10 @@ function gerarRelatorio() {
     texto += `DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
     texto += `CARTÃO: R$ ${cartao.toFixed(2)}\n`;
     texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
-    
 
-    // Mostra no POPUP
     document.getElementById("conteudoRelatorio").innerText = texto;
     document.getElementById("popupRelatorio").style.display = "block";
 
-    // Salva temporariamente para o WhatsApp
     window.relatorioTexto = texto;
 }
 
@@ -403,17 +384,15 @@ function fecharPopup() {
 
 function enviarWhatsApp() {
     let texto = encodeURIComponent(window.relatorioTexto);
-    let url = `https://wa.me/?text=${texto}`;
-    window.open(url, '_blank');
+    window.open(`https://wa.me/?text=${texto}`, "_blank");
 }
 </script>
-
 </head>
+
 <body>
 
 <h1>Controle de Sorvetes</h1>
 
-<!-- CAMPO DO NOME DO VENDEDOR -->
 <div class="caixa-info" style="margin-top: 15px;">
     <label style="font-weight:bold;">Nome do vendedor:</label><br>
     <input id="campoVendedor" type="text" placeholder="Digite seu nome"
@@ -422,18 +401,18 @@ function enviarWhatsApp() {
 </div>
 
 <script>
-document.getElementById('campoVendedor').value = localStorage.getItem('vendedor') || "";
+document.getElementById("campoVendedor").value = localStorage.getItem("vendedor") || "";
 </script>
 
 <div id="conteudo">
-
 <script>
 for (let cat in categorias) {
-    // adiciona id ao botão para controlar sticky apenas nele
+
     document.write(`<button class="cat-btn" id="btn_${cat}" onclick="toggle('${cat}')">${cat}</button>`);
     document.write(`<div id="cat_${cat}" class="categoria">`);
 
     categorias[cat].forEach(sabor => {
+
         let preco = precoPorCategoria[cat];
         if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
 
@@ -473,56 +452,43 @@ for (let cat in categorias) {
     document.write("</div>");
 }
 </script>
-
 </div>
 
-<!-- TOTAL EM VENDAS --> 
 <div id="totalVendas">
     TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span>
 </div>
 
-<!-- DINHEIRO -->
 <div class="caixa-info">
     VENDAS EM DINHEIRO:<br>
-    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}" 
+    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}"
            oninput="atualizarFinanceiro()"
            style="width: 90%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 22px; text-align: center;">
 </div>
 
-<!-- CARTÃO -->
 <div class="caixa-info">
     VENDAS NO CARTÃO:<br>
     <span id="campoCartao">R$ ${cartao.toFixed(2)}</span>
 </div>
 
-<!-- COMISSÃO -->
 <div class="caixa-info" style="background:#fff2cc; color:#8a6d00;">
     COMISSÃO:<br>
     <span id="campoComissao">R$ ${comissao.toFixed(2)}</span>
 </div>
 
-<!-- BOTÃO GERAR RELATÓRIO -->
 <button id="relatorio" onclick="gerarRelatorio()">GERAR RELATÓRIO</button>
 
-<!-- BOTÃO LIMPAR -->
 <button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
 
-<script>
-recalcularTotal();
-</script>
+<script>recalcularTotal();</script>
 
-<!-- POP-UP DE RELATÓRIO -->
-<div id="popupRelatorio" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); padding:20px; box-sizing:border-box; z-index:9999;">
-
+<!-- POP-UP -->
+<div id="popupRelatorio">
     <div style="background:white; width:100%; max-width:450px; margin:auto; margin-top:40px; padding:20px; border-radius:14px; font-size:18px; white-space:pre-wrap; box-shadow:0 4px 12px rgba(0,0,0,0.3);" id="conteudoRelatorio"></div>
 
-    <button onclick="enviarWhatsApp()" style="width:100%; background:#25D366; color:white; padding:16px; font-size:22px; border:none; border-radius:14px; margin-top:20px; font-weight:bold;">
-        ENVIAR PELO WHATSAPP
-    </button>
+    <button onclick="enviarWhatsApp()" style="width:100%; background:#25D366; color:white; padding:16px; font-size:22px; border:none; border-radius:14px; margin-top:20px; font-weight:bold;">ENVIAR PELO WHATSAPP</button>
 
-    <button onclick="fecharPopup()" style="width:100%; background:#ff3b30; color:white; padding:14px; font-size:20px; border:none; border-radius:14px; margin-top:12px; font-weight:bold;">
-        FECHAR
-    </button>
+    <button onclick="fecharPopup()" style="width:100%; background:#ff3b30; color:white; padding:14px; font-size:20px; border:none; border-radius:14px; margin-top:12px; font-weight:bold;">FECHAR</button>
 </div>
+
 </body>
 </html>
