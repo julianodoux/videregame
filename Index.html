@@ -37,6 +37,14 @@
         box-shadow: 0 3px 7px rgba(0,0,0,0.15);
     }
 
+    /* classe aplicada apenas na categoria aberta para ficar fixa (sticky) */
+    .cat-btn.sticky-open {
+        position: sticky;
+        top: 12px;        /* distância do topo da viewport enquanto fica fixa */
+        z-index: 30;      /* acima do resto do conteúdo */
+        box-shadow: 0 6px 14px rgba(0,0,0,0.20);
+    }
+
     .categoria {
         display: none;
         margin-top: 8px;
@@ -44,6 +52,8 @@
         padding: 14px;
         border-radius: 14px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        /* para evitar que o conteúdo da categoria fique "embaixo" do botão sticky */
+        padding-top: 18px;
     }
 
     .item {
@@ -146,6 +156,21 @@
         cursor: pointer;
         font-weight: bold;
     }
+
+    /* POPUP relatório */
+    #popupRelatorio {
+        display:none;
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,0.6);
+        backdrop-filter:blur(4px);
+        padding:20px;
+        box-sizing:border-box;
+        z-index:9999;
+    }
 </style>
 
 <script>
@@ -212,11 +237,27 @@ let vendidoSalvo = JSON.parse(localStorage.getItem("vendido")) || {};
 let cartao = total - dinheiro;
 if (cartao < 0) cartao = 0;
 
+let comissao = 0; // garante variável definida
+
 /* ------------------- FUNÇÕES ------------------- */
 
 function toggle(cat) {
     let el = document.getElementById("cat_" + cat);
-    el.style.display = el.style.display === "block" ? "none" : "block";
+    let btn = document.getElementById("btn_" + cat);
+
+    // alterna exibição
+    let abrir = el.style.display !== "block";
+    el.style.display = abrir ? "block" : "none";
+
+    // aplica/remova classe sticky apenas no botão da categoria aberta
+    // removemos sticky de todos e aplicamos só no atual quando aberto
+    for (let c in categorias) {
+        let b = document.getElementById("btn_" + c);
+        if (b) b.classList.remove("sticky-open");
+    }
+    if (abrir && btn) {
+        btn.classList.add("sticky-open");
+    }
 }
 
 function recalcularTotal() {
@@ -388,7 +429,8 @@ document.getElementById('campoVendedor').value = localStorage.getItem('vendedor'
 
 <script>
 for (let cat in categorias) {
-    document.write(`<button class="cat-btn" onclick="toggle('${cat}')">${cat}</button>`);
+    // adiciona id ao botão para controlar sticky apenas nele
+    document.write(`<button class="cat-btn" id="btn_${cat}" onclick="toggle('${cat}')">${cat}</button>`);
     document.write(`<div id="cat_${cat}" class="categoria">`);
 
     categorias[cat].forEach(sabor => {
@@ -470,24 +512,15 @@ recalcularTotal();
 </script>
 
 <!-- POP-UP DE RELATÓRIO -->
-<div id="popupRelatorio" 
-     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-     background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); 
-     padding:20px; box-sizing:border-box; z-index:9999;">
+<div id="popupRelatorio" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); padding:20px; box-sizing:border-box; z-index:9999;">
 
-    <div style="background:white; width:100%; max-width:450px; margin:auto; margin-top:40px;
-        padding:20px; border-radius:14px; font-size:18px; white-space:pre-wrap;
-        box-shadow:0 4px 12px rgba(0,0,0,0.3);" id="conteudoRelatorio"></div>
+    <div style="background:white; width:100%; max-width:450px; margin:auto; margin-top:40px; padding:20px; border-radius:14px; font-size:18px; white-space:pre-wrap; box-shadow:0 4px 12px rgba(0,0,0,0.3);" id="conteudoRelatorio"></div>
 
-    <button onclick="enviarWhatsApp()" 
-        style="width:100%; background:#25D366; color:white; padding:16px; 
-        font-size:22px; border:none; border-radius:14px; margin-top:20px; font-weight:bold;">
+    <button onclick="enviarWhatsApp()" style="width:100%; background:#25D366; color:white; padding:16px; font-size:22px; border:none; border-radius:14px; margin-top:20px; font-weight:bold;">
         ENVIAR PELO WHATSAPP
     </button>
 
-    <button onclick="fecharPopup()" 
-        style="width:100%; background:#ff3b30; color:white; padding:14px; 
-        font-size:20px; border:none; border-radius:14px; margin-top:12px; font-weight:bold;">
+    <button onclick="fecharPopup()" style="width:100%; background:#ff3b30; color:white; padding:14px; font-size:20px; border:none; border-radius:14px; margin-top:12px; font-weight:bold;">
         FECHAR
     </button>
 </div>
