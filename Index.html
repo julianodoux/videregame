@@ -6,152 +6,178 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f2f2f7;
-    padding: 12px;
-    color: #333;
-    max-width: 480px;
-    margin: auto;
-}
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f7;
+        padding: 12px;
+        color: #333;
+        max-width: 480px;
+        margin: auto;
+    }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 26px;
-    font-weight: 900;
-}
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 26px;
+        font-weight: 900;
+        color: #222;
+    }
 
-.cat-btn {
-    width: 100%;
-    background: #007aff;
-    color: white;
-    padding: 18px;
-    font-size: 18px;
-    border: none;
-    border-radius: 14px;
-    margin-top: 15px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 3px 7px rgba(0,0,0,0.15);
-}
+    .cat-btn {
+        width: 100%;
+        background: #007aff;
+        color: white;
+        padding: 18px;
+        font-size: 20px;
+        border: none;
+        border-radius: 14px;
+        margin-top: 15px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 3px 7px rgba(0,0,0,0.15);
+    }
 
-.cat-btn.sticky-open {
-    position: sticky;
-    top: 12px;
-    z-index: 30;
-}
+    .cat-btn.sticky-open {
+        position: sticky;
+        top: 12px;
+        z-index: 30;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.20);
+    }
 
-.categoria {
-    display: none;
-    margin-top: 8px;
-    background: #ffffff;
-    padding: 14px;
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
+    .categoria {
+        display: none;
+        margin-top: 8px;
+        background: #ffffff;
+        padding: 14px;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        padding-top: 18px;
+        transition: background 0.2s;
+    }
 
-.categoria.aberta {
-    background: #e8f0ff;
-}
+    /* COR DO CARD QUANDO ABERTO */
+    .categoria.aberta {
+        background: #e8f0ff !important;
+    }
 
-.item {
-    background: #fff;
-    padding: 14px;
-    margin: 12px 0;
-    border-radius: 14px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
+    .item {
+        background: #fff;
+        padding: 14px;
+        margin: 12px 0;
+        border-radius: 14px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: 0.2s;
+    }
 
-.item.zero {
-    background: #ff4d4d;
-    color: white;
-}
+    .item.zero {
+        background: #ff4d4d !important;
+        color: white !important;
+    }
 
-.nome {
-    font-size: 20px;
-    font-weight: bold;
-}
+    .nome {
+        font-size: 20px;
+        font-weight: bold;
+    }
 
-.valor {
-    font-size: 16px;
-    color: #007aff;
-    font-weight: bold;
-}
+    .valor {
+        font-size: 16px;
+        color: #007aff;
+        margin-top: 2px;
+        font-weight: bold;
+    }
 
-.restante {
-    font-size: 17px;
-    font-weight: bold;
-}
+    .restante {
+        font-size: 17px;
+        margin-top: 4px;
+        font-weight: bold;
+    }
 
-.linha {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 12px;
-}
+    .linha {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 14px;
+    }
 
-.controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+    .controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-.btn {
-    width: 45px;
-    height: 45px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    font-size: 26px;
-    font-weight: bold;
-}
+    .btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        font-size: 26px;
+        font-weight: bold;
+    }
 
-.menos { background: #ff3b30; color: white; }
-.mais { background: #34c759; color: white; }
+    .menos { background: #ff3b30; color: white; }
+    .mais  { background: #34c759; color: white; }
 
-.numero {
-    width: 45px;
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-}
+    .numero {
+        width: 45px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+    }
 
-.caixa-info, #totalVendas {
-    margin-top: 20px;
-    padding: 20px;
-    background: #e6fff0;
-    border-radius: 16px;
-    font-size: 22px;
-    text-align: center;
-    font-weight: 900;
-}
+    #totalVendas, .caixa-info {
+        margin-top: 20px;
+        padding: 20px;
+        background: #e6fff0;
+        border-radius: 16px;
+        font-size: 22px;
+        text-align: center;
+        font-weight: 900;
+        color: #0b6b1a;
+    }
 
-#limpar, #relatorio {
-    width: 100%;
-    padding: 18px;
-    font-size: 20px;
-    border: none;
-    border-radius: 14px;
-    margin-top: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    color: white;
-}
+    #limpar {
+        width: 100%;
+        background: #ff3b30;
+        color: white;
+        padding: 18px;
+        font-size: 20px;
+        border: none;
+        border-radius: 14px;
+        margin-top: 25px;
+        cursor: pointer;
+        font-weight: bold;
+    }
 
-#limpar { background: #ff3b30; }
-#relatorio { background: #5856d6; }
+    #relatorio {
+        width: 100%;
+        background: #5856d6;
+        color: white;
+        padding: 18px;
+        font-size: 20px;
+        border: none;
+        border-radius: 14px;
+        margin-top: 25px;
+        cursor: pointer;
+        font-weight: bold;
+    }
 
-#popupRelatorio {
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.6);
-    padding:20px;
-    z-index:9999;
-}
+    #popupRelatorio {
+        display:none;
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,0.6);
+        backdrop-filter:blur(4px);
+        padding:20px;
+        box-sizing:border-box;
+        z-index:9999;
+    }
 </style>
 
 <script>
+/* ------------------- PREÇOS ------------------- */
 let precoPorCategoria = {
     "PALETAS FRUTIVERÃO": 18,
     "AO LEITE FRUTIVERÃO": 8,
@@ -165,75 +191,213 @@ let precosLancamentos = {
     "Unicórnio": 10
 };
 
+/* ------------------- CATEGORIAS ------------------- */
 let categorias = {
-    "PALETAS FRUTIVERÃO": ["Raffaello","Oreo","Ferrero"],
-    "AO LEITE FRUTIVERÃO": ["Morango","Chocolate"],
-    "TROPICAL FRUTIVERÃO": ["Uva","Limão"],
-    "ESPECIAL FRUTVERÃO": ["Skimo morango"],
+    "PALETAS FRUTIVERÃO": [
+        "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine",
+        "Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá","Açaí",
+        "Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino","Banana com Avelã",
+        "Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"
+    ],
+
+    "AO LEITE FRUTIVERÃO": [
+        "Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango",
+        "Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"
+    ],
+
+    "TROPICAL FRUTIVERÃO": [
+        "Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina",
+        "Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"
+    ],
+
+    "ESPECIAL FRUTVERÃO": [
+        "Skimo morango","Skimo ao leite","Milk trufado","Brigadeiro","Chococo",
+        "Torta de limão","Itu napolitano","Frutblito","Sunday de chocolate","Sundae de Morango"
+    ],
+
     "LANÇAMENTOS": ["Pistache","Unicórnio"]
 };
 
 let id = 1;
+
+/* ------------------- LOCALSTORAGE ------------------- */
 let total = Number(localStorage.getItem("totalVendas")) || 0;
 let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
+
 let estoqueSalvo = JSON.parse(localStorage.getItem("estoque")) || {};
 let vendidoSalvo = JSON.parse(localStorage.getItem("vendido")) || {};
+
+let cartao = total - dinheiro;
+if (cartao < 0) cartao = 0;
+
+let comissao = 0;
+
+/* ------------------- FUNÇÕES ------------------- */
 
 function toggle(cat) {
     let el = document.getElementById("cat_" + cat);
     let btn = document.getElementById("btn_" + cat);
+
     let abrir = el.style.display !== "block";
+    el.style.display = abrir ? "block" : "none";
 
-    document.querySelectorAll(".categoria").forEach(c => c.style.display = "none");
-    document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("sticky-open"));
+    // remove classe aberta de todas
+    document.querySelectorAll(".categoria").forEach(c => c.classList.remove("aberta"));
 
-    if (abrir) {
-        el.style.display = "block";
-        btn.classList.add("sticky-open");
+    // aplica na atual
+    if (abrir) el.classList.add("aberta");
+
+    // controla sticky
+    for (let c in categorias) {
+        let b = document.getElementById("btn_" + c);
+        if (b) b.classList.remove("sticky-open");
     }
+    if (abrir && btn) btn.classList.add("sticky-open");
 }
 
-function atualizarResumoCategorias() {
+function recalcularTotal() {
+    let novoTotal = 0;
     let i = 1;
+
     for (let cat in categorias) {
-        let q = 0, v = 0;
-        categorias[cat].forEach(() => {
-            q += Number(document.getElementById("est_" + i)?.innerText || 0);
-            v += Number(document.getElementById("vend_" + i)?.innerText || 0);
+        categorias[cat].forEach(sabor => {
+
+            let preco = precoPorCategoria[cat];
+            if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
+
+            let vend = Number(document.getElementById("vend_" + i).innerText);
+            novoTotal += vend * preco;
+
             i++;
         });
-        document.getElementById("qnt_" + cat).innerText = q;
-        document.getElementById("vendcat_" + cat).innerText = v;
     }
+
+    total = novoTotal;
+    document.getElementById("valorTotal").innerText = total.toFixed(2);
+
+    atualizarFinanceiro();
 }
 
 function atualizar(id) {
     let est = Number(document.getElementById("est_" + id).innerText);
     let vend = Number(document.getElementById("vend_" + id).innerText);
-    let resto = Math.max(0, est - vend);
+    let resto = est - vend;
+
+    if (resto < 0) resto = 0;
 
     document.getElementById("resto_" + id).innerText = "Restante: " + resto;
-    document.getElementById("item_" + id).classList.toggle("zero", resto === 0);
+
+    let item = document.getElementById("item_" + id);
+    if (resto === 0) item.classList.add("zero");
+    else item.classList.remove("zero");
 
     estoqueSalvo[id] = est;
     vendidoSalvo[id] = vend;
 
+    salvar();
+    recalcularTotal();
+}
+
+function add(tipo, id) {
+    let campo = document.getElementById(tipo + "_" + id);
+    campo.innerText = Number(campo.innerText) + 1;
+    atualizar(id);
+}
+
+function remove(tipo, id) {
+    let campo = document.getElementById(tipo + "_" + id);
+    if (Number(campo.innerText) > 0) campo.innerText--;
+    atualizar(id);
+}
+
+function salvar() {
     localStorage.setItem("estoque", JSON.stringify(estoqueSalvo));
     localStorage.setItem("vendido", JSON.stringify(vendidoSalvo));
-
-    atualizarResumoCategorias();
+    localStorage.setItem("totalVendas", total.toFixed(2));
+    localStorage.setItem("dinheiro", dinheiro.toFixed(2));
 }
 
-function add(tipo,id){
-    let el=document.getElementById(tipo+"_"+id);
-    el.innerText=Number(el.innerText)+1;
-    atualizar(id);
+/* ------------------- FINANCEIRO ------------------- */
+
+function atualizarFinanceiro() {
+    dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
+
+    cartao = total - dinheiro;
+    if (cartao < 0) cartao = 0;
+
+    let cartaoLiquido = cartao * 0.95;
+    let base = dinheiro + cartaoLiquido;
+
+    comissao = base * 0.30;
+
+    document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
+    document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
+
+    salvar();
 }
 
-function remove(tipo,id){
-    let el=document.getElementById(tipo+"_"+id);
-    if(Number(el.innerText)>0) el.innerText--;
-    atualizar(id);
+/* ------------------- RELATÓRIO ------------------- */
+
+function gerarRelatorio() {
+    let vendedor = document.getElementById("campoVendedor").value || "";
+
+    let hoje = new Date();
+    let dia = String(hoje.getDate()).padStart(2,'0');
+    let mes = String(hoje.getMonth()+1).padStart(2,'0');
+    let ano = hoje.getFullYear();
+
+    let dataFormatada = `${dia}/${mes}/${ano}`;
+
+    let texto = `RELATÓRIO DIA ${dataFormatada}\n${vendedor.toUpperCase()}\n\n`;
+
+    let i = 1;
+    let totalCategorias = 0;
+
+    for (let cat in categorias) {
+        let totalCat = 0;
+
+        categorias[cat].forEach(sabor => {
+
+            let preco = precoPorCategoria[cat];
+            if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
+
+            let vend = vendidoSalvo[i] || 0;
+            totalCat += vend * preco;
+
+            i++;
+        });
+
+        texto += `${cat}: R$ ${totalCat.toFixed(2)}\n`;
+        totalCategorias += totalCat;
+    }
+
+    let cartaoLiquido = cartao * 0.95;
+    let base = dinheiro + cartaoLiquido;
+    let comissaoCalc = base * 0.30;
+
+    texto += `\nTOTAL GERAL: R$ ${totalCategorias.toFixed(2)}\n`;
+    texto += `DINHEIRO: R$ ${dinheiro.toFixed(2)}\n`;
+    texto += `CARTÃO: R$ ${cartao.toFixed(2)}\n`;
+    texto += `COMISSÃO: R$ ${comissaoCalc.toFixed(2)}\n`;
+
+    document.getElementById("conteudoRelatorio").innerText = texto;
+    document.getElementById("popupRelatorio").style.display = "block";
+
+    window.relatorioTexto = texto;
+}
+
+function limparTudo() {
+    localStorage.clear();
+    location.reload();
+}
+
+function fecharPopup() {
+    document.getElementById("popupRelatorio").style.display = "none";
+}
+
+function enviarWhatsApp() {
+    let texto = encodeURIComponent(window.relatorioTexto);
+    window.open(`https://wa.me/?text=${texto}`, "_blank");
 }
 </script>
 </head>
@@ -242,54 +406,102 @@ function remove(tipo,id){
 
 <h1>Controle de Sorvetes</h1>
 
+<div class="caixa-info" style="margin-top: 15px;">
+    <label style="font-weight:bold;">Nome do vendedor:</label><br>
+    <input id="campoVendedor" type="text" placeholder="Digite seu nome"
+           style="width: 90%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 22px; text-align: center;"
+           oninput="localStorage.setItem('vendedor', this.value)">
+</div>
+
+<script>
+document.getElementById("campoVendedor").value = localStorage.getItem("vendedor") || "";
+</script>
+
+<div id="conteudo">
 <script>
 for (let cat in categorias) {
-    document.write(`
-    <button class="cat-btn" id="btn_${cat}" onclick="toggle('${cat}')">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div>${cat}</div>
-            <div style="display:flex;gap:12px;font-size:14px;">
-                <div>Qnt <span id="qnt_${cat}">0</span></div>
-                <div>Vend. <span id="vendcat_${cat}">0</span></div>
-            </div>
-        </div>
-    </button>
-    <div id="cat_${cat}" class="categoria">
-    `);
+
+    document.write(`<button class="cat-btn" id="btn_${cat}" onclick="toggle('${cat}')">${cat}</button>`);
+    document.write(`<div id="cat_${cat}" class="categoria">`);
 
     categorias[cat].forEach(sabor => {
+
+        let preco = precoPorCategoria[cat];
+        if (cat === "LANÇAMENTOS") preco = precosLancamentos[sabor];
+
         let e = estoqueSalvo[id] || 0;
         let v = vendidoSalvo[id] || 0;
         let r = Math.max(0, e - v);
 
         document.write(`
-        <div class="item ${r===0?'zero':''}" id="item_${id}">
-            <div class="nome">${sabor}</div>
-            <div class="restante" id="resto_${id}">Restante: ${r}</div>
+            <div class="item ${r === 0 ? "zero" : ""}" id="item_${id}">
+                <div class="nome">${sabor}</div>
+                <div class="valor">Preço: R$ ${preco}</div>
+                <div class="restante" id="resto_${id}">Restante: ${r}</div>
 
-            <div class="linha">
-                <span>Estoque</span>
-                <button class="btn menos" onclick="remove('est',${id})">-</button>
-                <span class="numero" id="est_${id}">${e}</span>
-                <button class="btn mais" onclick="add('est',${id})">+</button>
-            </div>
+                <div class="linha">
+                    <div class="controls">
+                        <span>Estoque</span>
+                        <button class="btn menos" onclick="remove('est', ${id})">-</button>
+                        <span class="numero" id="est_${id}">${e}</span>
+                        <button class="btn mais" onclick="add('est', ${id})">+</button>
+                    </div>
+                </div>
 
-            <div class="linha">
-                <span>Vendido</span>
-                <button class="btn menos" onclick="remove('vend',${id})">-</button>
-                <span class="numero" id="vend_${id}">${v}</span>
-                <button class="btn mais" onclick="add('vend',${id})">+</button>
+                <div class="linha">
+                    <div class="controls">
+                        <span>Vendido</span>
+                        <button class="btn menos" onclick="remove('vend', ${id})">-</button>
+                        <span class="numero" id="vend_${id}">${v}</span>
+                        <button class="btn mais" onclick="add('vend', ${id})">+</button>
+                    </div>
+                </div>
             </div>
-        </div>
         `);
+
         id++;
     });
 
     document.write("</div>");
 }
 </script>
+</div>
 
-<script>atualizarResumoCategorias();</script>
+<div id="totalVendas">
+    TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span>
+</div>
+
+<div class="caixa-info">
+    VENDAS EM DINHEIRO:<br>
+    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}"
+           oninput="atualizarFinanceiro()"
+           style="width: 90%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 22px; text-align: center;">
+</div>
+
+<div class="caixa-info">
+    VENDAS NO CARTÃO:<br>
+    <span id="campoCartao">R$ ${cartao.toFixed(2)}</span>
+</div>
+
+<div class="caixa-info" style="background:#fff2cc; color:#8a6d00;">
+    COMISSÃO:<br>
+    <span id="campoComissao">R$ ${comissao.toFixed(2)}</span>
+</div>
+
+<button id="relatorio" onclick="gerarRelatorio()">GERAR RELATÓRIO</button>
+
+<button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
+
+<script>recalcularTotal();</script>
+
+<!-- POP-UP -->
+<div id="popupRelatorio">
+    <div style="background:white; width:100%; max-width:450px; margin:auto; margin-top:40px; padding:20px; border-radius:14px; font-size:18px; white-space:pre-wrap; box-shadow:0 4px 12px rgba(0,0,0,0.3);" id="conteudoRelatorio"></div>
+
+    <button onclick="enviarWhatsApp()" style="width:100%; background:#25D366; color:white; padding:16px; font-size:22px; border:none; border-radius:14px; margin-top:20px; font-weight:bold;">ENVIAR PELO WHATSAPP</button>
+
+    <button onclick="fecharPopup()" style="width:100%; background:#ff3b30; color:white; padding:14px; font-size:20px; border:none; border-radius:14px; margin-top:12px; font-weight:bold;">FECHAR</button>
+</div>
 
 </body>
-</html>
+</html> 
