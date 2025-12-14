@@ -75,15 +75,32 @@ h1 {
 }
 .restante { font-size: 17px; font-weight: bold; }
 .linha { display: flex; justify-content: space-between; margin-top: 14px; }
-.controls { display: flex; align-items: center; gap: 8px; }
-.btn {
-    width: 45px; height: 45px;
-    border-radius: 12px; border: none;
-    font-size: 26px; font-weight: bold;
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;                 /* ⬅ menos espaço */
 }
-.menos { background: #ff3b30; color: white; }
-.mais { background: #34c759; color: white; }
-.numero { width: 45px; text-align: center; font-size: 24px; font-weight: bold; }
+
+.controls span {
+    font-size: 12px;          /* ⬅ “Estoque / Vendido” menor */
+    font-weight: 600;
+}
+
+.btn {
+    width: 28px;              /* ⬅ botões pequenos */
+    height: 28px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;          /* ⬅ + e - menores */
+    font-weight: 700;
+}
+
+.numero {
+    width: 28px;
+    font-size: 16px;          /* ⬅ número menor */
+    font-weight: 700;
+}
 #totalVendas, .caixa-info {
     margin-top: 14px;
     padding: 14px;              /* ⬅ mais fino */
