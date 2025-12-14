@@ -61,7 +61,7 @@ h1 {
     color: white !important;
 }
 
-/* layout igual à foto */
+/* layout estilo foto */
 .item.card {
     display: flex;
     justify-content: space-between;
@@ -89,11 +89,17 @@ h1 {
     font-weight: 800;
 }
 
+/* painel lateral */
 .painel {
     background: #f1f1f1;
     padding: 8px;
     border-radius: 10px;
     min-width: 150px;
+    color: #000 !important; /* 🔒 sempre preto */
+}
+
+.painel * {
+    color: #000 !important; /* 🔒 força preto mesmo com .zero */
 }
 
 .linha {
