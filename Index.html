@@ -6,233 +6,255 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <style>
-body{
-    font-family:Arial,sans-serif;
-    background:#f2f2f7;
-    padding:10px;
-    max-width:480px;
-    margin:auto;
-    color:#333;
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f7;
+    padding: 12px;
+    color: #333;
+    max-width: 480px;
+    margin: auto;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: 900;
+}
+.cat-btn {
+    width: 100%;
+    background: #007aff;
+    color: white;
+    padding: 12px 14px;      /* ⬅ mais fino */
+    font-size: 17px;        /* ⬅ proporcional aos cards */
+    border: none;
+    border-radius: 12px;    /* ⬅ menos “gordinho” */
+    margin-top: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+}
+.cat-btn.sticky-open {
+    position: sticky;
+    top: 12px;
+    z-index: 30;
+}
+.categoria {
+    display: none;
+    margin-top: 4px;
+    background: #ffffff;
+    padding: 4px;               /* ⬅ quase sem borda */
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.10);
 }
 
-h1{
-    text-align:center;
-    margin-bottom:15px;
+.item {
+    background: #fff;
+    padding: 6px;               /* ⬅ bem fino */
+    margin: 5px 0;              /* ⬅ menos espaço entre picolés */
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* BOTÃO CATEGORIA */
-.cat-btn{
-    width:100%;
-    background:#007aff;
-    color:#fff;
-    padding:14px;
-    font-size:18px;
-    border:none;
-    border-radius:14px;
-    margin-top:12px;
-    font-weight:bold;
+.linha {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;            /* ⬅ grande vilão */
+}
+.item.zero {
+    background: #ff4d4d !important;
+    color: white !important;
+}
+.nome {
+    font-size: 16px;
+    font-weight: 700;
 }
 
-/* BLOCO CATEGORIA */
-.categoria{
-    display:none;
-    background:#e8f0ff;
-    padding:8px;
-    border-radius:14px;
-    margin-top:6px;
+.valor {
+    font-size: 13px;
+}
+.restante { font-size: 17px; font-weight: bold; }
+.linha { display: flex; justify-content: space-between; margin-top: 14px; }
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;                 /* ⬅ menos espaço */
 }
 
-/* ITEM */
-.item{
-    display:flex;
-    justify-content:space-between;
-    gap:8px;
-    background:#fff;
-    padding:10px;
-    margin-top:8px;
-    border-radius:12px;
-    box-shadow:0 2px 6px rgba(0,0,0,.12);
+.controls span {
+    font-size: 12px;          /* ⬅ “Estoque / Vendido” menor */
+    font-weight: 600;
 }
 
-.item.zero{
-    background:#ff4d4d;
-    color:#fff;
+.btn {
+    width: 28px;              /* ⬅ botões pequenos */
+    height: 28px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;          /* ⬅ + e - menores */
+    font-weight: 700;
 }
 
-/* INFO ESQUERDA */
-.info{
-    flex:1;
+.numero {
+    width: 28px;
+    font-size: 16px;          /* ⬅ número menor */
+    font-weight: 700;
+}
+#totalVendas, .caixa-info {
+    margin-top: 14px;
+    padding: 14px;              /* ⬅ mais fino */
+    background: #e6fff0;
+    border-radius: 12px;
+    font-size: 18px;            /* ⬅ proporcional */
+    text-align: center;
+    font-weight: 800;
+    color: #0b6b1a;
 }
 
-.nome{
-    font-size:17px;
-    font-weight:bold;
+#limpar,
+#relatorio {
+    width: 100%;
+    padding: 12px;              /* ⬅ mais fino */
+    font-size: 17px;
+    border: none;
+    border-radius: 12px;
+    margin-top: 16px;
+    cursor: pointer;
+    font-weight: 700;
 }
 
-.valor{
-    font-size:14px;
-    color:#007aff;
+#limpar {
+    background: #ff3b30;
+    color: white;
 }
 
-.restante{
-    font-size:14px;
-    font-weight:bold;
+#relatorio {
+    background: #5856d6;
+    color: white;
 }
-
-/* CONTROLES */
-.controles{
-    width:115px;
-    background:#f1f1f1;
-    border-radius:12px;
-    padding:6px;
-}
-
-.linha{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    font-size:12px;
-    margin-bottom:6px;
-}
-
-.btn{
-    width:28px;
-    height:28px;
-    border:none;
-    border-radius:8px;
-    font-size:18px;
-    font-weight:bold;
-    color:#fff;
-}
-
-.menos{background:#ff3b30;}
-.mais{background:#007aff;}
-
-.numero{
-    width:22px;
-    text-align:center;
-    font-weight:bold;
-}
-
-/* CAIXAS */
-.caixa-info{
-    background:#e6fff0;
-    padding:14px;
-    border-radius:14px;
-    margin-top:15px;
-    text-align:center;
-    font-size:18px;
-    font-weight:bold;
-}
-
-#limpar,#relatorio{
-    width:100%;
-    margin-top:15px;
-    padding:14px;
-    border:none;
-    border-radius:14px;
-    font-size:18px;
-    font-weight:bold;
-    color:#fff;
-}
-
-#limpar{background:#ff3b30;}
-#relatorio{background:#5856d6;}
-
-/* POPUP */
-#popupRelatorio{
+#popupRelatorio {
     display:none;
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.6);
+    background:rgba(0,0,0,0.6);
     padding:20px;
     z-index:9999;
 }
 </style>
 
 <script>
-let precoPorCategoria={
- "PALETAS FRUTIVERÃO":18,
- "AO LEITE FRUTIVERÃO":8,
- "TROPICAL FRUTIVERÃO":6,
- "ESPECIAL FRUTVERÃO":13,
- "LANÇAMENTOS":null
+let precoPorCategoria = {
+    "PALETAS FRUTIVERÃO": 18,
+    "AO LEITE FRUTIVERÃO": 8,
+    "TROPICAL FRUTIVERÃO": 6,
+    "ESPECIAL FRUTVERÃO": 13,
+    "LANÇAMENTOS": null
 };
 
-let precosLancamentos={
- "Pistache":16,
- "Unicórnio":10
+let precosLancamentos = {
+    "Pistache": 16,
+    "Unicórnio": 10
 };
 
-let categorias={
- "PALETAS FRUTIVERÃO":["Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine","Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá","Açaí","Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino","Banana com Avelã","Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"],
- "AO LEITE FRUTIVERÃO":["Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango","Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"],
- "TROPICAL FRUTIVERÃO":["Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina","Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"],
- "ESPECIAL FRUTVERÃO":["Skimo morango","Skimo ao leite","Milk trufado","Brigadeiro","Chococo","Torta de limão","Itu napolitano","Frutblito","Sunday de chocolate","Sundae de Morango"],
- "LANÇAMENTOS":["Pistache","Unicórnio"]
+let categorias = {
+    "PALETAS FRUTIVERÃO": ["Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M","Choco Maltine","Milk Trufado","Babalu","Blue Ice","Sensação","Morango","Maracujá","Açaí","Iogurte c/ Amora","Menta c/ Chocolate","Paçoca","Capuccino","Banana com Avelã","Coco c/ Abobora","Coco c/ Doce de Leite","Tapioca","Abacaxi Zero"],
+    "AO LEITE FRUTIVERÃO": ["Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango","Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"],
+    "TROPICAL FRUTIVERÃO": ["Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina","Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"],
+    "ESPECIAL FRUTVERÃO": ["Skimo morango","Skimo ao leite","Milk trufado","Brigadeiro","Chococo","Torta de limão","Itu napolitano","Frutblito","Sunday de chocolate","Sundae de Morango"],
+    "LANÇAMENTOS": ["Pistache","Unicórnio"]
 };
 
-let id=1;
-let estoque=JSON.parse(localStorage.getItem("estoque"))||{};
-let vendido=JSON.parse(localStorage.getItem("vendido"))||{};
-let total=Number(localStorage.getItem("totalVendas"))||0;
+let id = 1;
+let total = Number(localStorage.getItem("totalVendas")) || 0;
+let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
+let estoqueSalvo = JSON.parse(localStorage.getItem("estoque")) || {};
+let vendidoSalvo = JSON.parse(localStorage.getItem("vendido")) || {};
+let cartao = total - dinheiro;
+if (cartao < 0) cartao = 0;
+let comissao = 0;
 
-function toggle(cat){
- let el=document.getElementById("cat_"+cat);
- el.style.display=el.style.display==="block"?"none":"block";
+function toggle(cat) {
+    let el = document.getElementById("cat_" + cat);
+    let btn = document.getElementById("btn_" + cat);
+    let abrir = el.style.display !== "block";
+    el.style.display = abrir ? "block" : "none";
+
+    document.querySelectorAll(".categoria").forEach(c => c.classList.remove("aberta"));
+    document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("sticky-open"));
+
+    if (abrir) {
+        el.classList.add("aberta");
+        btn.classList.add("sticky-open");
+    }
 }
 
-function atualizar(id){
- let e=Number(document.getElementById("est_"+id).innerText);
- let v=Number(document.getElementById("vend_"+id).innerText);
- let r=Math.max(0,e-v);
-
- document.getElementById("resto_"+id).innerText="Restante: "+r;
-
- let item=document.getElementById("item_"+id);
- r===0?item.classList.add("zero"):item.classList.remove("zero");
-
- estoque[id]=e;
- vendido[id]=v;
- salvar();
- recalcular();
+function atualizarResumoCategorias() {
+    let i = 1;
+    for (let cat in categorias) {
+        let q = 0, v = 0;
+        categorias[cat].forEach(() => {
+            q += Number(document.getElementById("est_" + i)?.innerText || 0);
+            v += Number(document.getElementById("vend_" + i)?.innerText || 0);
+            i++;
+        });
+        document.getElementById("qnt_" + cat).innerText = q;
+        document.getElementById("vendcat_" + cat).innerText = v;
+    }
 }
 
-function add(tipo,id){
- let el=document.getElementById(tipo+"_"+id);
- el.innerText=Number(el.innerText)+1;
- atualizar(id);
+function recalcularTotal() {
+    let novo = 0, i = 1;
+    for (let cat in categorias) {
+        categorias[cat].forEach(sabor => {
+            let preco = cat === "LANÇAMENTOS" ? precosLancamentos[sabor] : precoPorCategoria[cat];
+            novo += Number(document.getElementById("vend_" + i).innerText) * preco;
+            i++;
+        });
+    }
+    total = novo;
+    document.getElementById("valorTotal").innerText = total.toFixed(2);
+    atualizarFinanceiro();
+    atualizarResumoCategorias();
 }
 
-function remove(tipo,id){
- let el=document.getElementById(tipo+"_"+id);
- if(Number(el.innerText)>0) el.innerText--;
- atualizar(id);
+function atualizar(id) {
+    let est = Number(document.getElementById("est_" + id).innerText);
+    let vend = Number(document.getElementById("vend_" + id).innerText);
+    let resto = Math.max(0, est - vend);
+    document.getElementById("resto_" + id).innerText = "Restante: " + resto;
+
+    let item = document.getElementById("item_" + id);
+    resto === 0 ? item.classList.add("zero") : item.classList.remove("zero");
+
+    estoqueSalvo[id] = est;
+    vendidoSalvo[id] = vend;
+    salvar();
+    recalcularTotal();
 }
 
-function salvar(){
- localStorage.setItem("estoque",JSON.stringify(estoque));
- localStorage.setItem("vendido",JSON.stringify(vendido));
- localStorage.setItem("totalVendas",total);
+function add(tipo, id){ document.getElementById(tipo+"_"+id).innerText++; atualizar(id); }
+function remove(tipo, id){
+    let c = document.getElementById(tipo+"_"+id);
+    if (Number(c.innerText)>0) c.innerText--;
+    atualizar(id);
 }
 
-function recalcular(){
- total=0;
- let i=1;
- for(let cat in categorias){
-   categorias[cat].forEach(s=>{
-     let preco=precoPorCategoria[cat];
-     if(cat==="LANÇAMENTOS") preco=precosLancamentos[s];
-     total+=(vendido[i]||0)*preco;
-     i++;
-   });
- }
- document.getElementById("valorTotal").innerText=total.toFixed(2);
+function salvar() {
+    localStorage.setItem("estoque", JSON.stringify(estoqueSalvo));
+    localStorage.setItem("vendido", JSON.stringify(vendidoSalvo));
+    localStorage.setItem("totalVendas", total.toFixed(2));
+    localStorage.setItem("dinheiro", dinheiro.toFixed(2));
 }
 
-function limparTudo(){
- localStorage.clear();
- location.reload();
+function atualizarFinanceiro() {
+    dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
+    cartao = Math.max(0, total - dinheiro);
+    let base = dinheiro + cartao * 0.95;
+    comissao = base * 0.30;
+    document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
+    document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
+    salvar();
 }
 </script>
 </head>
@@ -241,57 +263,73 @@ function limparTudo(){
 
 <h1>Controle de Sorvetes</h1>
 
+<div id="conteudo">
 <script>
-for(let cat in categorias){
- document.write(`<button class="cat-btn" onclick="toggle('${cat}')">${cat}</button>`);
- document.write(`<div class="categoria" id="cat_${cat}">`);
-
- categorias[cat].forEach(s=>{
-  let preco=precoPorCategoria[cat];
-  if(cat==="LANÇAMENTOS") preco=precosLancamentos[s];
-
-  let e=estoque[id]||0;
-  let v=vendido[id]||0;
-  let r=Math.max(0,e-v);
-
-  document.write(`
-  <div class="item ${r===0?"zero":""}" id="item_${id}">
-    <div class="info">
-        <div class="nome">${s}</div>
-        <div class="valor">Preço: R$ ${preco}</div>
-        <div class="restante" id="resto_${id}">Restante: ${r}</div>
-    </div>
-
-    <div class="controles">
-        <div class="linha">
-            <span>Estoque</span>
-            <button class="btn menos" onclick="remove('est',${id})">-</button>
-            <span class="numero" id="est_${id}">${e}</span>
-            <button class="btn mais" onclick="add('est',${id})">+</button>
+for (let cat in categorias) {
+    document.write(`
+    <button class="cat-btn" id="btn_${cat}" onclick="toggle('${cat}')">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span>${cat}</span>
+            <span style="font-size:14px;">
+                Qnt <span id="qnt_${cat}">0</span> |
+                Vend. <span id="vendcat_${cat}">0</span>
+            </span>
         </div>
-        <div class="linha">
-            <span>Vendido</span>
-            <button class="btn menos" onclick="remove('vend',${id})">-</button>
-            <span class="numero" id="vend_${id}">${v}</span>
-            <button class="btn mais" onclick="add('vend',${id})">+</button>
-        </div>
-    </div>
-  </div>
-  `);
-  id++;
- });
+    </button>
+    <div id="cat_${cat}" class="categoria">
+    `);
 
- document.write(`</div>`);
+    categorias[cat].forEach(sabor => {
+        let preco = cat === "LANÇAMENTOS" ? precosLancamentos[sabor] : precoPorCategoria[cat];
+        let e = estoqueSalvo[id] || 0;
+        let v = vendidoSalvo[id] || 0;
+        let r = Math.max(0, e - v);
+
+        document.write(`
+        <div class="item ${r===0?"zero":""}" id="item_${id}">
+            <div class="nome">${sabor}</div>
+            <div class="valor">Preço: R$ ${preco}</div>
+            <div class="restante" id="resto_${id}">Restante: ${r}</div>
+            <div class="linha">
+                <div class="controls">
+                    <span>Estoque</span>
+                    <button class="btn menos" onclick="remove('est',${id})">-</button>
+                    <span class="numero" id="est_${id}">${e}</span>
+                    <button class="btn mais" onclick="add('est',${id})">+</button>
+                </div>
+            </div>
+            <div class="linha">
+                <div class="controls">
+                    <span>Vendido</span>
+                    <button class="btn menos" onclick="remove('vend',${id})">-</button>
+                    <span class="numero" id="vend_${id}">${v}</span>
+                    <button class="btn mais" onclick="add('vend',${id})">+</button>
+                </div>
+            </div>
+        </div>
+        `);
+        id++;
+    });
+    document.write("</div>");
 }
 </script>
-
-<div class="caixa-info">
- TOTAL EM VENDAS: R$ <span id="valorTotal">0.00</span>
 </div>
 
-<button id="limpar" onclick="limparTudo()">LIMPAR TUDO</button>
+<div id="totalVendas">TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span></div>
 
-<script>recalcular();</script>
+<div class="caixa-info">
+    VENDAS EM DINHEIRO:<br>
+    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}"
+           oninput="atualizarFinanceiro()"
+           style="width:90%;padding:12px;font-size:22px;text-align:center;">
+</div>
+
+<div class="caixa-info">VENDAS NO CARTÃO:<br><span id="campoCartao">R$ ${cartao.toFixed(2)}</span></div>
+<div class="caixa-info" style="background:#fff2cc;">COMISSÃO:<br><span id="campoComissao">R$ ${comissao.toFixed(2)}</span></div>
+
+<button id="limpar" onclick="localStorage.clear();location.reload()">LIMPAR TUDO</button>
+
+<script>recalcularTotal();</script>
 
 </body>
 </html>
