@@ -24,15 +24,14 @@ h1 {
     width: 100%;
     background: #007aff;
     color: white;
-    padding: 12px 14px;      /* ⬅ mais fino */
-    font-size: 17px;        /* ⬅ proporcional aos cards */
+    padding: 12px 14px;
+    font-size: 17px;
     border: none;
-    border-radius: 12px;    /* ⬅ menos “gordinho” */
+    border-radius: 12px;
     margin-top: 12px;
     cursor: pointer;
     font-weight: 700;
     box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-}
 }
 .cat-btn.sticky-open {
     position: sticky;
@@ -41,105 +40,127 @@ h1 {
 }
 .categoria {
     display: none;
-    margin-top: 4px;
+    margin-top: 6px;
     background: #ffffff;
-    padding: 4px;               /* ⬅ quase sem borda */
-    border-radius: 10px;
+    padding: 4px;
+    border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.10);
 }
 
+/* ===== CARD ESTILO FOTO ===== */
 .item {
     background: #fff;
-    padding: 6px;               /* ⬅ bem fino */
-    margin: 5px 0;              /* ⬅ menos espaço entre picolés */
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
 }
 
-.linha {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 6px;            /* ⬅ grande vilão */
-}
 .item.zero {
     background: #ff4d4d !important;
     color: white !important;
 }
+
+.card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.info {
+    flex: 1;
+}
+
 .nome {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
 }
 
 .valor {
-    font-size: 13px;
+    font-size: 14px;
 }
-.restante { font-size: 17px; font-weight: bold; }
-.linha { display: flex; justify-content: space-between; margin-top: 14px; }
+
+.azul {
+    color: #007aff;
+    font-weight: 700;
+}
+
+.restante {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.painel {
+    background: #f1f1f1;
+    padding: 8px;
+    border-radius: 12px;
+    min-width: 145px;
+}
+
+.linha-painel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.linha-painel:last-child {
+    margin-bottom: 0;
+}
+
+.linha-painel span {
+    font-size: 12px;
+    font-weight: 700;
+}
+
 .controls {
     display: flex;
     align-items: center;
-    gap: 4px;                 /* ⬅ menos espaço */
-}
-
-.controls span {
-    font-size: 12px;          /* ⬅ “Estoque / Vendido” menor */
-    font-weight: 600;
+    gap: 4px;
 }
 
 .btn {
-    width: 28px;              /* ⬅ botões pequenos */
+    width: 28px;
     height: 28px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    font-size: 18px;          /* ⬅ + e - menores */
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
 }
 
 .numero {
     width: 28px;
-    font-size: 16px;          /* ⬅ número menor */
-    font-weight: 700;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 800;
 }
+
+/* ===== TOTAIS ===== */
 #totalVendas, .caixa-info {
     margin-top: 14px;
-    padding: 14px;              /* ⬅ mais fino */
+    padding: 14px;
     background: #e6fff0;
     border-radius: 12px;
-    font-size: 18px;            /* ⬅ proporcional */
+    font-size: 18px;
     text-align: center;
     font-weight: 800;
     color: #0b6b1a;
 }
 
-#limpar,
-#relatorio {
+#limpar {
     width: 100%;
-    padding: 12px;              /* ⬅ mais fino */
+    padding: 12px;
     font-size: 17px;
     border: none;
     border-radius: 12px;
     margin-top: 16px;
     cursor: pointer;
     font-weight: 700;
-}
-
-#limpar {
     background: #ff3b30;
     color: white;
-}
-
-#relatorio {
-    background: #5856d6;
-    color: white;
-}
-#popupRelatorio {
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.6);
-    padding:20px;
-    z-index:9999;
 }
 </style>
 
@@ -170,52 +191,17 @@ let total = Number(localStorage.getItem("totalVendas")) || 0;
 let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
 let estoqueSalvo = JSON.parse(localStorage.getItem("estoque")) || {};
 let vendidoSalvo = JSON.parse(localStorage.getItem("vendido")) || {};
-let cartao = total - dinheiro;
-if (cartao < 0) cartao = 0;
-let comissao = 0;
 
 function toggle(cat) {
     let el = document.getElementById("cat_" + cat);
     let btn = document.getElementById("btn_" + cat);
     let abrir = el.style.display !== "block";
-    el.style.display = abrir ? "block" : "none";
-
-    document.querySelectorAll(".categoria").forEach(c => c.classList.remove("aberta"));
+    document.querySelectorAll(".categoria").forEach(c => c.style.display="none");
     document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("sticky-open"));
-
     if (abrir) {
-        el.classList.add("aberta");
+        el.style.display = "block";
         btn.classList.add("sticky-open");
     }
-}
-
-function atualizarResumoCategorias() {
-    let i = 1;
-    for (let cat in categorias) {
-        let q = 0, v = 0;
-        categorias[cat].forEach(() => {
-            q += Number(document.getElementById("est_" + i)?.innerText || 0);
-            v += Number(document.getElementById("vend_" + i)?.innerText || 0);
-            i++;
-        });
-        document.getElementById("qnt_" + cat).innerText = q;
-        document.getElementById("vendcat_" + cat).innerText = v;
-    }
-}
-
-function recalcularTotal() {
-    let novo = 0, i = 1;
-    for (let cat in categorias) {
-        categorias[cat].forEach(sabor => {
-            let preco = cat === "LANÇAMENTOS" ? precosLancamentos[sabor] : precoPorCategoria[cat];
-            novo += Number(document.getElementById("vend_" + i).innerText) * preco;
-            i++;
-        });
-    }
-    total = novo;
-    document.getElementById("valorTotal").innerText = total.toFixed(2);
-    atualizarFinanceiro();
-    atualizarResumoCategorias();
 }
 
 function atualizar(id) {
@@ -223,14 +209,12 @@ function atualizar(id) {
     let vend = Number(document.getElementById("vend_" + id).innerText);
     let resto = Math.max(0, est - vend);
     document.getElementById("resto_" + id).innerText = "Restante: " + resto;
-
     let item = document.getElementById("item_" + id);
     resto === 0 ? item.classList.add("zero") : item.classList.remove("zero");
-
     estoqueSalvo[id] = est;
     vendidoSalvo[id] = vend;
-    salvar();
-    recalcularTotal();
+    localStorage.setItem("estoque", JSON.stringify(estoqueSalvo));
+    localStorage.setItem("vendido", JSON.stringify(vendidoSalvo));
 }
 
 function add(tipo, id){ document.getElementById(tipo+"_"+id).innerText++; atualizar(id); }
@@ -239,23 +223,6 @@ function remove(tipo, id){
     if (Number(c.innerText)>0) c.innerText--;
     atualizar(id);
 }
-
-function salvar() {
-    localStorage.setItem("estoque", JSON.stringify(estoqueSalvo));
-    localStorage.setItem("vendido", JSON.stringify(vendidoSalvo));
-    localStorage.setItem("totalVendas", total.toFixed(2));
-    localStorage.setItem("dinheiro", dinheiro.toFixed(2));
-}
-
-function atualizarFinanceiro() {
-    dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
-    cartao = Math.max(0, total - dinheiro);
-    let base = dinheiro + cartao * 0.95;
-    comissao = base * 0.30;
-    document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
-    document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
-    salvar();
-}
 </script>
 </head>
 
@@ -263,19 +230,10 @@ function atualizarFinanceiro() {
 
 <h1>Controle de Sorvetes</h1>
 
-<div id="conteudo">
 <script>
 for (let cat in categorias) {
     document.write(`
-    <button class="cat-btn" id="btn_${cat}" onclick="toggle('${cat}')">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span>${cat}</span>
-            <span style="font-size:14px;">
-                Qnt <span id="qnt_${cat}">0</span> |
-                Vend. <span id="vendcat_${cat}">0</span>
-            </span>
-        </div>
-    </button>
+    <button class="cat-btn" id="btn_${cat}" onclick="toggle('${cat}')">${cat}</button>
     <div id="cat_${cat}" class="categoria">
     `);
 
@@ -286,24 +244,25 @@ for (let cat in categorias) {
         let r = Math.max(0, e - v);
 
         document.write(`
-        <div class="item ${r===0?"zero":""}" id="item_${id}">
-            <div class="nome">${sabor}</div>
-            <div class="valor">Preço: R$ ${preco}</div>
-            <div class="restante" id="resto_${id}">Restante: ${r}</div>
-            <div class="linha">
-                <div class="controls">
-                    <span>Estoque</span>
-                    <button class="btn menos" onclick="remove('est',${id})">-</button>
-                    <span class="numero" id="est_${id}">${e}</span>
-                    <button class="btn mais" onclick="add('est',${id})">+</button>
-                </div>
+        <div class="item card ${r===0?"zero":""}" id="item_${id}">
+            <div class="info">
+                <div class="nome">${sabor}</div>
+                <div class="valor azul">Preço: R$ ${preco}</div>
+                <div class="restante" id="resto_${id}">Restante: ${r}</div>
             </div>
-            <div class="linha">
-                <div class="controls">
+
+            <div class="painel">
+                <div class="linha-painel">
+                    <span>Estoque</span>
+                    <button class="btn" onclick="remove('est',${id})">-</button>
+                    <span class="numero" id="est_${id}">${e}</span>
+                    <button class="btn" onclick="add('est',${id})">+</button>
+                </div>
+                <div class="linha-painel">
                     <span>Vendido</span>
-                    <button class="btn menos" onclick="remove('vend',${id})">-</button>
+                    <button class="btn" onclick="remove('vend',${id})">-</button>
                     <span class="numero" id="vend_${id}">${v}</span>
-                    <button class="btn mais" onclick="add('vend',${id})">+</button>
+                    <button class="btn" onclick="add('vend',${id})">+</button>
                 </div>
             </div>
         </div>
@@ -313,23 +272,8 @@ for (let cat in categorias) {
     document.write("</div>");
 }
 </script>
-</div>
-
-<div id="totalVendas">TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span></div>
-
-<div class="caixa-info">
-    VENDAS EM DINHEIRO:<br>
-    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}"
-           oninput="atualizarFinanceiro()"
-           style="width:90%;padding:12px;font-size:22px;text-align:center;">
-</div>
-
-<div class="caixa-info">VENDAS NO CARTÃO:<br><span id="campoCartao">R$ ${cartao.toFixed(2)}</span></div>
-<div class="caixa-info" style="background:#fff2cc;">COMISSÃO:<br><span id="campoComissao">R$ ${comissao.toFixed(2)}</span></div>
 
 <button id="limpar" onclick="localStorage.clear();location.reload()">LIMPAR TUDO</button>
-
-<script>recalcularTotal();</script>
 
 </body>
 </html>
