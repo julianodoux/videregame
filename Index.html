@@ -74,33 +74,36 @@ h1 {
 .mais { background: #34c759; color: white; }
 .numero { width: 45px; text-align: center; font-size: 24px; font-weight: bold; }
 #totalVendas, .caixa-info {
-    margin-top: 20px;
-    padding: 20px;
+    margin-top: 14px;
+    padding: 14px;              /* ⬅ mais fino */
     background: #e6fff0;
-    border-radius: 16px;
-    font-size: 22px;
+    border-radius: 12px;
+    font-size: 18px;            /* ⬅ proporcional */
     text-align: center;
-    font-weight: 900;
+    font-weight: 800;
+    color: #0b6b1a;
 }
-#limpar {
-    width: 100%;
-    background: #ff3b30;
-    color: white;
-    padding: 18px;
-    font-size: 20px;
-    border: none;
-    border-radius: 14px;
-    margin-top: 25px;
-}
+
+#limpar,
 #relatorio {
     width: 100%;
+    padding: 12px;              /* ⬅ mais fino */
+    font-size: 17px;
+    border: none;
+    border-radius: 12px;
+    margin-top: 16px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+#limpar {
+    background: #ff3b30;
+    color: white;
+}
+
+#relatorio {
     background: #5856d6;
     color: white;
-    padding: 18px;
-    font-size: 20px;
-    border: none;
-    border-radius: 14px;
-    margin-top: 25px;
 }
 #popupRelatorio {
     display:none;
