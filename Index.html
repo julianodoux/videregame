@@ -33,6 +33,9 @@ h1 {
     font-weight: 700;
     box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
+.cat-btn.ativo {
+    background: #34c759;
+}
 .cat-btn.sticky-open {
     position: sticky;
     top: 12px;
@@ -203,11 +206,15 @@ function toggle(cat) {
     let abrir = el.style.display !== "block";
 
     document.querySelectorAll(".categoria").forEach(c => c.style.display = "none");
-    document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("sticky-open"));
+    document.querySelectorAll(".cat-btn").forEach(b => {
+        b.classList.remove("sticky-open");
+        b.classList.remove("ativo");
+    });
 
     if (abrir) {
         el.style.display = "block";
         btn.classList.add("sticky-open");
+        btn.classList.add("ativo");
     }
 }
 
