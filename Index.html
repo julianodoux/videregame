@@ -1,402 +1,88 @@
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Controle de Sorvetes</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f2f2f7;
-    padding: 12px;
-    color: #333;
-    max-width: 480px;
-    margin: auto;
-}
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 26px;
-    font-weight: 900;
-}
-.cat-btn {
-    width: 100%;
-    background: #007aff;
-    color: white;
-    padding: 12px 14px;
-    font-size: 17px;
-    border: none;
-    border-radius: 12px;
-    margin-top: 12px;
-    cursor: pointer;
-    font-weight: 700;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-}
-.cat-btn.ativo {
-    background: #34c759;
-}
-.cat-btn.sticky-open {
-    position: sticky;
-    top: 12px;
-    z-index: 30;
-}
-.categoria {
-    display: none;
-    margin-top: 4px;
-    background: #ffffff;
-    padding: 4px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.10);
-}
-
-/* ===== CARD ===== */
-.item {
-    background: #fff;
-    padding: 8px;
-    margin: 6px 0;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.item.zero {
-    background: #ff4d4d !important;
-    color: white !important;
-}
-
-/* layout estilo foto */
-.item.card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-}
-
-.info {
-    flex: 1;
-}
-
-.nome {
-    font-size: 17px;
-    font-weight: 800;
-}
-
-.valor {
-    font-size: 14px;
-    color: #007aff;
-    font-weight: 700;
-}
-.item.zero .valor {
-    color: #ffffff;
-}
-
-.restante {
-    font-size: 16px;
-    font-weight: 800;
-}
-
-/* painel lateral */
-.painel {
-    background: #f1f1f1;
-    padding: 8px;
-    border-radius: 10px;
-    min-width: 150px;
-    color: #000 !important;
-}
-
-.painel * {
-    color: #000 !important;
-}
-
-.linha {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 6px;
-}
-
-.linha:first-child {
-    margin-top: 0;
-}
-
-.controls {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.controls span {
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: 800;
-}
-
-.numero {
-    width: 28px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 800;
-}
-
-/* ===== TOTAIS ===== */
-#totalVendas, .caixa-info {
-    margin-top: 14px;
-    padding: 14px;
-    background: #e6fff0;
-    border-radius: 12px;
-    font-size: 18px;
-    text-align: center;
-    font-weight: 800;
-    color: #0b6b1a;
-}
-
-#limpar {
-    width: 100%;
-    padding: 12px;
-    font-size: 17px;
-    border: none;
-    border-radius: 12px;
-    margin-top: 16px;
-    cursor: pointer;
-    font-weight: 700;
-    background: #ff3b30;
-    color: white;
-}
-</style>
-
 <script>
 let precoPorCategoria = {
-    "PALETAS FRUTIVERÃO": 18,
-    "AO LEITE FRUTIVERÃO": 8,
-    "TROPICAL FRUTIVERÃO": 6,
-    "ESPECIAL FRUTVERÃO": 13,
-    "LANÇAMENTOS": null
+    "MAGNUM": null,
+    "CORNETTO": null,
+    "OS FAVORITOS": null,
+    "FRUTARE": 10,
+    "FRUTILLY": 7.5
 };
 
 let precosLancamentos = {
-    "Pistache": 16,
-    "Unicórnio": 10
+    // MAGNUM
+    "Clássico": 20,
+    "Branco": 20,
+    "Avelã": 20,
+    "Amêndoas": 20,
+    "Cookies & Cream": 20,
+    "Menos Açúcar": 20,
+    "Pistache": 21,
+
+    // CORNETTO
+    "Choco Mix": 13,
+    "Chocante": 13,
+    "Uni Cornetto": 16.5,
+    "M&Ms": 16.5,
+    "Brigadeiro Cornetto": 16.5,
+
+    // OS FAVORITOS
+    "Mini Eski-bon": 17,
+    "Mini Morango": 17,
+    "Mini Chicabon": 17,
+    "Mini Doce de Leite": 17,
+    "Eski-bon": 12,
+    "Brigadeiro": 12,
+    "Chicabon": 12,
+    "Chicabon Menos Açúcar": 12,
+    "3 Chocolates": 12.5,
+    "Max Avelã": 12.5,
+    "Tablito": 12.5
 };
 
 let categorias = {
-    "PALETAS FRUTIVERÃO": [
-        "Raffaello","Oreo","Ferrero","Kinder Ovo","Kinder Bueno","M&M",
-        "Choco Maltine","Milk Trufado","Babalu","Blue Ice","Sensação",
-        "Morango","Maracujá","Açaí","Iogurte c/ Amora","Menta c/ Chocolate",
-        "Paçoca","Capuccino","Banana com Avelã","Coco c/ Abobora",
-        "Coco c/ Doce de Leite","Tapioca","Abacaxi Zero",
-        "Bom Bom"
+    "MAGNUM": [
+        "Clássico",
+        "Branco",
+        "Avelã",
+        "Amêndoas",
+        "Cookies & Cream",
+        "Menos Açúcar",
+        "Pistache"
     ],
-    "AO LEITE FRUTIVERÃO": ["Morango","Chocolate","Leite Condensado","Milho-Verde","Açaí c/ Morango","Coco","Coco Queimado","Abóbora c/ Coco","Amendoim","Abacate","Blue Ice"],
-    "TROPICAL FRUTIVERÃO": ["Uva","Limão","Maracujá","Manga","Abacaxi","Melancia","Tangerina","Maçã Verde","Groselha","Tutti Frutti","Pinta Língua"],
-    "ESPECIAL FRUTVERÃO": ["Skimo morango","Skimo ao leite","Milk trufado","Brigadeiro","Chococo","Torta de limão","Itu napolitano","Frutblito","Sunday de chocolate","Sundae de Morango"],
-    "LANÇAMENTOS": ["Pistache","Unicórnio"]
+
+    "CORNETTO": [
+        "Choco Mix",
+        "Chocante",
+        "Uni Cornetto",
+        "M&Ms",
+        "Brigadeiro Cornetto"
+    ],
+
+    "OS FAVORITOS": [
+        "Mini Eski-bon",
+        "Mini Morango",
+        "Mini Chicabon",
+        "Mini Doce de Leite",
+        "Eski-bon",
+        "Brigadeiro",
+        "Chicabon",
+        "Chicabon Menos Açúcar",
+        "3 Chocolates",
+        "Max Avelã",
+        "Tablito"
+    ],
+
+    "FRUTARE": [
+        "Tangerina",
+        "Limão",
+        "Morango",
+        "Abacaxi",
+        "Uva",
+        "Coco"
+    ],
+
+    "FRUTILLY": [
+        "Frutilly",
+        "Frutilly Pinta Língua"
+    ]
 };
-
-let id = 1;
-let total = Number(localStorage.getItem("totalVendas")) || 0;
-let dinheiro = Number(localStorage.getItem("dinheiro")) || 0;
-let estoqueSalvo = JSON.parse(localStorage.getItem("estoque")) || {};
-let vendidoSalvo = JSON.parse(localStorage.getItem("vendido")) || {};
-let cartao = Math.max(0, total - dinheiro);
-let comissao = 0;
-
-function toggle(cat) {
-    let el = document.getElementById("cat_" + cat);
-    let btn = document.getElementById("btn_" + cat);
-    let abrir = el.style.display !== "block";
-
-    document.querySelectorAll(".categoria").forEach(c => c.style.display = "none");
-    document.querySelectorAll(".cat-btn").forEach(b => {
-        b.classList.remove("sticky-open");
-        b.classList.remove("ativo");
-    });
-
-    if (abrir) {
-        el.style.display = "block";
-        btn.classList.add("sticky-open");
-        btn.classList.add("ativo");
-    }
-}
-
-function atualizarResumoCategorias() {
-    let i = 1;
-    for (let cat in categorias) {
-        let q = 0, v = 0;
-        categorias[cat].forEach(() => {
-            q += Number(document.getElementById("est_" + i)?.innerText || 0);
-            v += Number(document.getElementById("vend_" + i)?.innerText || 0);
-            i++;
-        });
-        document.getElementById("qnt_" + cat).innerText = q;
-        document.getElementById("vendcat_" + cat).innerText = v;
-    }
-}
-
-function recalcularTotal() {
-    let novo = 0, i = 1;
-    for (let cat in categorias) {
-        categorias[cat].forEach(sabor => {
-            let preco = cat === "LANÇAMENTOS" ? precosLancamentos[sabor] : precoPorCategoria[cat];
-            novo += Number(document.getElementById("vend_" + i).innerText) * preco;
-            i++;
-        });
-    }
-    total = novo;
-    document.getElementById("valorTotal").innerText = total.toFixed(2);
-    atualizarFinanceiro();
-    atualizarResumoCategorias();
-}
-
-function atualizar(id) {
-    let est = Number(document.getElementById("est_" + id).innerText);
-    let vend = Number(document.getElementById("vend_" + id).innerText);
-    let resto = Math.max(0, est - vend);
-
-    document.getElementById("resto_" + id).innerText = "Restante: " + resto;
-
-    let item = document.getElementById("item_" + id);
-    resto === 0 ? item.classList.add("zero") : item.classList.remove("zero");
-
-    estoqueSalvo[id] = est;
-    vendidoSalvo[id] = vend;
-    salvar();
-    recalcularTotal();
-}
-
-function add(tipo, id) {
-    document.getElementById(tipo + "_" + id).innerText++;
-    atualizar(id);
-}
-
-function remove(tipo, id) {
-    let c = document.getElementById(tipo + "_" + id);
-    if (Number(c.innerText) > 0) c.innerText--;
-    atualizar(id);
-}
-
-function salvar() {
-    localStorage.setItem("estoque", JSON.stringify(estoqueSalvo));
-    localStorage.setItem("vendido", JSON.stringify(vendidoSalvo));
-    localStorage.setItem("totalVendas", total.toFixed(2));
-    localStorage.setItem("dinheiro", dinheiro.toFixed(2));
-}
-
-function atualizarFinanceiro() {
-    dinheiro = Number(document.getElementById("campoDinheiro").value) || 0;
-    cartao = Math.max(0, total - dinheiro);
-    let base = dinheiro + cartao * 0.95;
-    comissao = base * 0.30;
-
-    document.getElementById("campoCartao").innerText = "R$ " + cartao.toFixed(2);
-    document.getElementById("campoComissao").innerText = "R$ " + comissao.toFixed(2);
-
-    salvar();
-}
 </script>
-</head>
-
-<body>
-
-<h1>Controle de Sorvetes</h1>
-
-<div id="conteudo">
-<script>
-for (let cat in categorias) {
-    document.write(`
-    <button class="cat-btn" id="btn_${cat}" onclick="toggle('${cat}')">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span>${cat}</span>
-            <span style="font-size:14px;">
-                Qnt <span id="qnt_${cat}">0</span> |
-                Vend. <span id="vendcat_${cat}">0</span>
-            </span>
-        </div>
-    </button>
-    <div id="cat_${cat}" class="categoria">
-    `);
-
-    categorias[cat].forEach(sabor => {
-        let preco = cat === "LANÇAMENTOS" ? precosLancamentos[sabor] : precoPorCategoria[cat];
-        let e = estoqueSalvo[id] || 0;
-        let v = vendidoSalvo[id] || 0;
-        let r = Math.max(0, e - v);
-
-        document.write(`
-        <div class="item card ${r===0?"zero":""}" id="item_${id}">
-            <div class="info">
-                <div class="nome">${sabor}</div>
-                <div class="valor">Preço: R$ ${preco}</div>
-                <div class="restante" id="resto_${id}">Restante: ${r}</div>
-            </div>
-
-            <div class="painel">
-                <div class="linha">
-                    <div class="controls">
-                        <span>Estoque</span>
-                        <button class="btn" onclick="remove('est',${id})">-</button>
-                        <span class="numero" id="est_${id}">${e}</span>
-                        <button class="btn" onclick="add('est',${id})">+</button>
-                    </div>
-                </div>
-                <div class="linha">
-                    <div class="controls">
-                        <span>Vendido</span>
-                        <button class="btn" onclick="remove('vend',${id})">-</button>
-                        <span class="numero" id="vend_${id}">${v}</span>
-                        <button class="btn" onclick="add('vend',${id})">+</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        `);
-        id++;
-    });
-    document.write("</div>");
-}
-</script>
-</div>
-
-<div id="totalVendas">
-    TOTAL EM VENDAS: R$ <span id="valorTotal">${total.toFixed(2)}</span>
-</div>
-
-<div class="caixa-info">
-    VENDAS EM DINHEIRO:<br>
-    <input id="campoDinheiro" type="number" step="0.01" value="${dinheiro}"
-           oninput="atualizarFinanceiro()"
-           style="width:60%;padding:8px;font-size:22px;text-align:center;">
-</div>
-
-<div class="caixa-info">
-    VENDAS NO CARTÃO:<br>
-    <span id="campoCartao">R$ ${cartao.toFixed(2)}</span>
-</div>
-
-<div class="caixa-info" style="background:#fff2cc;">
-    COMISSÃO:<br>
-    <span id="campoComissao">R$ ${comissao.toFixed(2)}</span>
-</div>
-
-<button id="limpar" onclick="
-if (confirm('Tem certeza que deseja apagar TODOS os dados?\nEssa ação não pode ser desfeita.')) {
-    localStorage.clear();
-    location.reload();
-}">
-LIMPAR TUDO
-</button>
-
-<script>recalcularTotal();</script>
-
-</body>
-</html>
