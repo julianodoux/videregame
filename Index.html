@@ -1,88 +1,90 @@
-<script>
-let precoPorCategoria = {
-    "MAGNUM": null,
-    "CORNETTO": null,
-    "OS FAVORITOS": null,
-    "FRUTARE": 10,
-    "FRUTILLY": 7.5
-};
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Tv On+ | Download Oficial</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-let precosLancamentos = {
-    // MAGNUM
-    "Clássico": 20,
-    "Branco": 20,
-    "Avelã": 20,
-    "Amêndoas": 20,
-    "Cookies & Cream": 20,
-    "Menos Açúcar": 20,
-    "Pistache": 21,
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-    // CORNETTO
-    "Choco Mix": 13,
-    "Chocante": 13,
-    "Uni Cornetto": 16.5,
-    "M&Ms": 16.5,
-    "Brigadeiro Cornetto": 16.5,
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
 
-    // OS FAVORITOS
-    "Mini Eski-bon": 17,
-    "Mini Morango": 17,
-    "Mini Chicabon": 17,
-    "Mini Doce de Leite": 17,
-    "Eski-bon": 12,
-    "Brigadeiro": 12,
-    "Chicabon": 12,
-    "Chicabon Menos Açúcar": 12,
-    "3 Chocolates": 12.5,
-    "Max Avelã": 12.5,
-    "Tablito": 12.5
-};
+    .container {
+      text-align: center;
+      padding: 20px;
+      max-width: 400px;
+      width: 100%;
+    }
 
-let categorias = {
-    "MAGNUM": [
-        "Clássico",
-        "Branco",
-        "Avelã",
-        "Amêndoas",
-        "Cookies & Cream",
-        "Menos Açúcar",
-        "Pistache"
-    ],
+    .logo {
+      width: 180px;
+      margin-bottom: 20px;
+    }
 
-    "CORNETTO": [
-        "Choco Mix",
-        "Chocante",
-        "Uni Cornetto",
-        "M&Ms",
-        "Brigadeiro Cornetto"
-    ],
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: bold;
+    }
 
-    "OS FAVORITOS": [
-        "Mini Eski-bon",
-        "Mini Morango",
-        "Mini Chicabon",
-        "Mini Doce de Leite",
-        "Eski-bon",
-        "Brigadeiro",
-        "Chicabon",
-        "Chicabon Menos Açúcar",
-        "3 Chocolates",
-        "Max Avelã",
-        "Tablito"
-    ],
+    .subtitle {
+      margin-top: 8px;
+      margin-bottom: 30px;
+      color: #555;
+      font-size: 16px;
+    }
 
-    "FRUTARE": [
-        "Tangerina",
-        "Limão",
-        "Morango",
-        "Abacaxi",
-        "Uva",
-        "Coco"
-    ],
+    .download-btn {
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      padding: 16px 32px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.1s ease;
+    }
 
-    "FRUTILLY": [
-        "Frutilly",
-        "Frutilly Pinta Língua"
-    ]
-};
-</script>
+    .download-btn:hover {
+      opacity: 0.9;
+      transform: scale(1.03);
+    }
+
+    .info {
+      margin-top: 25px;
+      font-size: 14px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <img src="logo.png" alt="Tv On+" class="logo">
+
+    <h1>Tv On+</h1>
+    <div class="subtitle">O melhor do streaming</div>
+
+    <a href="tvonplus.apk" download>
+      <button class="download-btn">Baixar App</button>
+    </a>
+
+    <div class="info">
+      Compatível com Android<br>
+      Ative fontes desconhecidas para instalar
+    </div>
+  </div>
+
+</body>
+</html>
