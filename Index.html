@@ -2,93 +2,128 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Google</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin-top: 150px;
-    background: #fff;
+body{
+font-family:Arial;
+text-align:center;
+margin-top:120px;
 }
 
-.logo {
-    font-size: 80px;
-    font-weight: bold;
-    color: #4285F4;
+.logo{
+font-size:80px;
+color:#4285F4;
 }
 
-input {
-    width: 500px;
-    padding: 12px;
-    border-radius: 30px;
-    border: 1px solid #ccc;
-    outline: none;
+input{
+width:500px;
+padding:12px;
+border-radius:30px;
+border:1px solid #ccc;
 }
 
-button {
-    margin-top: 20px;
-    padding: 10px 20px;
+.captcha-bg{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.4);
 }
 
-.captcha-bg {
-    display: none;
-    position: fixed;
-    width:100%;
-    height:100%;
-    top:0;
-    left:0;
-    background: rgba(0,0,0,0.4);
+.captcha{
+background:#fff;
+width:330px;
+margin:100px auto;
+padding:10px;
 }
 
-.captcha-box {
-    width:300px;
-    background:#fff;
-    padding:20px;
-    margin:200px auto;
-    text-align:left;
-    border-radius:5px;
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:5px;
 }
 
-.checkbox {
-    width:20px;
-    height:20px;
+img{
+width:100%;
+cursor:pointer;
+}
+
+.selected{
+border:4px solid blue;
 }
 </style>
-
 </head>
 
 <body>
 
 <div class="logo">Google</div>
 
-<form onsubmit="mostrarCaptcha(); return false;">
-    <br>
-    <input type="text" placeholder="Pesquisar no Google">
-    <br>
-    <button>Pesquisar</button>
+<form onsubmit="abrirCaptcha(); return false;">
+<br>
+<input placeholder="Pesquisar no Google">
+<br><br>
+<button>Pesquisar</button>
 </form>
 
-<div class="captcha-bg" id="captcha">
-    <div class="captcha-box">
-        <input type="checkbox" class="checkbox" onclick="verificando()"> 
-        Não sou um robô
-        <p id="status"></p>
-    </div>
+<div class="captcha-bg" id="bg">
+<div class="captcha">
+<p id="texto">Selecione todas as imagens com ônibus</p>
+
+<div class="grid">
+<img src="https://picsum.photos/100?1" onclick="sel(this)">
+<img src="https://picsum.photos/100?2" onclick="sel(this)">
+<img src="https://picsum.photos/100?3" onclick="sel(this)">
+<img src="https://picsum.photos/100?4" onclick="sel(this)">
+<img src="https://picsum.photos/100?5" onclick="sel(this)">
+<img src="https://picsum.photos/100?6" onclick="sel(this)">
+<img src="https://picsum.photos/100?7" onclick="sel(this)">
+<img src="https://picsum.photos/100?8" onclick="sel(this)">
+<img src="https://picsum.photos/100?9" onclick="sel(this)">
+</div>
+
+<br>
+<button onclick="falhou()">Verificar</button>
+<p id="erro"></p>
+
+</div>
 </div>
 
 <script>
-function mostrarCaptcha(){
-    document.getElementById("captcha").style.display = "block";
+
+var desafios=[
+"ônibus",
+"semáforos",
+"hidrantes",
+"escadas",
+"motos",
+"carros",
+"bicicletas",
+"faixas de pedestres"
+]
+
+function abrirCaptcha(){
+document.getElementById("bg").style.display="block";
 }
 
-function verificando(){
-    document.getElementById("status").innerHTML = "Verificando...";
-    setTimeout(()=>{
-        document.getElementById("status").innerHTML = "Você é humano 👍";
-    },2000)
+function sel(el){
+el.classList.toggle("selected");
 }
+
+function falhou(){
+document.getElementById("erro").innerHTML="❌ Tente novamente";
+document.getElementById("texto").innerHTML=
+"Selecione todas as imagens com "+
+desafios[Math.floor(Math.random()*desafios.length)];
+
+document.querySelectorAll("img").forEach(e=>{
+e.classList.remove("selected");
+e.src="https://picsum.photos/100?"+Math.random();
+})
+}
+
 </script>
 
 </body>
