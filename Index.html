@@ -1,90 +1,95 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title| Download Oficial</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 150px;
+    background: #fff;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+.logo {
+    font-size: 80px;
+    font-weight: bold;
+    color: #4285F4;
+}
 
-    .container {
-      text-align: center;
-      padding: 20px;
-      max-width: 400px;
-      width: 100%;
-    }
+input {
+    width: 500px;
+    padding: 12px;
+    border-radius: 30px;
+    border: 1px solid #ccc;
+    outline: none;
+}
 
-    .logo {
-      width: 180px;
-      margin-bottom: 20px;
-    }
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+}
 
-    h1 {
-      margin: 0;
-      font-size: 28px;
-      font-weight: bold;
-    }
+.captcha-bg {
+    display: none;
+    position: fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    background: rgba(0,0,0,0.4);
+}
 
-    .subtitle {
-      margin-top: 8px;
-      margin-bottom: 30px;
-      color: #555;
-      font-size: 16px;
-    }
+.captcha-box {
+    width:300px;
+    background:#fff;
+    padding:20px;
+    margin:200px auto;
+    text-align:left;
+    border-radius:5px;
+}
 
-    .download-btn {
-      background: #000000;
-      color: #ffffff;
-      border: none;
-      padding: 16px 32px;
-      font-size: 18px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: transform 0.1s ease, opacity 0.1s ease;
-    }
+.checkbox {
+    width:20px;
+    height:20px;
+}
+</style>
 
-    .download-btn:hover {
-      opacity: 0.9;
-      transform: scale(1.03);
-    }
-
-    .info {
-      margin-top: 25px;
-      font-size: 14px;
-      color: #777;
-    }
-  </style>
 </head>
+
 <body>
 
-  <div class="container">
-    <img src="logo.png" alt="" class="logo">
+<div class="logo">Google</div>
 
-    <h1></h1>
-    <div class="subtitle"></div>
+<form onsubmit="mostrarCaptcha(); return false;">
+    <br>
+    <input type="text" placeholder="Pesquisar no Google">
+    <br>
+    <button>Pesquisar</button>
+</form>
 
-    <a href="Tv On+.apk" download>
-      <button class="download-btn">Baixar App</button>
-    </a>
-
-    <div class="info">
-      Compatível com Android<br>
-      Ative fontes desconhecidas para instalar
+<div class="captcha-bg" id="captcha">
+    <div class="captcha-box">
+        <input type="checkbox" class="checkbox" onclick="verificando()"> 
+        Não sou um robô
+        <p id="status"></p>
     </div>
-  </div>
+</div>
+
+<script>
+function mostrarCaptcha(){
+    document.getElementById("captcha").style.display = "block";
+}
+
+function verificando(){
+    document.getElementById("status").innerHTML = "Verificando...";
+    setTimeout(()=>{
+        document.getElementById("status").innerHTML = "Você é humano 👍";
+    },2000)
+}
+</script>
 
 </body>
 </html>
